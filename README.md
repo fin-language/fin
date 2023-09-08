@@ -97,6 +97,8 @@ YouTube playlist above has best info.
 
 ![image](https://github.com/fin-language/fin/assets/274012/a8ad8717-85a1-43c6-bd01-30227aa34528)
 
-https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr
+## More info
+- https://github.com/fin-language/fin/blob/main/README.md#-pdf-slides
+- https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr
 
 
