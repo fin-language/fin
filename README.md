@@ -15,10 +15,10 @@ Interesting things about fin:
 <br>
 
 
-# 📰 [pdf slides](https://github.com/fin-language/fin/files/12561935/slides.pdf)
+# 📰 [pdf slides](https://github.com/fin-language/fin/files/12561990/slides.pdf)
 If you prefer text over video, you can view the slides in pdf form. They lack some detail discussed in the video, but still have lots of info.
 
-[slides.pdf](https://github.com/fin-language/fin/files/12561935/slides.pdf)
+[slides.pdf](https://github.com/fin-language/fin/files/12561990/slides.pdf)
 
 
 <br>
