@@ -37,15 +37,15 @@ YouTube playlist above has best info.
 
 ![image](https://github.com/fin-language/fin/assets/274012/1a5fe6f9-2a3b-42e2-b9ea-2b769fb16deb)
 
-![image](https://github.com/fin-language/fin/assets/274012/8109ac30-66c7-4b1f-b210-74f708239509)
+![image](https://github.com/fin-language/fin/assets/274012/7db5e0dd-86f1-4623-aeff-537d8d9b8157)
 
 ![image](https://github.com/fin-language/fin/assets/274012/ca0ffbd9-26a2-4acf-885a-5c1aa3fb7273)
 
-![image](https://github.com/fin-language/fin/assets/274012/97ca3bb0-b061-4740-8dcd-8e2d2b7cd962)
+![image](https://github.com/fin-language/fin/assets/274012/e08fdd16-0d3b-48ee-9ec9-ad87b05b0664)
 
 ![image](https://github.com/fin-language/fin/assets/274012/63d133c0-85c7-42e0-866a-8a66811beae5)
 
-![image](https://github.com/fin-language/fin/assets/274012/01123fe5-c1c3-486f-8520-243f6ad65d4a)
+![image](https://github.com/fin-language/fin/assets/274012/a2dcb49e-a0b2-4dd3-9a7a-6116b7e04753)
 
 ![image](https://github.com/fin-language/fin/assets/274012/e5a980b1-bc84-415b-81f6-f5ab97955e2b)
 
@@ -59,7 +59,7 @@ YouTube playlist above has best info.
 
 ![image](https://github.com/fin-language/fin/assets/274012/c1ff9c58-cf33-4153-85b4-7b854f51148d)
 
-![image](https://github.com/fin-language/fin/assets/274012/3ecd986f-e76d-42df-80e9-36ebf0f922ca)
+![image](https://github.com/fin-language/fin/assets/274012/2e700366-7d04-41fe-9f71-12785c12fb85)
 
 ![image](https://github.com/fin-language/fin/assets/274012/8b66297d-265d-4207-9716-8b78443764a6)
 
