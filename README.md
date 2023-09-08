@@ -1,4 +1,4 @@
-# fin language
+# fin - a language for embedded systems
 
 ![image](https://github.com/fin-language/fin/assets/274012/226202a2-af98-4fe8-bfc5-718e6b719134)
 
