@@ -3,6 +3,12 @@
 
  Why C#? See intro below.
 
+# Video Series
+https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr
+
+[![image](https://github.com/fin-language/fin/assets/274012/fe0af0c4-c2a9-4f9c-9ab3-8b02b88fc934)](https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr)
+
+
 # Feedback
 The fin compiler isn't ready to share yet, but I do already transpile C# to C and js (and also efficient C#) in [StateSmith](https://github.com/StateSmith/StateSmith). I'm not too worried about the transpiling work.
 
@@ -12,7 +18,8 @@ In the next couple weeks, I'll be adding proposals for syntax to use for stack a
 
 For the most part, I just wanted to get it out there and stop working by myself in a vacuum. Especially if there is a language I'm not aware of that already does what I'm planning.
 
-# Quick Intro
+# Some intro slides
+YouTube playlist above has best info.
 
 ![image](https://github.com/fin-language/fin/assets/274012/bc7a3435-78e1-4133-b66b-9d19549194c7)
 
