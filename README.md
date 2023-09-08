@@ -1,14 +1,14 @@
 # fin language
-Currently a work in progress. Looking for feedback.
 
 ![image](https://github.com/fin-language/fin/assets/274012/226202a2-af98-4fe8-bfc5-718e6b719134)
 
 Interesting things about fin:
-- focuses on resource constrained embedded systems (no heap or garbage collector required).
 - fin is like a modern C++ that is much simpler, way safer, and already has superb tooling (IDE, debugger, refactoring...).
+- focuses on resource constrained embedded systems (no heap or garbage collector required).
 - transpiles to high quality human readable C99 so we can use it with any microcontroller.
 - has incredible testing/simulation capabilities (python like).
 - familiar C/C++ syntax (be productive day 1).
+- currently a work in progress.
 - ...
 
 # [Video Series](https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr)
