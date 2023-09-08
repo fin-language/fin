@@ -1,16 +1,26 @@
-# fin - write C faster, better and safer
- Fin transpiles a subset of C# to C99 suitable for embedded systems (no heap or garbage collection required).
+# fin language
+Currently a work in progress. Looking for feedback.
 
- Why C#? See intro below.
+![image](https://github.com/fin-language/fin/assets/274012/226202a2-af98-4fe8-bfc5-718e6b719134)
 
-# Video Series
+Interesting things about fin:
+- focuses on resource constrained embedded systems (no heap or garbage collector required).
+- fin is like a modern C++ that is much simpler, way safer, and already has superb tooling (IDE, debugger, refactoring...).
+- transpiles to high quality human readable C99 so we can use it with any microcontroller.
+- has incredible testing/simulation capabilities (python like).
+- familiar C/C++ syntax (be productive day 1).
+- ...
+
+# [Video Series](https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr)
+I've just uploaded a youtube playlist that details fin, a bunch of stuff related to testing C embedded projects, multiple controller simulations, and the challenges that fin helps us solve.
+
 https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr
 
 ![image](https://github.com/fin-language/fin/assets/274012/fe0af0c4-c2a9-4f9c-9ab3-8b02b88fc934)
 
 
 # Feedback
-The fin compiler isn't ready to share yet, but I do already transpile C# to C and js (and also efficient C#) in [StateSmith](https://github.com/StateSmith/StateSmith). I'm not too worried about the transpiling work.
+The fin compiler isn't ready to share yet, but I do already transpile to C and js in [StateSmith](https://github.com/StateSmith/StateSmith). I'm not too worried about the transpiling work.
 
 What I'm looking for mostly right now is some [feedback on the concept](https://github.com/fin-language/fin/issues/2).
 
@@ -21,34 +31,44 @@ For the most part, I just wanted to get it out there and stop working by myself 
 # Some intro slides
 YouTube playlist above has best info.
 
-![image](https://github.com/fin-language/fin/assets/274012/bc7a3435-78e1-4133-b66b-9d19549194c7)
+![image](https://github.com/fin-language/fin/assets/274012/226202a2-af98-4fe8-bfc5-718e6b719134)
 
-![image](https://github.com/fin-language/fin/assets/274012/90df391b-cfbe-41d1-914a-bd8eb3dcc13e)
+![image](https://github.com/fin-language/fin/assets/274012/9e451fcd-7e4b-475d-a2e9-444279bbf32b)
 
-![image](https://github.com/fin-language/fin/assets/274012/a6d8b915-2af0-42e3-86a4-26d8beda9f8a)
+![image](https://github.com/fin-language/fin/assets/274012/1a5fe6f9-2a3b-42e2-b9ea-2b769fb16deb)
 
-![image](https://github.com/fin-language/fin/assets/274012/d28dc975-a285-40b2-97ae-6574a2c0c40c)
+![image](https://github.com/fin-language/fin/assets/274012/8109ac30-66c7-4b1f-b210-74f708239509)
 
-![image](https://github.com/fin-language/fin/assets/274012/09361c2a-d65a-40d3-b267-5b82f55000cf)
+![image](https://github.com/fin-language/fin/assets/274012/ca0ffbd9-26a2-4acf-885a-5c1aa3fb7273)
 
-![image](https://github.com/fin-language/fin/assets/274012/0a3df673-7647-4420-8828-38f7fdd8dc58)
+![image](https://github.com/fin-language/fin/assets/274012/97ca3bb0-b061-4740-8dcd-8e2d2b7cd962)
 
-![image](https://github.com/fin-language/fin/assets/274012/5935d40f-bab2-4da3-81bc-48cba0c33bd9)
+![image](https://github.com/fin-language/fin/assets/274012/63d133c0-85c7-42e0-866a-8a66811beae5)
 
-![image](https://github.com/fin-language/fin/assets/274012/d1879009-e961-49a5-9812-cf843f31d765)
+![image](https://github.com/fin-language/fin/assets/274012/01123fe5-c1c3-486f-8520-243f6ad65d4a)
 
-![image](https://github.com/fin-language/fin/assets/274012/c22cedb9-febc-4bad-a4b9-9c026da96596)
+![image](https://github.com/fin-language/fin/assets/274012/e5a980b1-bc84-415b-81f6-f5ab97955e2b)
 
-![image](https://github.com/fin-language/fin/assets/274012/d11b12d9-50f9-4c6f-8b7a-41fc01ff14c2)
+![image](https://github.com/fin-language/fin/assets/274012/62646934-18e6-4a47-82d9-76dbe3a63071)
 
-![image](https://github.com/fin-language/fin/assets/274012/cd6efe69-1cc7-4949-8b77-f885c3d88983)
+![image](https://github.com/fin-language/fin/assets/274012/f9381ece-1908-4176-b677-446222f9e2d4)
 
-![image](https://github.com/fin-language/fin/assets/274012/ccec041a-6128-4042-8061-b83f8d5091de)
+![image](https://github.com/fin-language/fin/assets/274012/87866ea9-1542-4976-923e-8d2f1db684f4)
 
-![image](https://github.com/fin-language/fin/assets/274012/888c7a25-0ccc-4a5f-9a24-3e1c1bf65bb8)
+![image](https://github.com/fin-language/fin/assets/274012/c3faf9be-2fa2-441d-b070-b1088ac1d501)
 
-![image](https://github.com/fin-language/fin/assets/274012/695b40fd-00aa-466c-b4ed-686e565c306b)
+![image](https://github.com/fin-language/fin/assets/274012/c1ff9c58-cf33-4153-85b4-7b854f51148d)
 
-![image](https://github.com/fin-language/fin/assets/274012/f81cf407-418d-4c30-914f-84962f013041)
+![image](https://github.com/fin-language/fin/assets/274012/3ecd986f-e76d-42df-80e9-36ebf0f922ca)
 
-![image](https://github.com/fin-language/fin/assets/274012/fce2bacb-cf8f-47c4-90bd-9004a3d440db)
+![image](https://github.com/fin-language/fin/assets/274012/8b66297d-265d-4207-9716-8b78443764a6)
+
+![image](https://github.com/fin-language/fin/assets/274012/6cf13c1c-98e6-4b06-a3a2-23cfc4041b50)
+
+![image](https://github.com/fin-language/fin/assets/274012/947b758a-47fd-4436-9a57-b6ebd74092d2)
+
+![image](https://github.com/fin-language/fin/assets/274012/a8ad8717-85a1-43c6-bd01-30227aa34528)
+
+https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr
+
+
