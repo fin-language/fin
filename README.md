@@ -14,6 +14,21 @@ Interesting things about fin:
 
 <br>
 
+# ☠️ Safety Stuff
+- non-null references
+- null analysis for pointers
+- safer strings (also support c strings)
+- safer arrays (also support c naked arrays)
+- lightweight optional exceptions
+- arithmetic overflow
+- non-blocking assurances
+- data thread safety
+- selective safety escapes (for speed)
+
+More info in [video 2](https://youtu.be/GMeskZM4wW0?si=9pD_PxQn6qty9vfT&t=63) or see pdf slides around slide 21.
+
+<br>
+
 
 # 📰 [pdf slides](https://github.com/fin-language/fin/files/12561990/slides.pdf)
 If you prefer text over video, you can view the slides in pdf form. They lack some detail discussed in the video, but still have lots of info.
