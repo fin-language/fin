@@ -11,6 +11,19 @@ Interesting things about fin:
 - currently a work in progress.
 - ...
 
+
+<br>
+
+
+# 📰 [pdf slides](https://github.com/fin-language/fin/files/12561935/slides.pdf)
+If you prefer text over video, you can view the slides in pdf form. They lack some detail discussed in the video, but still have lots of info.
+
+[slides.pdf](https://github.com/fin-language/fin/files/12561935/slides.pdf)
+
+
+<br>
+
+
 # [Video Series](https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr)
 I've just uploaded a youtube playlist that details fin, a bunch of stuff related to testing C embedded projects, multiple controller simulations, and the challenges that fin helps us solve.
 
