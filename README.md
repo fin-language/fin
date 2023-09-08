@@ -14,6 +14,7 @@ Interesting things about fin:
 
 <br>
 
+
 # ☠️ Safety Stuff
 - non-null references
 - null analysis for pointers
@@ -26,6 +27,7 @@ Interesting things about fin:
 - selective safety escapes (for speed)
 
 More info in [video 2](https://youtu.be/GMeskZM4wW0?si=9pD_PxQn6qty9vfT&t=63) or see pdf slides around slide 21.
+
 
 <br>
 
@@ -47,6 +49,9 @@ https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr
 ![image](https://github.com/fin-language/fin/assets/274012/fe0af0c4-c2a9-4f9c-9ab3-8b02b88fc934)
 
 
+<br>
+
+
 # Feedback
 The fin compiler isn't ready to share yet, but I do already transpile to C and js in [StateSmith](https://github.com/StateSmith/StateSmith). I'm not too worried about the transpiling work.
 
@@ -55,6 +60,10 @@ What I'm looking for mostly right now is some [feedback on the concept](https://
 In the next couple weeks, I'll be adding proposals for syntax to use for stack allocating objects and other stuff. More videos too.
 
 For the most part, I just wanted to get it out there and stop working by myself in a vacuum. Especially if there is a language I'm not aware of that already does what I'm planning.
+
+
+<br>
+
 
 # Some intro slides
 YouTube playlist above has best info.
