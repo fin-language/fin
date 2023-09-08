@@ -6,7 +6,7 @@
 # Video Series
 https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr
 
-[![image](https://github.com/fin-language/fin/assets/274012/fe0af0c4-c2a9-4f9c-9ab3-8b02b88fc934)](https://youtube.com/playlist?list=PLe6ZYZk0KW45X2rLYI1IYco5774oe3Lmr)
+![image](https://github.com/fin-language/fin/assets/274012/fe0af0c4-c2a9-4f9c-9ab3-8b02b88fc934)
 
 
 # Feedback
