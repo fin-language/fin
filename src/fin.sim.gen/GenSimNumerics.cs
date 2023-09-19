@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace fin.sim.gen;
 
 public class GenSimNumerics
@@ -9,14 +11,15 @@ public class GenSimNumerics
     //    var output = Build("i8");
     //    File.WriteAllText(dir_path + "i8.cs", output);
     //}
+
     private static readonly TypeInfo[] types = { 
         new TypeInfo("i8"), new TypeInfo("i16"), new TypeInfo("i32"), new TypeInfo("i64"), new TypeInfo("u8"), new TypeInfo("u16"), new TypeInfo("u32"), new TypeInfo("u64"),
-        new TypeInfo("i8r"), new TypeInfo("i16r"), new TypeInfo("i32r"), new TypeInfo("i64r"), new TypeInfo("u8r"), new TypeInfo("u16r"), new TypeInfo("u32r"), new TypeInfo("u64r"),
     };
 
+    [Fact]
     public void MakeAll()
     {
-        const string dir_path = @"..\..\..\";
+        string dir_path = TestHelper.GetThisDir() + "/../fin.sim/lang/";
 
         foreach (var type in types)
         {
@@ -31,8 +34,6 @@ public class GenSimNumerics
         var output = $@"
 //NOTE! AUTO GENERATED
 
-using RefExtendsPublic;
-using torc.lang;
 using Xunit;
 using FluentAssertions;
 
@@ -244,13 +245,12 @@ namespace torc
         var template = $@"
 //NOTE! AUTO GENERATED FILE
 using System;
-using RefExtendsPublic;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace torc.lang
+namespace fin.sim.lang
 {{
-    public class {typeInfo.memory_name} : WiftObj, IHas{typeInfo.memory_name.ToUpper()}
+    public class {typeInfo.memory_name} : FinObj , IHas{typeInfo.memory_name.ToUpper()}
     {{
         public const {backing_type} MAX = {typeInfo.GetMaxValue()};
         public const {backing_type} MIN = {typeInfo.GetMinValue()};
@@ -274,18 +274,16 @@ namespace torc.lang
         {{
             get
             {{
-                ThrowIfDestructed();
+                _ThrowIfDestructed();
                 return this.cp;
             }}
 
             set
             {{
-                ThrowIfDestructed();
+                _ThrowIfDestructed();
                 this._value = value._value;
             }}
         }}
-
-        public {typeInfo.memory_name}r r {{ get {{ return new {typeInfo.memory_name}r(this); }} }}
 
         /// <summary>
         /// creates a copy of {typeInfo.memory_name} memory. Useful for when passing to functions.
@@ -294,7 +292,6 @@ namespace torc.lang
 
         public static implicit operator {typeInfo.memory_name}({backing_type} num) {{ return new {typeInfo.memory_name}(num); }}
         public static implicit operator {backing_type}({typeInfo.memory_name} num) {{ return num.read_value; }}    //needed
-        //public static implicit operator {typeInfo.memory_name}r({typeInfo.memory_name} num) {{ return new {typeInfo.memory_name}r(num); }}
 
         {asTypeConversions}
 
@@ -320,7 +317,7 @@ namespace torc.lang
             return v.GetHashCode();
         }}
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {{
             if (obj == null) {{ return false; }}
             if (ReferenceEquals(this, obj)) {{ return true; }}
@@ -354,77 +351,6 @@ namespace torc.lang
             return value == ({backing_type})value;
         }}
     }}
-
-    ////////////////////////////////////////////////
-
-    public struct {typeInfo.memory_name}r //: IOtherHas{typeInfo.memory_name.ToUpper()}
-    {{
-        public const {backing_type} MAX = {typeInfo.GetMaxValue()};
-        public const {backing_type} MIN = {typeInfo.GetMinValue()};
-
-        private {typeInfo.memory_name} refr_obj;
-
-        public {typeInfo.memory_name}r({typeInfo.memory_name} refr_obj)
-        {{
-            this.refr_obj = refr_obj;
-        }}
-
-        public {typeInfo.memory_name} v
-        {{
-            get
-            {{
-                return refr_obj.cp; //TODOLOW think about
-            }}
-
-            set
-            {{
-                refr_obj.v = value;
-            }}
-        }}
-
-        internal static {backing_type} GetBackingValue({typeInfo.memory_name} n) {{ return {typeInfo.memory_name}.GetBackingValue(n); }}
-
-        /// <summary>
-        /// creates a copy of {typeInfo.memory_name} memory. Useful for when passing to functions.
-        /// </summary>
-        public {typeInfo.memory_name} cp => v;
-
-        /// <summary>
-        /// returns a new reference to the same {typeInfo.memory_name} memory that this reference already points to.
-        /// </summary>
-        public {typeInfo.memory_name}r r => this;
-
-        public void point_to({typeInfo.memory_name} refr_obj) {{ this.refr_obj = refr_obj; }}
-
-        //public static implicit operator {backing_type}({typeInfo.memory_name}r num) {{ return num.read_value; }}
-        public static implicit operator {typeInfo.memory_name}({typeInfo.memory_name}r num) {{ return num.cp; }}
-
-        {asTypeConversions}
-
-        { wideningConversionsRef.Trim() }
-
-        { narrowingConversions.Trim() }
-
-        { wrappingConversions.Trim() }
-
-        { GenComparisonOperatorRef(typeInfo.memory_name, "==") + "\n" }
-        { GenComparisonOperatorRef(typeInfo.memory_name, "!=") + "\n" }
-
-        public override bool Equals(object obj)
-        {{
-            return refr_obj.Equals(obj);            
-        }}
-
-        public override string ToString()
-        {{
-            return v.ToString();
-        }}
-
-        public override int GetHashCode()
-        {{
-            return v.GetHashCode();
-        }}
-    }}
 }}
 ";
 
@@ -452,13 +378,13 @@ namespace torc.lang
             }
         }
 
-        foreach (var otherType in types)
-        {
-            TypeInfo resultType = classType.GetResultType(otherType);
-            if (resultType.width > 64) continue;
+        //foreach (var otherType in types)
+        //{
+        //    TypeInfo resultType = classType.GetResultType(otherType);
+        //    if (resultType.width > 64) continue;
 
-            result += GenOverflowingOperator(classType, otherType.full_name, resultType, op);
-        }
+        //    result += GenOverflowingOperator(classType, otherType.full_name, resultType, op);
+        //}
 
         //{ i32 result = i16 + 65534; Assert.Equal<int>(65535, result); }
         foreach (var otherType in types)
