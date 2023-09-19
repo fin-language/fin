@@ -37,7 +37,7 @@ public class GenSimNumerics
 using Xunit;
 using FluentAssertions;
 
-namespace torc
+namespace fin.sim.lang.tests
 {{
     public class AllNumericTests 
     {{
@@ -204,7 +204,6 @@ namespace torc
         List<TypeInfo> smallerTypes = GetSmallerTypes(typeInfo);
 
         var wideningConversions = "";
-        var wideningConversionsRef = "";
 
         var asTypeConversions = ""; //needed for mixing signed and unsigned where the unsigned needs promoting
 
@@ -212,8 +211,7 @@ namespace torc
         foreach (var widerType in widenToTypes)
         {
             wideningConversions    += $"        public static implicit operator {widerType.memory_name}({typeInfo.memory_name} num) {{ return num.read_value; }}\n";
-            wideningConversionsRef += $"        public static implicit operator {widerType.memory_name}({typeInfo.memory_name}r num) {{ return num.cp; }}\n";
-            asTypeConversions += $"\n        public {widerType.memory_name} as_{widerType.memory_name} => v;";
+            asTypeConversions += $"\n        public {widerType.memory_name} as_{widerType.memory_name} => value;";
         }
 
         var narrowingConversions = "";
@@ -226,7 +224,10 @@ namespace torc
 
             //TODOLOW don't use decimal types
             narrowingConversions += $@"
-        public {narrowTypeName} as_{narrowTypeName}_ort {{
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public {narrowTypeName} as_{narrowTypeName} {{
             get {{
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -250,14 +251,14 @@ using System;
 
 namespace fin.sim.lang
 {{
-    public class {typeInfo.memory_name} : FinObj , IHas{typeInfo.memory_name.ToUpper()}
+    public struct {typeInfo.memory_name}: IHas{typeInfo.memory_name.ToUpper()}
     {{
         public const {backing_type} MAX = {typeInfo.GetMaxValue()};
         public const {backing_type} MIN = {typeInfo.GetMinValue()};
 
-        protected {backing_type} _value;
+        internal {backing_type} _value;
 
-        private {typeInfo.memory_name}()
+        public {typeInfo.memory_name}()
         {{
         }}
 
@@ -270,25 +271,20 @@ namespace fin.sim.lang
 
         internal static {backing_type} GetBackingValue({typeInfo.memory_name} n) {{ return n.read_value; }}
 
-        public {typeInfo.memory_name} v
+        public {typeInfo.memory_name} value
         {{
             get
             {{
-                _ThrowIfDestructed();
-                return this.cp;
+                // TODO: _ThrowIfDestructed();
+                return this;
             }}
 
             set
             {{
-                _ThrowIfDestructed();
+                // TODO: _ThrowIfDestructed();
                 this._value = value._value;
             }}
         }}
-
-        /// <summary>
-        /// creates a copy of {typeInfo.memory_name} memory. Useful for when passing to functions.
-        /// </summary>
-        public {typeInfo.memory_name} cp => new {typeInfo.memory_name}(read_value);
 
         public static implicit operator {typeInfo.memory_name}({backing_type} num) {{ return new {typeInfo.memory_name}(num); }}
         public static implicit operator {backing_type}({typeInfo.memory_name} num) {{ return num.read_value; }}    //needed
@@ -303,6 +299,10 @@ namespace fin.sim.lang
 
         { GenComparisonOperator(typeInfo, "==") + "\n" }
         { GenComparisonOperator(typeInfo, "!=") + "\n" }
+        { GenComparisonOperator(typeInfo, "<") + "\n" }
+        { GenComparisonOperator(typeInfo, "<=") + "\n" }
+        { GenComparisonOperator(typeInfo, ">") + "\n" }
+        { GenComparisonOperator(typeInfo, ">=") + "\n" }
 
         { GenOverflowingOperator(typeInfo, "+") + "\n" }
 
@@ -314,13 +314,12 @@ namespace fin.sim.lang
 
         public override int GetHashCode()
         {{
-            return v.GetHashCode();
+            return value.GetHashCode();
         }}
 
         public override bool Equals(object? obj)
         {{
             if (obj == null) {{ return false; }}
-            if (ReferenceEquals(this, obj)) {{ return true; }}
 
             decimal value;
 
@@ -401,7 +400,7 @@ namespace fin.sim.lang
         return result;
     }
 
-    private static string GenOverflowingOperator(TypeInfo classType, string otherTypeName, TypeInfo resultType, string op, string otherValueGetter = null)
+    private static string GenOverflowingOperator(TypeInfo classType, string otherTypeName, TypeInfo resultType, string op, string? otherValueGetter = null)
     {
         otherValueGetter = otherValueGetter ?? $"{otherTypeName}.GetBackingValue(b)";
 
@@ -412,51 +411,35 @@ namespace fin.sim.lang
             {GenOverflowChecks(resultType)}
             {resultType.full_name} result = ({resultType.GetBackingTypeName()})value;
             return result;
-        }}";
+        }}
+        ";
         return template.Trim();
     }
 
-    private static string GenOverflowingOperator(string torc_type, string backing_type, string op, string overflowChecks)
+    private static string GenOverflowingOperator(string fin_type, string backing_type, string op, string overflowChecks)
     {
         var template = $@"
-        public static {torc_type} operator {op}({torc_type} a, {torc_type} b)
+        public static {fin_type} operator {op}({fin_type} a, {fin_type} b)
         {{
             var value = a.read_value {op} b.read_value;
             {overflowChecks}
-            {torc_type} result = ({backing_type})value;
+            {fin_type} result = ({backing_type})value;
             return result;
         }}";
         return template.Trim();
     }
 
-    private static string GenNonOverflowingOperator(string torc_type, string backing_type, string op)
+    private static string GenNonOverflowingOperator(string fin_type, string backing_type, string op)
     {
         var template = $@"
-        public static {torc_type} operator {op}({torc_type} a, {torc_type} b)
+        public static {fin_type} operator {op}({fin_type} a, {fin_type} b)
         {{
             var value = a.read_value {op} b.read_value;
-            {torc_type} result = ({backing_type})value;
+            {fin_type} result = ({backing_type})value;
             return result;
         }}";
         return template.Trim();
     }
-
-    private static string GenNonOverflowingOperatorRef(string torc_type, string backing_type, string op)
-    {
-        var template = $@"
-        public static {torc_type} operator {op}({torc_type}r a, {torc_type} b)
-        {{
-            var value = {torc_type}r.GetBackingValue(a.v) {op} {torc_type}r.GetBackingValue(b.v);
-            {torc_type} result = ({backing_type})value;
-            return result;
-        }}";
-        return template.Trim();
-    }
-
-    //List<TypeInfo> GetOtherTypes(TypeInfo type)
-    //{
-    //    List<TypeInfo> others = new List<TypeInfo>();
-    //}
 
     private static string GenComparisonOperator(TypeInfo classType, string op)
     {
@@ -473,17 +456,6 @@ namespace fin.sim.lang
         public static bool operator {op}({classType} a, {otherType} b)
         {{
             var result = a.read_value {op} b.read_value;
-            return result;
-        }}";
-        return template.Trim();
-    }
-
-    private static string GenComparisonOperatorRef(string torc_type, string op)
-    {
-        var template = $@"
-        public static bool operator {op}({torc_type}r a, {torc_type} b)
-        {{
-            var result = {torc_type}r.GetBackingValue(a.v) {op} {torc_type}r.GetBackingValue(b.v);
             return result;
         }}";
         return template.Trim();

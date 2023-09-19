@@ -6,14 +6,14 @@ using System;
 
 namespace fin.sim.lang
 {
-    public class u8 : FinObj , IHasU8
+    public struct u8: IHasU8
     {
         public const byte MAX = 255;
         public const byte MIN = 0;
 
-        protected byte _value;
+        internal byte _value;
 
-        private u8()
+        public u8()
         {
         }
 
@@ -26,36 +26,31 @@ namespace fin.sim.lang
 
         internal static byte GetBackingValue(u8 n) { return n.read_value; }
 
-        public u8 v
+        public u8 value
         {
             get
             {
-                _ThrowIfDestructed();
-                return this.cp;
+                // TODO: _ThrowIfDestructed();
+                return this;
             }
 
             set
             {
-                _ThrowIfDestructed();
+                // TODO: _ThrowIfDestructed();
                 this._value = value._value;
             }
         }
-
-        /// <summary>
-        /// creates a copy of u8 memory. Useful for when passing to functions.
-        /// </summary>
-        public u8 cp => new u8(read_value);
 
         public static implicit operator u8(byte num) { return new u8(num); }
         public static implicit operator byte(u8 num) { return num.read_value; }    //needed
 
         
-        public u16 as_u16 => v;
-        public u32 as_u32 => v;
-        public u64 as_u64 => v;
-        public i16 as_i16 => v;
-        public i32 as_i32 => v;
-        public i64 as_i64 => v;
+        public u16 as_u16 => value;
+        public u32 as_u32 => value;
+        public u64 as_u64 => value;
+        public i16 as_i16 => value;
+        public i32 as_i32 => value;
+        public i64 as_i64 => value;
 
         public static implicit operator u16(u8 num) { return num.read_value; }
         public static implicit operator u32(u8 num) { return num.read_value; }
@@ -64,7 +59,10 @@ namespace fin.sim.lang
         public static implicit operator i32(u8 num) { return num.read_value; }
         public static implicit operator i64(u8 num) { return num.read_value; }
 
-        public i8 as_i8_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public i8 as_i8 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -87,6 +85,30 @@ namespace fin.sim.lang
         public static bool operator !=(u8 a, u8 b)
         {
             var result = a.read_value != b.read_value;
+            return result;
+        }
+
+        public static bool operator <(u8 a, u8 b)
+        {
+            var result = a.read_value < b.read_value;
+            return result;
+        }
+
+        public static bool operator <=(u8 a, u8 b)
+        {
+            var result = a.read_value <= b.read_value;
+            return result;
+        }
+
+        public static bool operator >(u8 a, u8 b)
+        {
+            var result = a.read_value > b.read_value;
+            return result;
+        }
+
+        public static bool operator >=(u8 a, u8 b)
+        {
+            var result = a.read_value >= b.read_value;
             return result;
         }
 
@@ -136,13 +158,12 @@ namespace fin.sim.lang
 
         public override int GetHashCode()
         {
-            return v.GetHashCode();
+            return value.GetHashCode();
         }
 
         public override bool Equals(object? obj)
         {
             if (obj == null) { return false; }
-            if (ReferenceEquals(this, obj)) { return true; }
 
             decimal value;
 

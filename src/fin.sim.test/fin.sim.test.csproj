@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\fin.sim\fin.sim.csproj" />
+  </ItemGroup>
+
 </Project>

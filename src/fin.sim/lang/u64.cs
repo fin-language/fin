@@ -6,14 +6,14 @@ using System;
 
 namespace fin.sim.lang
 {
-    public class u64 : FinObj , IHasU64
+    public struct u64: IHasU64
     {
         public const ulong MAX = 18446744073709551615;
         public const ulong MIN = 0;
 
-        protected ulong _value;
+        internal ulong _value;
 
-        private u64()
+        public u64()
         {
         }
 
@@ -26,25 +26,20 @@ namespace fin.sim.lang
 
         internal static ulong GetBackingValue(u64 n) { return n.read_value; }
 
-        public u64 v
+        public u64 value
         {
             get
             {
-                _ThrowIfDestructed();
-                return this.cp;
+                // TODO: _ThrowIfDestructed();
+                return this;
             }
 
             set
             {
-                _ThrowIfDestructed();
+                // TODO: _ThrowIfDestructed();
                 this._value = value._value;
             }
         }
-
-        /// <summary>
-        /// creates a copy of u64 memory. Useful for when passing to functions.
-        /// </summary>
-        public u64 cp => new u64(read_value);
 
         public static implicit operator u64(ulong num) { return new u64(num); }
         public static implicit operator ulong(u64 num) { return num.read_value; }    //needed
@@ -53,7 +48,10 @@ namespace fin.sim.lang
 
         
 
-        public i64 as_i64_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public i64 as_i64 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -65,7 +63,10 @@ namespace fin.sim.lang
             }
         }
 
-        public i32 as_i32_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public i32 as_i32 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -77,7 +78,10 @@ namespace fin.sim.lang
             }
         }
 
-        public u32 as_u32_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public u32 as_u32 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -89,7 +93,10 @@ namespace fin.sim.lang
             }
         }
 
-        public i16 as_i16_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public i16 as_i16 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -101,7 +108,10 @@ namespace fin.sim.lang
             }
         }
 
-        public u16 as_u16_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public u16 as_u16 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -113,7 +123,10 @@ namespace fin.sim.lang
             }
         }
 
-        public i8 as_i8_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public i8 as_i8 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -125,7 +138,10 @@ namespace fin.sim.lang
             }
         }
 
-        public u8 as_u8_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public u8 as_u8 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -157,6 +173,30 @@ namespace fin.sim.lang
             return result;
         }
 
+        public static bool operator <(u64 a, u64 b)
+        {
+            var result = a.read_value < b.read_value;
+            return result;
+        }
+
+        public static bool operator <=(u64 a, u64 b)
+        {
+            var result = a.read_value <= b.read_value;
+            return result;
+        }
+
+        public static bool operator >(u64 a, u64 b)
+        {
+            var result = a.read_value > b.read_value;
+            return result;
+        }
+
+        public static bool operator >=(u64 a, u64 b)
+        {
+            var result = a.read_value >= b.read_value;
+            return result;
+        }
+
 
         public static u64 operator +(u64 a, u64 b)
         {
@@ -175,13 +215,12 @@ namespace fin.sim.lang
 
         public override int GetHashCode()
         {
-            return v.GetHashCode();
+            return value.GetHashCode();
         }
 
         public override bool Equals(object? obj)
         {
             if (obj == null) { return false; }
-            if (ReferenceEquals(this, obj)) { return true; }
 
             decimal value;
 

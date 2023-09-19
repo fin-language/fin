@@ -6,14 +6,14 @@ using System;
 
 namespace fin.sim.lang
 {
-    public class i32 : FinObj , IHasI32
+    public struct i32: IHasI32
     {
         public const int MAX = 2147483647;
         public const int MIN = -2147483648;
 
-        protected int _value;
+        internal int _value;
 
-        private i32()
+        public i32()
         {
         }
 
@@ -26,35 +26,33 @@ namespace fin.sim.lang
 
         internal static int GetBackingValue(i32 n) { return n.read_value; }
 
-        public i32 v
+        public i32 value
         {
             get
             {
-                _ThrowIfDestructed();
-                return this.cp;
+                // TODO: _ThrowIfDestructed();
+                return this;
             }
 
             set
             {
-                _ThrowIfDestructed();
+                // TODO: _ThrowIfDestructed();
                 this._value = value._value;
             }
         }
-
-        /// <summary>
-        /// creates a copy of i32 memory. Useful for when passing to functions.
-        /// </summary>
-        public i32 cp => new i32(read_value);
 
         public static implicit operator i32(int num) { return new i32(num); }
         public static implicit operator int(i32 num) { return num.read_value; }    //needed
 
         
-        public i64 as_i64 => v;
+        public i64 as_i64 => value;
 
         public static implicit operator i64(i32 num) { return num.read_value; }
 
-        public u32 as_u32_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public u32 as_u32 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -66,7 +64,10 @@ namespace fin.sim.lang
             }
         }
 
-        public i16 as_i16_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public i16 as_i16 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -78,7 +79,10 @@ namespace fin.sim.lang
             }
         }
 
-        public u16 as_u16_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public u16 as_u16 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -90,7 +94,10 @@ namespace fin.sim.lang
             }
         }
 
-        public i8 as_i8_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public i8 as_i8 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -102,7 +109,10 @@ namespace fin.sim.lang
             }
         }
 
-        public u8 as_u8_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public u8 as_u8 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -132,6 +142,30 @@ namespace fin.sim.lang
             return result;
         }
 
+        public static bool operator <(i32 a, i32 b)
+        {
+            var result = a.read_value < b.read_value;
+            return result;
+        }
+
+        public static bool operator <=(i32 a, i32 b)
+        {
+            var result = a.read_value <= b.read_value;
+            return result;
+        }
+
+        public static bool operator >(i32 a, i32 b)
+        {
+            var result = a.read_value > b.read_value;
+            return result;
+        }
+
+        public static bool operator >=(i32 a, i32 b)
+        {
+            var result = a.read_value >= b.read_value;
+            return result;
+        }
+
 
         public static i32 operator +(i32 a, i32 b)
         {
@@ -157,13 +191,12 @@ namespace fin.sim.lang
 
         public override int GetHashCode()
         {
-            return v.GetHashCode();
+            return value.GetHashCode();
         }
 
         public override bool Equals(object? obj)
         {
             if (obj == null) { return false; }
-            if (ReferenceEquals(this, obj)) { return true; }
 
             decimal value;
 

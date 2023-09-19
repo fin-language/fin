@@ -6,14 +6,14 @@ using System;
 
 namespace fin.sim.lang
 {
-    public class i8 : FinObj , IHasI8
+    public struct i8: IHasI8
     {
         public const sbyte MAX = 127;
         public const sbyte MIN = -128;
 
-        protected sbyte _value;
+        internal sbyte _value;
 
-        private i8()
+        public i8()
         {
         }
 
@@ -26,39 +26,37 @@ namespace fin.sim.lang
 
         internal static sbyte GetBackingValue(i8 n) { return n.read_value; }
 
-        public i8 v
+        public i8 value
         {
             get
             {
-                _ThrowIfDestructed();
-                return this.cp;
+                // TODO: _ThrowIfDestructed();
+                return this;
             }
 
             set
             {
-                _ThrowIfDestructed();
+                // TODO: _ThrowIfDestructed();
                 this._value = value._value;
             }
         }
-
-        /// <summary>
-        /// creates a copy of i8 memory. Useful for when passing to functions.
-        /// </summary>
-        public i8 cp => new i8(read_value);
 
         public static implicit operator i8(sbyte num) { return new i8(num); }
         public static implicit operator sbyte(i8 num) { return num.read_value; }    //needed
 
         
-        public i16 as_i16 => v;
-        public i32 as_i32 => v;
-        public i64 as_i64 => v;
+        public i16 as_i16 => value;
+        public i32 as_i32 => value;
+        public i64 as_i64 => value;
 
         public static implicit operator i16(i8 num) { return num.read_value; }
         public static implicit operator i32(i8 num) { return num.read_value; }
         public static implicit operator i64(i8 num) { return num.read_value; }
 
-        public u8 as_u8_ort {
+        /// <summary>
+        /// Throws if the value won't fit.
+        /// </summary>
+        public u8 as_u8 {
             get {
                 var vv = GetBackingValue(this);
                 decimal v = vv;
@@ -81,6 +79,30 @@ namespace fin.sim.lang
         public static bool operator !=(i8 a, i8 b)
         {
             var result = a.read_value != b.read_value;
+            return result;
+        }
+
+        public static bool operator <(i8 a, i8 b)
+        {
+            var result = a.read_value < b.read_value;
+            return result;
+        }
+
+        public static bool operator <=(i8 a, i8 b)
+        {
+            var result = a.read_value <= b.read_value;
+            return result;
+        }
+
+        public static bool operator >(i8 a, i8 b)
+        {
+            var result = a.read_value > b.read_value;
+            return result;
+        }
+
+        public static bool operator >=(i8 a, i8 b)
+        {
+            var result = a.read_value >= b.read_value;
             return result;
         }
 
@@ -123,13 +145,12 @@ namespace fin.sim.lang
 
         public override int GetHashCode()
         {
-            return v.GetHashCode();
+            return value.GetHashCode();
         }
 
         public override bool Equals(object? obj)
         {
             if (obj == null) { return false; }
-            if (ReferenceEquals(this, obj)) { return true; }
 
             decimal value;
 
