@@ -50,6 +50,7 @@ namespace fin.sim.lang
         public i64 as_i64 => value;
 
         public static implicit operator i16(i8 num) { return num.read_value; }
+        public static implicit operator sbyte(i8? num) { return num.Value; } // can't convert to i8 because that's the same type
         public static implicit operator i32(i8 num) { return num.read_value; }
         public static implicit operator i64(i8 num) { return num.read_value; }
 
@@ -136,7 +137,15 @@ namespace fin.sim.lang
             return result;
         }
 
+        public static i8? operator ++(i8? a)
+        {
+            return null;
+        }
 
+        public static i8 operator ++(i8 a)
+        {
+            return 0;
+        }
 
         public override string ToString()
         {

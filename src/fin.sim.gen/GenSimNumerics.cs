@@ -20,8 +20,6 @@ public class GenSimNumerics
         }
     }
 
-
-
     private static string GenOverflowChecks(TypeInfo typeInfo)
     {
         if (typeInfo.width >= 64)
