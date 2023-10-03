@@ -130,6 +130,40 @@ namespace fin.sim.lang
         public i8 wrap_to_i8 => unchecked((sbyte)GetBackingValue(this));
         public u8 wrap_to_u8 => unchecked((byte)GetBackingValue(this));
 
+        public u8 to_u8(out bool success)
+        {
+            var vv = GetBackingValue(this);
+            decimal v = vv;
+            if (v > u8.MAX || v < u8.MIN)
+            {
+                success = false;
+            }
+            else
+            {
+                success = true;
+            }
+            return (byte)vv;
+        }
+
+        public bool to_u8(out u8 result)
+        {
+            bool success;
+            var vv = GetBackingValue(this);
+            decimal v = vv;
+            if (v > u8.MAX || v < u8.MIN)
+            {
+                success = false;
+            }
+            else
+            {
+                success = true;
+            }
+
+            result = (byte)vv;
+
+            return success;
+        }
+
         public static bool operator ==(i32 a, i32 b)
         {
             var result = a.read_value == b.read_value;
