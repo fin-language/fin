@@ -1,17 +1,22 @@
-﻿using ExProj1;
-using MethodDecorator.Fody.Interfaces;
+﻿using MethodDecorator.Fody.Interfaces;
 using System.Reflection;
 
-// Attribute should be "registered" by adding as module or assembly custom attribute.
-// ??? why is this needed? Seems to work without it.
-[module: Interceptor]
+namespace fin.sim;
 
-namespace ExProj1;
-
-// Any attribute which provides OnEntry/OnExit/OnException with proper args
+/// <summary>
+/// Required for accurate simulations. This attribute is used by Fody.MethodDecorator to intercept all methods.
+/// This allows us to track the call stack, take into account scope settings like `Math.unsafe_allowed()`.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Class | AttributeTargets.Assembly | AttributeTargets.Module)]
-public class InterceptorAttribute : Attribute, IMethodDecorator
+public class MethodInterceptorAttribute : Attribute, IAspectMatchingRule, IMethodDecorator
 {
+    public string AttributeTargetTypes { get; set; } = "";
+    public bool AttributeExclude { get; set; }
+    public int AttributePriority { get; set; }
+    public int AspectPriority { get; set; }
+
+    public MethodInterceptorAttribute() {}
+
     public static Stack<MethodBase> methodBases = new();
 
     // instance, method and args can be captured here and stored in attribute instance fields
