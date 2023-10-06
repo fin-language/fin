@@ -48,8 +48,8 @@ public class GenSimNumerics
         var widenToTypes = GetWideningConversions(typeInfo);
         foreach (var widerType in widenToTypes)
         {
-            wideningConversions    += $"        public static implicit operator {widerType.memory_name}({typeInfo.memory_name} num) {{ return num.read_value; }}\n";
-            asTypeConversions += $"\n        public {widerType.memory_name} as_{widerType.memory_name} => value;";
+            wideningConversions += $"        public static implicit operator {widerType.memory_name}({typeInfo.memory_name} num) {{ return num.read_value; }}\n";
+            asTypeConversions += $"\n        public {widerType.memory_name} {widerType.memory_name} => value;";
         }
 
         var narrowingConversions = "";
@@ -63,12 +63,12 @@ public class GenSimNumerics
             //TODOLOW don't use decimal types
             narrowingConversions += $@"
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public {narrowTypeName} as_{narrowTypeName} {{
+        public {narrowTypeName} unsafe_to_{narrowTypeName} {{
             get {{
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > {narrowTypeName}.MAX || v < {narrowTypeName}.MIN)
                 {{
                     throw new System.OverflowException(""value "" + vv + "" too large for {narrowTypeName}"");
@@ -78,7 +78,7 @@ public class GenSimNumerics
         }}
 ";
 
-            wrappingConversions += $"        public {narrowTypeName} wrap_to_{narrowTypeName} => unchecked(({narrowTypeInfo.GetBackingTypeName()})GetBackingValue(this));\n";
+            wrappingConversions += $"        public {narrowTypeName} wrap_{narrowTypeName} => unchecked(({narrowTypeInfo.GetBackingTypeName()})GetBackingValue(this));\n";
         }
 
         var template = $@"
@@ -129,10 +129,13 @@ namespace fin.sim.lang
 
         {asTypeConversions}
 
+        // widening conversions
         { wideningConversions.Trim() }
 
+        // narrowing conversions
         { narrowingConversions.Trim() }
 
+        // wrapping conversions
         { wrappingConversions.Trim() }
 
         { GenComparisonOperator(typeInfo, "==") + "\n" }

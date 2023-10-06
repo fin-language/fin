@@ -45,19 +45,21 @@ namespace fin.sim.lang
         public static implicit operator uint(u32 num) { return num.read_value; }    //needed
 
         
-        public u64 as_u64 => value;
-        public i64 as_i64 => value;
+        public u64 u64 => value;
+        public i64 i64 => value;
 
+        // widening conversions
         public static implicit operator u64(u32 num) { return num.read_value; }
         public static implicit operator i64(u32 num) { return num.read_value; }
 
+        // narrowing conversions
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public i32 as_i32 {
+        public i32 unsafe_to_i32 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > i32.MAX || v < i32.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for i32");
@@ -67,12 +69,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public i16 as_i16 {
+        public i16 unsafe_to_i16 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > i16.MAX || v < i16.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for i16");
@@ -82,12 +84,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public u16 as_u16 {
+        public u16 unsafe_to_u16 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > u16.MAX || v < u16.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for u16");
@@ -97,12 +99,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public i8 as_i8 {
+        public i8 unsafe_to_i8 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > i8.MAX || v < i8.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for i8");
@@ -112,12 +114,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public u8 as_u8 {
+        public u8 unsafe_to_u8 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > u8.MAX || v < u8.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for u8");
@@ -126,11 +128,12 @@ namespace fin.sim.lang
             }
         }
 
-        public i32 wrap_to_i32 => unchecked((int)GetBackingValue(this));
-        public i16 wrap_to_i16 => unchecked((short)GetBackingValue(this));
-        public u16 wrap_to_u16 => unchecked((ushort)GetBackingValue(this));
-        public i8 wrap_to_i8 => unchecked((sbyte)GetBackingValue(this));
-        public u8 wrap_to_u8 => unchecked((byte)GetBackingValue(this));
+        // wrapping conversions
+        public i32 wrap_i32 => unchecked((int)GetBackingValue(this));
+        public i16 wrap_i16 => unchecked((short)GetBackingValue(this));
+        public u16 wrap_u16 => unchecked((ushort)GetBackingValue(this));
+        public i8 wrap_i8 => unchecked((sbyte)GetBackingValue(this));
+        public u8 wrap_u8 => unchecked((byte)GetBackingValue(this));
 
         public static bool operator ==(u32 a, u32 b)
         {

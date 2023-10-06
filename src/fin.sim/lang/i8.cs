@@ -45,21 +45,23 @@ namespace fin.sim.lang
         public static implicit operator sbyte(i8 num) { return num.read_value; }    //needed
 
         
-        public i16 as_i16 => value;
-        public i32 as_i32 => value;
-        public i64 as_i64 => value;
+        public i16 i16 => value;
+        public i32 i32 => value;
+        public i64 i64 => value;
 
+        // widening conversions
         public static implicit operator i16(i8 num) { return num.read_value; }
         public static implicit operator i32(i8 num) { return num.read_value; }
         public static implicit operator i64(i8 num) { return num.read_value; }
 
+        // narrowing conversions
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public u8 as_u8 {
+        public u8 unsafe_to_u8 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > u8.MAX || v < u8.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for u8");
@@ -68,7 +70,8 @@ namespace fin.sim.lang
             }
         }
 
-        public u8 wrap_to_u8 => unchecked((byte)GetBackingValue(this));
+        // wrapping conversions
+        public u8 wrap_u8 => unchecked((byte)GetBackingValue(this));
 
         public static bool operator ==(i8 a, i8 b)
         {

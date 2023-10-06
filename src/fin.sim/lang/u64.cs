@@ -46,15 +46,17 @@ namespace fin.sim.lang
 
         
 
+        // widening conversions
         
 
+        // narrowing conversions
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public i64 as_i64 {
+        public i64 unsafe_to_i64 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > i64.MAX || v < i64.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for i64");
@@ -64,12 +66,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public i32 as_i32 {
+        public i32 unsafe_to_i32 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > i32.MAX || v < i32.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for i32");
@@ -79,12 +81,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public u32 as_u32 {
+        public u32 unsafe_to_u32 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > u32.MAX || v < u32.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for u32");
@@ -94,12 +96,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public i16 as_i16 {
+        public i16 unsafe_to_i16 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > i16.MAX || v < i16.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for i16");
@@ -109,12 +111,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public u16 as_u16 {
+        public u16 unsafe_to_u16 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > u16.MAX || v < u16.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for u16");
@@ -124,12 +126,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public i8 as_i8 {
+        public i8 unsafe_to_i8 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > i8.MAX || v < i8.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for i8");
@@ -139,12 +141,12 @@ namespace fin.sim.lang
         }
 
         /// <summary>
-        /// Throws if the value won't fit.
+        /// Throws during simulation if the value won't fit.
         /// </summary>
-        public u8 as_u8 {
+        public u8 unsafe_to_u8 {
             get {
                 var vv = GetBackingValue(this);
-                decimal v = vv;
+                decimal v = vv; // will not use decimal in the future to speed up simulations
                 if (v > u8.MAX || v < u8.MIN)
                 {
                     throw new System.OverflowException("value " + vv + " too large for u8");
@@ -153,13 +155,14 @@ namespace fin.sim.lang
             }
         }
 
-        public i64 wrap_to_i64 => unchecked((long)GetBackingValue(this));
-        public i32 wrap_to_i32 => unchecked((int)GetBackingValue(this));
-        public u32 wrap_to_u32 => unchecked((uint)GetBackingValue(this));
-        public i16 wrap_to_i16 => unchecked((short)GetBackingValue(this));
-        public u16 wrap_to_u16 => unchecked((ushort)GetBackingValue(this));
-        public i8 wrap_to_i8 => unchecked((sbyte)GetBackingValue(this));
-        public u8 wrap_to_u8 => unchecked((byte)GetBackingValue(this));
+        // wrapping conversions
+        public i64 wrap_i64 => unchecked((long)GetBackingValue(this));
+        public i32 wrap_i32 => unchecked((int)GetBackingValue(this));
+        public u32 wrap_u32 => unchecked((uint)GetBackingValue(this));
+        public i16 wrap_i16 => unchecked((short)GetBackingValue(this));
+        public u16 wrap_u16 => unchecked((ushort)GetBackingValue(this));
+        public i8 wrap_i8 => unchecked((sbyte)GetBackingValue(this));
+        public u8 wrap_u8 => unchecked((byte)GetBackingValue(this));
 
         public static bool operator ==(u64 a, u64 b)
         {
