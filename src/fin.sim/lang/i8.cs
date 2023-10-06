@@ -10,7 +10,10 @@ public struct i8: IHasI8
     public const sbyte MAX = 127;
     public const sbyte MIN = -128;
 
-    internal sbyte _value;
+    /// <summary>
+    /// C# backing value.
+    /// </summary>
+    internal sbyte _csValue;
 
     public i8()
     {
@@ -18,12 +21,13 @@ public struct i8: IHasI8
 
     private i8(sbyte value)
     {
-        _value = value;
+        _csValue = value;
     }
 
-    private sbyte read_value => _value;
-
-    internal static sbyte GetBackingValue(i8 n) { return n.read_value; }
+    /// <summary>
+    /// C# read only backing value.
+    /// </summary>
+    internal sbyte _csReadValue => _csValue;
 
     public i8 value
     {
@@ -36,7 +40,7 @@ public struct i8: IHasI8
         set
         {
             // TODO: _ThrowIfDestructed();
-            this._value = value._value;
+            this._csValue = value._csValue;
         }
     }
 
@@ -49,8 +53,12 @@ public struct i8: IHasI8
     /// Implicit conversion from fin numeric type to C# numeric type.
     /// </summary>
     /// This is needed for technical reasons, but I don't remember them. Should be documented.
-    public static implicit operator sbyte(i8 num) { return num.read_value; }
+    public static implicit operator sbyte(i8 num) { return num._csReadValue; }
 
+    //################################################################
+    // widening conversions
+    //################################################################
+    
     
     /// <summary>
     /// Safe explicit widening conversion.
@@ -71,25 +79,29 @@ public struct i8: IHasI8
     /// <summary>
     /// Safe implicit widening conversion.
     /// </summary>
-    public static implicit operator i16(i8 num) { return num.read_value; }
+    public static implicit operator i16(i8 num) { return num._csReadValue; }
 
     /// <summary>
     /// Safe implicit widening conversion.
     /// </summary>
-    public static implicit operator i32(i8 num) { return num.read_value; }
+    public static implicit operator i32(i8 num) { return num._csReadValue; }
 
     /// <summary>
     /// Safe implicit widening conversion.
     /// </summary>
-    public static implicit operator i64(i8 num) { return num.read_value; }
+    public static implicit operator i64(i8 num) { return num._csReadValue; }
 
+
+    //################################################################
     // narrowing conversions
+    //################################################################
+    
     /// <summary>
     /// Throws during simulation if the value won't fit.
     /// </summary>
     public u8 unsafe_to_u8 {
         get {
-            var vv = GetBackingValue(this);
+            var vv = this._csReadValue;
             decimal v = vv; // will not use decimal in the future to speed up simulations
             if (v > u8.MAX || v < u8.MIN)
             {
@@ -99,42 +111,53 @@ public struct i8: IHasI8
         }
     }
 
-    // wrapping conversions
-    public u8 wrap_u8 => unchecked((byte)GetBackingValue(this));
 
+    //################################################################
+    // wrapping conversions (only for unsigned)
+    //################################################################
+    
+    /// <summary>
+    /// Safe explicit wrapping conversion. Truncates upper bits.
+    /// </summary>
+    public u8 wrap_u8 => unchecked((byte)this._csReadValue);
+
+    //################################################################
+    // comparisons
+    //################################################################
+    
     public static bool operator ==(i8 a, i8 b)
     {
-        var result = a.read_value == b.read_value;
+        var result = a._csReadValue == b._csReadValue;
         return result;
     }
 
     public static bool operator !=(i8 a, i8 b)
     {
-        var result = a.read_value != b.read_value;
+        var result = a._csReadValue != b._csReadValue;
         return result;
     }
 
     public static bool operator <(i8 a, i8 b)
     {
-        var result = a.read_value < b.read_value;
+        var result = a._csReadValue < b._csReadValue;
         return result;
     }
 
     public static bool operator <=(i8 a, i8 b)
     {
-        var result = a.read_value <= b.read_value;
+        var result = a._csReadValue <= b._csReadValue;
         return result;
     }
 
     public static bool operator >(i8 a, i8 b)
     {
-        var result = a.read_value > b.read_value;
+        var result = a._csReadValue > b._csReadValue;
         return result;
     }
 
     public static bool operator >=(i8 a, i8 b)
     {
-        var result = a.read_value >= b.read_value;
+        var result = a._csReadValue >= b._csReadValue;
         return result;
     }
 
@@ -142,7 +165,7 @@ public struct i8: IHasI8
     
     public static i8 operator +(i8 a, i8 b)
     {
-        var value = i8.GetBackingValue(a) + i8.GetBackingValue(b);
+        var value = a._csReadValue + b._csReadValue;
         if (value < i8.MIN) { throw new Exception("underflow!"); }
         if (value > i8.MAX) { throw new Exception("overflow!");  }
         i8 result = (sbyte)value;
@@ -150,7 +173,7 @@ public struct i8: IHasI8
     }
     public static i16 operator +(i8 a, i16 b)
     {
-        var value = i8.GetBackingValue(a) + i16.GetBackingValue(b);
+        var value = a._csReadValue + b._csReadValue;
         if (value < i16.MIN) { throw new Exception("underflow!"); }
         if (value > i16.MAX) { throw new Exception("overflow!");  }
         i16 result = (short)value;
@@ -158,7 +181,7 @@ public struct i8: IHasI8
     }
     public static i32 operator +(i8 a, i32 b)
     {
-        var value = i8.GetBackingValue(a) + i32.GetBackingValue(b);
+        var value = a._csReadValue + b._csReadValue;
         if (value < i32.MIN) { throw new Exception("underflow!"); }
         if (value > i32.MAX) { throw new Exception("overflow!");  }
         i32 result = (int)value;
@@ -166,7 +189,7 @@ public struct i8: IHasI8
     }
     public static i64 operator +(i8 a, i64 b)
     {
-        var value = i8.GetBackingValue(a) + i64.GetBackingValue(b);
+        var value = a._csReadValue + b._csReadValue;
         
         i64 result = (long)value;
         return result;
@@ -176,7 +199,7 @@ public struct i8: IHasI8
 
     public override string ToString()
     {
-        return read_value.ToString();
+        return _csReadValue.ToString();
     }
 
     public override int GetHashCode()
@@ -201,14 +224,14 @@ public struct i8: IHasI8
             case uint   i: obj_value = i; break;
             case ulong  i: obj_value = i; break;
 
-            case i8  i: obj_value = i8.GetBackingValue(i);  break;
-            case i16 i: obj_value = i16.GetBackingValue(i); break;
-            case i32 i: obj_value = i32.GetBackingValue(i); break;
-            case i64 i: obj_value = i64.GetBackingValue(i); break;
-            case u8  i: obj_value = u8.GetBackingValue(i);  break;
-            case u16 i: obj_value = u16.GetBackingValue(i); break;
-            case u32 i: obj_value = u32.GetBackingValue(i); break;
-            case u64 i: obj_value = u64.GetBackingValue(i); break;
+            case i8  i: obj_value = i._csReadValue; break;
+            case i16 i: obj_value = i._csReadValue; break;
+            case i32 i: obj_value = i._csReadValue; break;
+            case i64 i: obj_value = i._csReadValue; break;
+            case u8  i: obj_value = i._csReadValue; break;
+            case u16 i: obj_value = i._csReadValue; break;
+            case u32 i: obj_value = i._csReadValue; break;
+            case u64 i: obj_value = i._csReadValue; break;
 
             default: return false;
         }

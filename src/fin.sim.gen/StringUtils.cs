@@ -40,6 +40,11 @@ public class StringUtils
         return output;
     }
 
+    public static string IndentNewLines(string str, string indent)
+    {
+        return str.ReplaceLineEndings("\n" + indent);
+    }
+
     public static string[] SplitIntoLinesOrEmpty(string str)
     {
         var lines = Regex.Split(str, @"\r\n|\r|\n");    // TODOLOW compile common regex

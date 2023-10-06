@@ -63,7 +63,17 @@ public class GenSimNumerics
 
             narrowingConversions += GenUnsafeToConversion(narrowTypeInfo);
 
-            wrappingConversions += $"        public {narrowTypeName} wrap_{narrowTypeName} => unchecked(({narrowTypeInfo.GetBackingTypeName()})GetBackingValue(this));\n";
+            if (narrowTypeInfo.is_unsigned)
+            {
+                wrappingConversions += $"""
+
+                    /// <summary>
+                    /// Safe explicit wrapping conversion. Truncates upper bits.
+                    /// </summary>
+                    public {narrowTypeName} wrap_{narrowTypeName} => unchecked(({narrowTypeInfo.GetBackingTypeName()})this._csReadValue);
+
+                """;
+            }
         }
     }
 
@@ -79,7 +89,7 @@ public class GenSimNumerics
                     /// <summary>
                     /// Safe implicit widening conversion.
                     /// </summary>
-                    public static implicit operator {{widerType.memory_name}}({{typeInfo.memory_name}} num) { return num.read_value; }
+                    public static implicit operator {{widerType.memory_name}}({{typeInfo.memory_name}} num) { return num._csReadValue; }
 
                 """;
 
@@ -107,7 +117,7 @@ public class GenSimNumerics
                     /// </summary>
                     public {{narrowTypeName}} unsafe_to_{{narrowTypeName}} {
                         get {
-                            var vv = GetBackingValue(this);
+                            var vv = this._csReadValue;
                             decimal v = vv; // will not use decimal in the future to speed up simulations
                             if (v > {{narrowTypeName}}.MAX || v < {{narrowTypeName}}.MIN)
                             {
@@ -137,7 +147,7 @@ public class GenSimNumerics
 
             if (classType.is_signed == false && classType.CanPromoteToOrViceVersa(otherType) == false)
             {
-                result += GenOverflowingOperator(classType, "IHas" + otherType.full_name.ToUpper(), resultType, op, otherValueGetter: $"{otherType.full_name}.GetBackingValue(({otherType.memory_name})b)");
+                result += GenOverflowingOperator(classType, "IHas" + otherType.full_name.ToUpper(), resultType, op, otherValueGetter: $"b.value");
             }
         }
 
@@ -166,14 +176,14 @@ public class GenSimNumerics
 
     private static string GenOverflowingOperator(TypeInfo classType, string otherTypeName, TypeInfo resultType, string op, string? otherValueGetter = null)
     {
-        otherValueGetter = otherValueGetter ?? $"{otherTypeName}.GetBackingValue(b)";
+        otherValueGetter = otherValueGetter ?? $"b._csReadValue";
 
         var template = $$"""
 
             public static {{resultType.full_name}} operator {{op}}({{classType.full_name}} a, {{otherTypeName}} b)
             {
-                var value = {{classType.full_name}}.GetBackingValue(a) {{op}} {{otherValueGetter}};
-                {{GenOverflowChecks(resultType).ReplaceLineEndings("\n        ")}}
+                var value = a._csReadValue {{op}} {{otherValueGetter}};
+                {{GenOverflowChecks(resultType).IndentNewLines("        ")}}
                 {{resultType.full_name}} result = ({{resultType.GetBackingTypeName()}})value;
                 return result;
             }
@@ -187,7 +197,7 @@ public class GenSimNumerics
         var template = $$"""
             public static {{fin_type}} operator {{op}}({{fin_type}} a, {{fin_type}} b)
             {
-                var value = a.read_value {{op}} b.read_value;
+                var value = a._csReadValue {{op}} b._csReadValue;
                 {{overflowChecks}}
                 {{fin_type}} result = ({{backing_type}})value;
                 return result;
@@ -201,7 +211,7 @@ public class GenSimNumerics
         var template = $$"""
             public static {{fin_type}} operator {{op}}({{fin_type}} a, {{fin_type}} b)
             {
-                var value = a.read_value {{op}} b.read_value;
+                var value = a._csReadValue {{op}} b._csReadValue;
                 {{fin_type}} result = ({{backing_type}})value;
                 return result;
             }
@@ -224,7 +234,7 @@ public class GenSimNumerics
         var template = $$"""
             public static bool operator {{op}}({{classType}} a, {{otherType}} b)
             {
-                var result = a.read_value {{op}} b.read_value;
+                var result = a._csReadValue {{op}} b._csReadValue;
                 return result;
             }
         """;
@@ -281,6 +291,17 @@ public class GenSimNumerics
 
     private static string RenderTemplate(TypeInfo typeInfo, string backing_type, string implicitWidening, string explicitWidening, string narrowingConversions, string wrappingConversions)
     {
+        static string header(string title)
+        {
+            var marker = "//################################################################";
+            return $"""
+                {marker}
+                // {title}
+                {marker}
+
+                """.IndentNewLines("    ");
+        }
+
         return $$"""
             //NOTE! AUTO GENERATED FILE
             using System;
@@ -294,7 +315,10 @@ public class GenSimNumerics
                 public const {{backing_type}} MAX = {{typeInfo.GetMaxValue()}};
                 public const {{backing_type}} MIN = {{typeInfo.GetMinValue()}};
             
-                internal {{backing_type}} _value;
+                /// <summary>
+                /// C# backing value.
+                /// </summary>
+                internal {{backing_type}} _csValue;
             
                 public {{typeInfo.memory_name}}()
                 {
@@ -302,12 +326,13 @@ public class GenSimNumerics
             
                 private {{typeInfo.memory_name}}({{backing_type}} value)
                 {
-                    _value = value;
+                    _csValue = value;
                 }
             
-                private {{backing_type}} read_value => _value;
-            
-                internal static {{backing_type}} GetBackingValue({{typeInfo.memory_name}} n) { return n.read_value; }
+                /// <summary>
+                /// C# read only backing value.
+                /// </summary>
+                internal {{backing_type}} _csReadValue => _csValue;
             
                 public {{typeInfo.memory_name}} value
                 {
@@ -320,7 +345,7 @@ public class GenSimNumerics
                     set
                     {
                         // TODO: _ThrowIfDestructed();
-                        this._value = value._value;
+                        this._csValue = value._csValue;
                     }
                 }
             
@@ -333,18 +358,22 @@ public class GenSimNumerics
                 /// Implicit conversion from fin numeric type to C# numeric type.
                 /// </summary>
                 /// This is needed for technical reasons, but I don't remember them. Should be documented.
-                public static implicit operator {{backing_type}}({{typeInfo.memory_name}} num) { return num.read_value; }
+                public static implicit operator {{backing_type}}({{typeInfo.memory_name}} num) { return num._csReadValue; }
             
+                {{header("widening conversions")}}
                 {{explicitWidening}}
             
                 {{implicitWidening.Trim()}}
             
-                // narrowing conversions
+
+                {{header("narrowing conversions")}}
                 {{narrowingConversions.Trim()}}
             
-                // wrapping conversions
+
+                {{header("wrapping conversions (only for unsigned)")}}
                 {{wrappingConversions.Trim()}}
             
+                {{header("comparisons")}}
                 {{GenComparisonOperator(typeInfo, "==") + "\n"}}
                 {{GenComparisonOperator(typeInfo, "!=") + "\n"}}
                 {{GenComparisonOperator(typeInfo, "<") + "\n"}}
@@ -357,7 +386,7 @@ public class GenSimNumerics
             
                 public override string ToString()
                 {
-                    return read_value.ToString();
+                    return _csReadValue.ToString();
                 }
             
                 public override int GetHashCode()
@@ -382,14 +411,14 @@ public class GenSimNumerics
                         case uint   i: obj_value = i; break;
                         case ulong  i: obj_value = i; break;
             
-                        case i8  i: obj_value = i8.GetBackingValue(i);  break;
-                        case i16 i: obj_value = i16.GetBackingValue(i); break;
-                        case i32 i: obj_value = i32.GetBackingValue(i); break;
-                        case i64 i: obj_value = i64.GetBackingValue(i); break;
-                        case u8  i: obj_value = u8.GetBackingValue(i);  break;
-                        case u16 i: obj_value = u16.GetBackingValue(i); break;
-                        case u32 i: obj_value = u32.GetBackingValue(i); break;
-                        case u64 i: obj_value = u64.GetBackingValue(i); break;
+                        case i8  i: obj_value = i._csReadValue; break;
+                        case i16 i: obj_value = i._csReadValue; break;
+                        case i32 i: obj_value = i._csReadValue; break;
+                        case i64 i: obj_value = i._csReadValue; break;
+                        case u8  i: obj_value = i._csReadValue; break;
+                        case u16 i: obj_value = i._csReadValue; break;
+                        case u32 i: obj_value = i._csReadValue; break;
+                        case u64 i: obj_value = i._csReadValue; break;
             
                         default: return false;
                     }

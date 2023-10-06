@@ -13,4 +13,18 @@ public class IntegerTest
         i8 a = 1;
         a.Should().NotBe(4);
     }
+
+    [Fact]
+    public void Test2()
+    {
+        u32 u32 = 1;
+        u8 u8 = 1;
+
+        (u32 > u8).Should().BeFalse();
+        (u32 < u8).Should().BeFalse();
+
+        (u32 == u8).Should().BeTrue();
+        (u32 >= u8).Should().BeTrue();
+        (u32 <= u8).Should().BeTrue();
+    }
 }

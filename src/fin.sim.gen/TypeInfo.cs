@@ -10,6 +10,8 @@ public class TypeInfo
     public readonly string memory_name;
     public readonly string full_name;   //differs for references
 
+    public bool is_unsigned => !is_signed;
+
     public TypeInfo(string type_name)
     {
         var regex = new Regex(@"([iu])(\d+)(r?)");
