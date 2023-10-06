@@ -16,7 +16,7 @@ public class GenSimNumerics
         foreach (var type in types)
         {
             var output = CreateCodeForType(type);
-            File.WriteAllText(dir_path + type.full_name + ".cs", output);
+            File.WriteAllText(dir_path + type.fin_name + ".cs", output);
         }
     }
 
@@ -28,7 +28,7 @@ public class GenSimNumerics
         List<TypeInfo> widenToTypes = GetWideningConversions(typeInfo);
 
         GetWideningConversions(typeInfo, out string implicitWidening, out string explicitWidening, widenToTypes);
-        GetNarrowConversions(smallerTypes, out string narrowingConversions, out string wrappingConversions);
+        GetNarrowConversions(typeInfo, smallerTypes, out string narrowingConversions, out string wrappingConversions);
 
         string template = RenderTemplate(typeInfo: typeInfo, backing_type: backing_type, implicitWidening: implicitWidening, explicitWidening: explicitWidening, narrowingConversions: narrowingConversions, wrappingConversions: wrappingConversions);
 
@@ -37,31 +37,33 @@ public class GenSimNumerics
 
     //-------------------------------------------------------------------------------------
 
-    private static string GenOverflowChecks(TypeInfo typeInfo)
+    private static string GenOverflowChecks(string op, TypeInfo typeInfo)
     {
         if (typeInfo.width >= 64)
         {
             return "";
         }
 
+        string finType = typeInfo.fin_name;
+
         var overflowChecks = $$"""
-            if (value < {{typeInfo.memory_name}}.MIN) { throw new Exception("underflow!"); }
-            if (value > {{typeInfo.memory_name}}.MAX) { throw new Exception("overflow!");  }
+            if (value < {{typeInfo.fin_name}}.MIN) { throw new OverflowException($"Underflow! `{a} ({{finType}}) {{op}} {b} ({{finType}})` result `{value}` is beyond {{finType}} type MIN limit of `{{{typeInfo.fin_name}}.MIN}`. Explicitly widen before `{{op}}` operation."); }
+            if (value > {{typeInfo.fin_name}}.MAX) { throw new OverflowException($"Overflow! `{a} ({{finType}}) {{op}} {b} ({{finType}})` result `{value}` is beyond {{finType}} type MAX limit of `{{{typeInfo.fin_name}}.MAX}`. Explicitly widen before `{{op}}` operation."); }
             """;
 
         return overflowChecks;
     }
 
 
-    private static void GetNarrowConversions(List<TypeInfo> smallerTypes, out string narrowingConversions, out string wrappingConversions)
+    private static void GetNarrowConversions(TypeInfo typeInfo, List<TypeInfo> smallerTypes, out string narrowingConversions, out string wrappingConversions)
     {
         narrowingConversions = "";
         wrappingConversions = "";
         foreach (var narrowTypeInfo in smallerTypes)
         {
-            var narrowTypeName = narrowTypeInfo.memory_name;
+            var narrowTypeName = narrowTypeInfo.fin_name;
 
-            narrowingConversions += GenUnsafeToConversion(narrowTypeInfo);
+            narrowingConversions += GenUnsafeToConversion(typeInfo, narrowTypeInfo);
 
             if (narrowTypeInfo.is_unsigned)
             {
@@ -89,7 +91,7 @@ public class GenSimNumerics
                     /// <summary>
                     /// Safe implicit widening conversion.
                     /// </summary>
-                    public static implicit operator {{widerType.memory_name}}({{typeInfo.memory_name}} num) { return num._csReadValue; }
+                    public static implicit operator {{widerType.fin_name}}({{typeInfo.fin_name}} num) { return num._csReadValue; }
 
                 """;
 
@@ -98,44 +100,62 @@ public class GenSimNumerics
                     /// <summary>
                     /// Safe explicit widening conversion.
                     /// </summary>
-                    public {widerType.memory_name} {widerType.memory_name} => value;
+                    public {widerType.fin_name} {widerType.fin_name} => value;
 
                 """;
         }
     }
 
-    private static string GenUnsafeToConversion(TypeInfo narrowTypeInfo)
+    private static string GenUnsafeToConversion(TypeInfo typeInfo, TypeInfo narrowTypeInfo)
     {
-        var narrowTypeName = narrowTypeInfo.memory_name;
+        var narrowTypeName = narrowTypeInfo.fin_name;
 
-        //TODOLOW don't use decimal types
-        var nc = "";
-        nc += "\n";
-        nc += $$"""
-                    /// <summary>
-                    /// Throws during simulation if the value won't fit.
-                    /// </summary>
-                    public {{narrowTypeName}} unsafe_to_{{narrowTypeName}} {
-                        get {
-                            var vv = this._csReadValue;
-                            decimal v = vv; // will not use decimal in the future to speed up simulations
-                            if (v > {{narrowTypeName}}.MAX || v < {{narrowTypeName}}.MIN)
-                            {
-                                throw new System.OverflowException("value " + vv + " too large for {{narrowTypeName}}");
-                            }
-                            return ({{narrowTypeInfo.GetBackingTypeName()}})vv;
-                        }
-                    }
+        string overflowCheck;
+
+        if (typeInfo.width == 64 || narrowTypeInfo.width == 64)
+        {
+            overflowCheck = $$"""
+                decimal dv = csValue; // use decimal type when C# primitives are too small
+                if (dv > {{narrowTypeName}}.MAX || dv < {{narrowTypeName}}.MIN)
+
                 """;
-        nc += "\n";
-        return nc;
+        }
+        else
+        {
+            overflowCheck = $$"""
+                if (csValue > {{narrowTypeName}}.MAX || csValue < {{narrowTypeName}}.MIN)
+
+                """;
+        }
+        overflowCheck += $$"""
+                {
+                    throw new OverflowException($"{{typeInfo.fin_name}} value `{csValue}` cannot be converted to type {{narrowTypeName}}.");
+                }
+                """;
+
+        var code = $$"""
+
+                    /// <summary>
+                    /// Potentially unsafe conversion from {{typeInfo.fin_name}} to {{narrowTypeName}}.
+                    /// This operation will throw during simulation if the value won't fit.
+                    /// </summary>
+                    public {{narrowTypeName}} unsafe_to_{{narrowTypeName}}()
+                    {
+                        {{typeInfo.GetBackingTypeName()}} csValue = this._csReadValue;
+                        {{overflowCheck.IndentNewLines("        ")}}
+                        return ({{narrowTypeInfo.GetBackingTypeName()}})csValue;
+                    }
+
+                """;
+
+        return code;
     }
 
     private static string GenOverflowingOperator(TypeInfo classType, string op)
     {
         var result = "";
 
-        result += GenOverflowingOperator(classType, classType.full_name, classType, op);
+        result += GenOverflowingOperator(classType, classType.fin_name, classType, op);
 
         //for mixing signed and unsigned
         foreach (var otherType in types)
@@ -147,7 +167,7 @@ public class GenSimNumerics
 
             if (classType.is_signed == false && classType.CanPromoteToOrViceVersa(otherType) == false)
             {
-                result += GenOverflowingOperator(classType, "IHas" + otherType.full_name.ToUpper(), resultType, op, otherValueGetter: $"b.value");
+                result += GenOverflowingOperator(classType, "IHas" + otherType.fin_name.ToUpper(), resultType, op, otherValueGetter: $"b.value");
             }
         }
 
@@ -156,7 +176,7 @@ public class GenSimNumerics
         //    TypeInfo resultType = classType.GetResultType(otherType);
         //    if (resultType.width > 64) continue;
 
-        //    result += GenOverflowingOperator(classType, otherType.full_name, resultType, op);
+        //    result += GenOverflowingOperator(classType, otherType.fin_name, resultType, op);
         //}
 
         //{ i32 result = i16 + 65534; Assert.Equal<int>(65535, result); }
@@ -167,7 +187,7 @@ public class GenSimNumerics
             if (resultType.width <= classType.width) continue;
             if (classType.CanPromoteTo(otherType) && classType.is_signed == otherType.is_signed)
             {
-                result += GenOverflowingOperator(classType, otherType.memory_name, resultType, op);
+                result += GenOverflowingOperator(classType, otherType.fin_name, resultType, op);
             }
         }
 
@@ -180,11 +200,11 @@ public class GenSimNumerics
 
         var template = $$"""
 
-            public static {{resultType.full_name}} operator {{op}}({{classType.full_name}} a, {{otherTypeName}} b)
+            public static {{resultType.fin_name}} operator {{op}}({{classType.fin_name}} a, {{otherTypeName}} b)
             {
                 var value = a._csReadValue {{op}} {{otherValueGetter}};
-                {{GenOverflowChecks(resultType).IndentNewLines("        ")}}
-                {{resultType.full_name}} result = ({{resultType.GetBackingTypeName()}})value;
+                {{GenOverflowChecks(op, resultType).IndentNewLines("        ")}}
+                {{resultType.fin_name}} result = ({{resultType.GetBackingTypeName()}})value;
                 return result;
             }
         """;
@@ -224,7 +244,7 @@ public class GenSimNumerics
     {
         var result = "";
 
-        result += GenComparisonOperator(classType.full_name, op, classType.full_name);
+        result += GenComparisonOperator(classType.fin_name, op, classType.fin_name);
 
         return result;
     }
@@ -306,11 +326,12 @@ public class GenSimNumerics
             //NOTE! AUTO GENERATED FILE
             using System;
             
-            #pragma warning disable IDE1006 // Naming Styles
-            
+            #pragma warning disable IDE1006 // Naming Styles.
+            #pragma warning disable CS0652  // Useless comparison for integer types. Stuff like `u8 < 0`. Not a priority.
+
             namespace fin.sim.lang;
 
-            public struct {{typeInfo.memory_name}}: IHas{{typeInfo.memory_name.ToUpper()}}
+            public struct {{typeInfo.fin_name}}: IHas{{typeInfo.fin_name.ToUpper()}}
             {
                 public const {{backing_type}} MAX = {{typeInfo.GetMaxValue()}};
                 public const {{backing_type}} MIN = {{typeInfo.GetMinValue()}};
@@ -320,11 +341,11 @@ public class GenSimNumerics
                 /// </summary>
                 internal {{backing_type}} _csValue;
             
-                public {{typeInfo.memory_name}}()
+                public {{typeInfo.fin_name}}()
                 {
                 }
             
-                private {{typeInfo.memory_name}}({{backing_type}} value)
+                private {{typeInfo.fin_name}}({{backing_type}} value)
                 {
                     _csValue = value;
                 }
@@ -334,7 +355,7 @@ public class GenSimNumerics
                 /// </summary>
                 internal {{backing_type}} _csReadValue => _csValue;
             
-                public {{typeInfo.memory_name}} value
+                public {{typeInfo.fin_name}} value
                 {
                     get
                     {
@@ -352,13 +373,13 @@ public class GenSimNumerics
                 /// <summary>
                 /// Implicit conversion from C# numeric type to fin numeric type.
                 /// </summary>
-                public static implicit operator {{typeInfo.memory_name}}({{backing_type}} num) { return new {{typeInfo.memory_name}}(num); }
+                public static implicit operator {{typeInfo.fin_name}}({{backing_type}} num) { return new {{typeInfo.fin_name}}(num); }
 
                 /// <summary>
                 /// Implicit conversion from fin numeric type to C# numeric type.
                 /// </summary>
                 /// This is needed for technical reasons, but I don't remember them. Should be documented.
-                public static implicit operator {{backing_type}}({{typeInfo.memory_name}} num) { return num._csReadValue; }
+                public static implicit operator {{backing_type}}({{typeInfo.fin_name}} num) { return num._csReadValue; }
             
                 {{header("widening conversions")}}
                 {{explicitWidening}}

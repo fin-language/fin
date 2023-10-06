@@ -1,7 +1,8 @@
 //NOTE! AUTO GENERATED FILE
 using System;
 
-#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE1006 // Naming Styles.
+#pragma warning disable CS0652  // Useless comparison for integer types. Stuff like `u8 < 0`. Not a priority.
 
 namespace fin.sim.lang;
 
@@ -77,78 +78,73 @@ public struct i32: IHasI32
     //################################################################
     
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from i32 to u32.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public u32 unsafe_to_u32 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > u32.MAX || v < u32.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for u32");
-            }
-            return (uint)vv;
+    public u32 unsafe_to_u32()
+    {
+        int csValue = this._csReadValue;
+        if (csValue > u32.MAX || csValue < u32.MIN)
+        {
+            throw new OverflowException($"i32 value `{csValue}` cannot be converted to type u32.");
         }
+        return (uint)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from i32 to i16.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public i16 unsafe_to_i16 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > i16.MAX || v < i16.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for i16");
-            }
-            return (short)vv;
+    public i16 unsafe_to_i16()
+    {
+        int csValue = this._csReadValue;
+        if (csValue > i16.MAX || csValue < i16.MIN)
+        {
+            throw new OverflowException($"i32 value `{csValue}` cannot be converted to type i16.");
         }
+        return (short)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from i32 to u16.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public u16 unsafe_to_u16 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > u16.MAX || v < u16.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for u16");
-            }
-            return (ushort)vv;
+    public u16 unsafe_to_u16()
+    {
+        int csValue = this._csReadValue;
+        if (csValue > u16.MAX || csValue < u16.MIN)
+        {
+            throw new OverflowException($"i32 value `{csValue}` cannot be converted to type u16.");
         }
+        return (ushort)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from i32 to i8.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public i8 unsafe_to_i8 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > i8.MAX || v < i8.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for i8");
-            }
-            return (sbyte)vv;
+    public i8 unsafe_to_i8()
+    {
+        int csValue = this._csReadValue;
+        if (csValue > i8.MAX || csValue < i8.MIN)
+        {
+            throw new OverflowException($"i32 value `{csValue}` cannot be converted to type i8.");
         }
+        return (sbyte)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from i32 to u8.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public u8 unsafe_to_u8 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > u8.MAX || v < u8.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for u8");
-            }
-            return (byte)vv;
+    public u8 unsafe_to_u8()
+    {
+        int csValue = this._csReadValue;
+        if (csValue > u8.MAX || csValue < u8.MIN)
+        {
+            throw new OverflowException($"i32 value `{csValue}` cannot be converted to type u8.");
         }
+        return (byte)csValue;
     }
 
 
@@ -216,8 +212,8 @@ public struct i32: IHasI32
     public static i32 operator +(i32 a, i32 b)
     {
         var value = a._csReadValue + b._csReadValue;
-        if (value < i32.MIN) { throw new Exception("underflow!"); }
-        if (value > i32.MAX) { throw new Exception("overflow!");  }
+        if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `+` operation."); }
+        if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `+` operation."); }
         i32 result = (int)value;
         return result;
     }

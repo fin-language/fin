@@ -1,7 +1,8 @@
 //NOTE! AUTO GENERATED FILE
 using System;
 
-#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE1006 // Naming Styles.
+#pragma warning disable CS0652  // Useless comparison for integer types. Stuff like `u8 < 0`. Not a priority.
 
 namespace fin.sim.lang;
 
@@ -97,18 +98,17 @@ public struct i8: IHasI8
     //################################################################
     
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from i8 to u8.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public u8 unsafe_to_u8 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > u8.MAX || v < u8.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for u8");
-            }
-            return (byte)vv;
+    public u8 unsafe_to_u8()
+    {
+        sbyte csValue = this._csReadValue;
+        if (csValue > u8.MAX || csValue < u8.MIN)
+        {
+            throw new OverflowException($"i8 value `{csValue}` cannot be converted to type u8.");
         }
+        return (byte)csValue;
     }
 
 
@@ -166,24 +166,24 @@ public struct i8: IHasI8
     public static i8 operator +(i8 a, i8 b)
     {
         var value = a._csReadValue + b._csReadValue;
-        if (value < i8.MIN) { throw new Exception("underflow!"); }
-        if (value > i8.MAX) { throw new Exception("overflow!");  }
+        if (value < i8.MIN) { throw new OverflowException($"Underflow! `{a} (i8) + {b} (i8)` result `{value}` is beyond i8 type MIN limit of `{i8.MIN}`. Explicitly widen before `+` operation."); }
+        if (value > i8.MAX) { throw new OverflowException($"Overflow! `{a} (i8) + {b} (i8)` result `{value}` is beyond i8 type MAX limit of `{i8.MAX}`. Explicitly widen before `+` operation."); }
         i8 result = (sbyte)value;
         return result;
     }
     public static i16 operator +(i8 a, i16 b)
     {
         var value = a._csReadValue + b._csReadValue;
-        if (value < i16.MIN) { throw new Exception("underflow!"); }
-        if (value > i16.MAX) { throw new Exception("overflow!");  }
+        if (value < i16.MIN) { throw new OverflowException($"Underflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MIN limit of `{i16.MIN}`. Explicitly widen before `+` operation."); }
+        if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `+` operation."); }
         i16 result = (short)value;
         return result;
     }
     public static i32 operator +(i8 a, i32 b)
     {
         var value = a._csReadValue + b._csReadValue;
-        if (value < i32.MIN) { throw new Exception("underflow!"); }
-        if (value > i32.MAX) { throw new Exception("overflow!");  }
+        if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `+` operation."); }
+        if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `+` operation."); }
         i32 result = (int)value;
         return result;
     }

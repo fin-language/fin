@@ -41,7 +41,7 @@ namespace fin.sim.lang.tests
         {
             void genInner(decimal value)
             {
-                inner += tab + $"{{ {type.full_name} n = {value}; Assert.Equal<{type.memory_name}>({value}, n); }}\n";
+                inner += tab + $"{{ {type.fin_name} n = {value}; Assert.Equal<{type.fin_name}>({value}, n); }}\n";
 
                 var binary = type.ToBinary(value);
                 binary = String.Join("_", ChunksUpto(binary, 4));
@@ -50,7 +50,7 @@ namespace fin.sim.lang.tests
                 {
                     binary = $"unchecked(({type.GetBackingTypeName()}){binary})";
                 }
-                inner += tab + $"{{ {type.full_name} n = {value}; Assert.Equal<{type.memory_name}>({binary}, n.v); }}\n";
+                inner += tab + $"{{ {type.fin_name} n = {value}; Assert.Equal<{type.fin_name}>({binary}, n.v); }}\n";
             }
 
             if (type.is_signed)
@@ -87,7 +87,7 @@ namespace fin.sim.lang.tests
 
             foreach (var widerType in widerTypes)
             {
-                inner += tab + $"{{ {type.full_name} n = {type.GetMaxValue()}; {type.full_name}r r = n.r; {widerType.full_name} wider = n; Assert.Equal<{widerType.memory_name}>({type.GetMaxValue()}, wider); wider = r; Assert.Equal<{widerType.memory_name}>({type.GetMaxValue()}, wider);}}\n";
+                inner += tab + $"{{ {type.fin_name} n = {type.GetMaxValue()}; {type.fin_name}r r = n.r; {widerType.fin_name} wider = n; Assert.Equal<{widerType.fin_name}>({type.GetMaxValue()}, wider); wider = r; Assert.Equal<{widerType.fin_name}>({type.GetMaxValue()}, wider);}}\n";
             }
 
             inner += "\n";
@@ -113,7 +113,7 @@ namespace fin.sim.lang.tests
         var topDecl = "";
         foreach (var type in types)
         {
-            topDecl += tab + $"{type.full_name} {type.full_name} = 1;\n";
+            topDecl += tab + $"{type.fin_name} {type.fin_name} = 1;\n";
 
             foreach (var otherType in types)
             {
@@ -121,15 +121,15 @@ namespace fin.sim.lang.tests
                 if (resultType.width > 64) continue;
 
                 //{ i32 result = u16 + i8; Assert.Equal<int>(2, result); }
-                inner += tab + $"{{ {resultType.full_name} result = {type.full_name} + {otherType.full_name}; Assert.Equal<{resultType.memory_name}>(2, result); }}\n";
-                pickyInner += tab + $"{{ var result = {type.full_name} + {otherType.full_name}; Assert.IsType<{resultType.full_name}>(result); Assert.Equal<{resultType.memory_name}>(2, result); }}\n";
+                inner += tab + $"{{ {resultType.fin_name} result = {type.fin_name} + {otherType.fin_name}; Assert.Equal<{resultType.fin_name}>(2, result); }}\n";
+                pickyInner += tab + $"{{ var result = {type.fin_name} + {otherType.fin_name}; Assert.IsType<{resultType.fin_name}>(result); Assert.Equal<{resultType.fin_name}>(2, result); }}\n";
 
                 resultType = type.GetResultTypeFromLiteral(otherType.GetMaxValue() - 1);
 
-                inner += tab + $"{{ {resultType.full_name} result = {type.full_name} + {otherType.GetMaxValue() - 1}; Assert.Equal<{resultType.memory_name}>({otherType.GetMaxValue()}, result); }}\n";
+                inner += tab + $"{{ {resultType.fin_name} result = {type.fin_name} + {otherType.GetMaxValue() - 1}; Assert.Equal<{resultType.fin_name}>({otherType.GetMaxValue()}, result); }}\n";
 
                 //{ var result = u16 + i8; Assert.IsType<i32>(result); Assert.Equal<int>(2, result); }
-                pickyInner += tab + $"{{ var result = {type.full_name} + {otherType.GetMaxValue() - 1}; Assert.IsType<{resultType.full_name}>(result); Assert.Equal<{resultType.memory_name}>({otherType.GetMaxValue()}, result); }}\n";
+                pickyInner += tab + $"{{ var result = {type.fin_name} + {otherType.GetMaxValue() - 1}; Assert.IsType<{resultType.fin_name}>(result); Assert.Equal<{resultType.fin_name}>({otherType.GetMaxValue()}, result); }}\n";
             }
 
             inner += "\n";

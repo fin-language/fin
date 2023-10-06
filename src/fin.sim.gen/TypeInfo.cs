@@ -7,29 +7,26 @@ public class TypeInfo
     public readonly bool is_signed;
     public readonly char sign_char;
     public readonly int width;
-    public readonly string memory_name;
-    public readonly string full_name;   //differs for references
+    public readonly string fin_name;
 
     public bool is_unsigned => !is_signed;
 
-    public TypeInfo(string type_name)
+    public TypeInfo(string fin_type_name)
     {
         var regex = new Regex(@"([iu])(\d+)(r?)");
 
-        Match match = regex.Match(type_name);
+        Match match = regex.Match(fin_type_name);
 
         sign_char = match.Groups[1].Value[0];
         width = int.Parse(match.Groups[2].Value);
 
         is_signed = sign_char == 'i';
-
-        memory_name = "" + sign_char + width;
-        full_name = type_name;
+        fin_name = "" + sign_char + width;
     }
 
     public string ToBinary(decimal value)
     {
-        string v = memory_name switch
+        string v = fin_name switch
         {
             "i8" => Convert.ToString(unchecked((byte)(SByte)value), 2),
             "i16" => Convert.ToString((Int16)value, 2),
@@ -46,7 +43,7 @@ public class TypeInfo
 
     public decimal GetMinValue()
     {
-        return memory_name switch
+        return fin_name switch
         {
             "i8" => SByte.MinValue,
             "i16" => Int16.MinValue,
@@ -62,7 +59,7 @@ public class TypeInfo
 
     public decimal GetMaxValue()
     {
-        return memory_name switch
+        return fin_name switch
         {
             "i8" => SByte.MaxValue,
             "i16" => Int16.MaxValue,
@@ -78,21 +75,18 @@ public class TypeInfo
 
     public string GetBackingTypeName()
     {
-        string backing_type;
-
-        switch (memory_name)
+        string backing_type = fin_name switch
         {
-            case "i8": backing_type = "sbyte"; break;
-            case "i16": backing_type = "short"; break;
-            case "i32": backing_type = "int"; break;
-            case "i64": backing_type = "long"; break;
-            case "u8": backing_type = "byte"; break;
-            case "u16": backing_type = "ushort"; break;
-            case "u32": backing_type = "uint"; break;
-            case "u64": backing_type = "ulong"; break;
-            default: throw new Exception();
-        }
-
+            "i8" => "sbyte",
+            "i16" => "short",
+            "i32" => "int",
+            "i64" => "long",
+            "u8" => "byte",
+            "u16" => "ushort",
+            "u32" => "uint",
+            "u64" => "ulong",
+            _ => throw new Exception(),
+        };
         return backing_type;
     }
 
@@ -249,6 +243,6 @@ public class TypeInfo
 
     public bool Equals(TypeInfo other)
     {
-        return full_name.Equals(other.full_name);
+        return fin_name.Equals(other.fin_name);
     }
 }

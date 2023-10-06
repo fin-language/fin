@@ -1,7 +1,8 @@
 //NOTE! AUTO GENERATED FILE
 using System;
 
-#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE1006 // Naming Styles.
+#pragma warning disable CS0652  // Useless comparison for integer types. Stuff like `u8 < 0`. Not a priority.
 
 namespace fin.sim.lang;
 
@@ -69,108 +70,108 @@ public struct u64: IHasU64
     //################################################################
     
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from u64 to i64.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public i64 unsafe_to_i64 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > i64.MAX || v < i64.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for i64");
-            }
-            return (long)vv;
+    public i64 unsafe_to_i64()
+    {
+        ulong csValue = this._csReadValue;
+        decimal dv = csValue; // use decimal type when C# primitives are too small
+        if (dv > i64.MAX || dv < i64.MIN)
+        {
+            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type i64.");
         }
+        return (long)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from u64 to i32.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public i32 unsafe_to_i32 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > i32.MAX || v < i32.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for i32");
-            }
-            return (int)vv;
+    public i32 unsafe_to_i32()
+    {
+        ulong csValue = this._csReadValue;
+        decimal dv = csValue; // use decimal type when C# primitives are too small
+        if (dv > i32.MAX || dv < i32.MIN)
+        {
+            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type i32.");
         }
+        return (int)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from u64 to u32.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public u32 unsafe_to_u32 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > u32.MAX || v < u32.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for u32");
-            }
-            return (uint)vv;
+    public u32 unsafe_to_u32()
+    {
+        ulong csValue = this._csReadValue;
+        decimal dv = csValue; // use decimal type when C# primitives are too small
+        if (dv > u32.MAX || dv < u32.MIN)
+        {
+            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type u32.");
         }
+        return (uint)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from u64 to i16.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public i16 unsafe_to_i16 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > i16.MAX || v < i16.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for i16");
-            }
-            return (short)vv;
+    public i16 unsafe_to_i16()
+    {
+        ulong csValue = this._csReadValue;
+        decimal dv = csValue; // use decimal type when C# primitives are too small
+        if (dv > i16.MAX || dv < i16.MIN)
+        {
+            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type i16.");
         }
+        return (short)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from u64 to u16.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public u16 unsafe_to_u16 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > u16.MAX || v < u16.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for u16");
-            }
-            return (ushort)vv;
+    public u16 unsafe_to_u16()
+    {
+        ulong csValue = this._csReadValue;
+        decimal dv = csValue; // use decimal type when C# primitives are too small
+        if (dv > u16.MAX || dv < u16.MIN)
+        {
+            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type u16.");
         }
+        return (ushort)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from u64 to i8.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public i8 unsafe_to_i8 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > i8.MAX || v < i8.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for i8");
-            }
-            return (sbyte)vv;
+    public i8 unsafe_to_i8()
+    {
+        ulong csValue = this._csReadValue;
+        decimal dv = csValue; // use decimal type when C# primitives are too small
+        if (dv > i8.MAX || dv < i8.MIN)
+        {
+            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type i8.");
         }
+        return (sbyte)csValue;
     }
 
     /// <summary>
-    /// Throws during simulation if the value won't fit.
+    /// Potentially unsafe conversion from u64 to u8.
+    /// This operation will throw during simulation if the value won't fit.
     /// </summary>
-    public u8 unsafe_to_u8 {
-        get {
-            var vv = this._csReadValue;
-            decimal v = vv; // will not use decimal in the future to speed up simulations
-            if (v > u8.MAX || v < u8.MIN)
-            {
-                throw new System.OverflowException("value " + vv + " too large for u8");
-            }
-            return (byte)vv;
+    public u8 unsafe_to_u8()
+    {
+        ulong csValue = this._csReadValue;
+        decimal dv = csValue; // use decimal type when C# primitives are too small
+        if (dv > u8.MAX || dv < u8.MIN)
+        {
+            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type u8.");
         }
+        return (byte)csValue;
     }
 
 
