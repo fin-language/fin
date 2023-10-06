@@ -1,6 +1,6 @@
-﻿//NOTE! AUTO GENERATED FILE
+﻿#pragma warning disable IDE1006 // Naming Styles
 
-#pragma warning disable IDE1006 // Naming Styles
+using System;
 
 namespace fin.sim.lang;
 

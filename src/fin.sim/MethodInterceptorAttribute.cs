@@ -1,4 +1,5 @@
 ﻿using MethodDecorator.Fody.Interfaces;
+using System;
 using System.Reflection;
 
 namespace fin.sim;
@@ -17,30 +18,25 @@ public class MethodInterceptorAttribute : Attribute, IAspectMatchingRule, IMetho
 
     public MethodInterceptorAttribute() {}
 
-    public static Stack<MethodBase> methodBases = new();
-
     // instance, method and args can be captured here and stored in attribute instance fields
     // for future usage in OnEntry/OnExit/OnException
-    public void Init(object instance, MethodBase method, object[] args)
+    public void Init(object? instance, MethodBase method, object[] args)
     {
-        methodBases.Push(method);
-        //str = string.Format("Init: {0} [{1}]", method.DeclaringType.FullName + "." + method.Name, args.Length);
+        ScopeTracker.Push(new Scope(instance, method, args));
     }
 
     public void OnEntry()
     {
-        int x = 0;
+        // not sure how this differs from Init
     }
 
     public void OnExit()
     {
-        int x = 0;
-        methodBases.Pop();
+        ScopeTracker.Pop();
     }
 
     public void OnException(Exception exception)
     {
-        //var str = string.Format("OnException: {0}: {1}", exception.GetType(), exception.Message);
-        methodBases.Pop();
+        ScopeTracker.Pop();
     }
 }

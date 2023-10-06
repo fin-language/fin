@@ -193,33 +193,33 @@ namespace fin.sim.lang
         {
             if (obj == null) { return false; }
 
-            decimal value;
+            decimal obj_value;
 
             switch (obj)
             {
-                case sbyte  i: value = i; break;
-                case short  i: value = i; break;
-                case int    i: value = i; break;
-                case long   i: value = i; break;
-                case byte   i: value = i; break;
-                case ushort i: value = i; break;
-                case uint   i: value = i; break;
-                case ulong  i: value = i; break;
+                case sbyte  i: obj_value = i; break;
+                case short  i: obj_value = i; break;
+                case int    i: obj_value = i; break;
+                case long   i: obj_value = i; break;
+                case byte   i: obj_value = i; break;
+                case ushort i: obj_value = i; break;
+                case uint   i: obj_value = i; break;
+                case ulong  i: obj_value = i; break;
 
-                case i8  i: value = i8.GetBackingValue(i);  break;
-                case i16 i: value = i16.GetBackingValue(i); break;
-                case i32 i: value = i32.GetBackingValue(i); break;
-                case i64 i: value = i64.GetBackingValue(i); break;
-                case u8  i: value = u8.GetBackingValue(i);  break;
-                case u16 i: value = u16.GetBackingValue(i); break;
-                case u32 i: value = u32.GetBackingValue(i); break;
-                case u64 i: value = u64.GetBackingValue(i); break;
+                case i8  i: obj_value = i8.GetBackingValue(i);  break;
+                case i16 i: obj_value = i16.GetBackingValue(i); break;
+                case i32 i: obj_value = i32.GetBackingValue(i); break;
+                case i64 i: obj_value = i64.GetBackingValue(i); break;
+                case u8  i: obj_value = u8.GetBackingValue(i);  break;
+                case u16 i: obj_value = u16.GetBackingValue(i); break;
+                case u32 i: obj_value = u32.GetBackingValue(i); break;
+                case u64 i: obj_value = u64.GetBackingValue(i); break;
 
                 default: return false;
             }
 
-            if (value < MIN || value > MAX) { return false; }
-            return value == (ushort)value;
+            if (obj_value < MIN || obj_value > MAX) { return false; }
+            return obj_value == (ushort)value;
         }
     }
 }
