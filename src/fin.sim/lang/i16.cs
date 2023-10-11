@@ -27,7 +27,7 @@ public struct i16: IHasI16
 
     private static void ThrowIfMathModeNotSpecified()
     {
-        Math.ThrowIfModeNotSpecified();
+        math.ThrowIfModeNotSpecified();
     }
 
     /// <summary>

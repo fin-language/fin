@@ -27,7 +27,7 @@ public struct i32: IHasI32
 
     private static void ThrowIfMathModeNotSpecified()
     {
-        Math.ThrowIfModeNotSpecified();
+        math.ThrowIfModeNotSpecified();
     }
 
     /// <summary>

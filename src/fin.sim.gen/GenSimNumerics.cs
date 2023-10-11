@@ -357,7 +357,7 @@ public class GenSimNumerics
             
                 private static void ThrowIfMathModeNotSpecified()
                 {
-                    Math.ThrowIfModeNotSpecified();
+                    math.ThrowIfModeNotSpecified();
                 }
 
                 /// <summary>

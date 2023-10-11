@@ -2,7 +2,10 @@
 
 namespace fin.sim.lang;
 
-public class Math
+/// <summary>
+/// Lower case name because it is meant to be a language concept and not a Class type.
+/// </summary>
+public class math
 {
     [simonly]
     public enum Mode {
@@ -43,7 +46,7 @@ public class Math
     {
         scope.mode = mode;
         scope.implicit_err = implicit_err;
-        mode = Mode.Checked;
+        mode = Mode.NotSpecified;
         implicit_err = null;
     }
 
@@ -54,7 +57,7 @@ public class Math
     [simonly]
     public static void ThrowIfModeNotSpecified()
     {
-        if (Math.CurrentMode == Math.Mode.NotSpecified)
+        if (math.CurrentMode == math.Mode.NotSpecified)
         {
             throw new InvalidOperationException("Math mode must be specified for now (until fin default established).");
         }

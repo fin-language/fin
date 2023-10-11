@@ -25,13 +25,13 @@ public class ScopeTracker
 
     public static void Push(Scope scope)
     {
-        fin.sim.lang.Math.StoreSettingsAndDefault(scope);
+        fin.sim.lang.math.StoreSettingsAndDefault(scope);
         ScopeStack.Push(scope);
     }
 
     public static void Pop()
     {
         var scope = ScopeStack.Pop();
-        lang.Math.RestoreSettings(scope);
+        lang.math.RestoreSettings(scope);
     }
 }

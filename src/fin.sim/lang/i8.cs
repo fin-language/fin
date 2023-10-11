@@ -27,7 +27,7 @@ public struct i8: IHasI8
 
     private static void ThrowIfMathModeNotSpecified()
     {
-        Math.ThrowIfModeNotSpecified();
+        math.ThrowIfModeNotSpecified();
     }
 
     /// <summary>

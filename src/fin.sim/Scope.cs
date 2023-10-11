@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using FinMath = fin.sim.lang.Math;
+using FinMath = fin.sim.lang.math;
 
 namespace fin.sim;
 

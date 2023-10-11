@@ -27,7 +27,7 @@ public struct u32: IHasU32
 
     private static void ThrowIfMathModeNotSpecified()
     {
-        Math.ThrowIfModeNotSpecified();
+        math.ThrowIfModeNotSpecified();
     }
 
     /// <summary>

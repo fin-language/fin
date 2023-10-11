@@ -7,25 +7,24 @@ public class Sample
 {
     public Sample()
     {
-        Math.CurrentMode.Should().Be(Math.Mode.Checked);
+        math.CurrentMode.Should().Be(math.Mode.NotSpecified);
     }
 
     public int get_int2()
     {
         u8 a = 2, b = 44, c = 2;
-        //Math.force_inlined();
         return (a + b) / c;
     }
 
     public void method()
     {
         int x = get_int();
-        Math.CurrentMode.Should().Be(Math.Mode.Checked);
+        math.CurrentMode.Should().Be(math.Mode.NotSpecified);
     }
 
     public int get_int()
     {
-        Math.CurrentMode.Should().Be(Math.Mode.Checked);
+        math.CurrentMode.Should().Be(math.Mode.NotSpecified);
         return 2234;
     }
 }
@@ -35,19 +34,19 @@ public class ScopeTest
     [Fact]
     public void Test1()
     {
-        Math.unsafe_mode(); // Math.scoped_pragma
-        Math.CurrentMode.Should().Be(Math.Mode.Unsafe);
+        math.unsafe_mode(); // Math.scoped_pragma
+        math.CurrentMode.Should().Be(math.Mode.Unsafe);
 
         Sample sample = new();
-        Math.CurrentMode.Should().Be(Math.Mode.Unsafe);
+        math.CurrentMode.Should().Be(math.Mode.Unsafe);
 
         sample.method();
-        Math.CurrentMode.Should().Be(Math.Mode.Unsafe);
+        math.CurrentMode.Should().Be(math.Mode.Unsafe);
     }
 
     [Fact]
     public void Test2()
     {
-        ScopeTracker.CurrentScope.mode.Should().Be(Math.Mode.NotSpecified);
+        ScopeTracker.CurrentScope.mode.Should().Be(math.Mode.NotSpecified);
     }
 }
