@@ -7,6 +7,7 @@ public class UnitTest1
     [Fact]
     public void Test1()
     {
+        fin.sim.lang.Math.unsafe_mode();
         u8 a = 0;
         i8 b = -1;
         var c = a + b;

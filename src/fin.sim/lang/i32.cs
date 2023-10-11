@@ -25,6 +25,11 @@ public struct i32: IHasI32
         _csValue = value;
     }
 
+    private static void ThrowIfMathModeNotSpecified()
+    {
+        Math.ThrowIfModeNotSpecified();
+    }
+
     /// <summary>
     /// C# read only backing value.
     /// </summary>
@@ -83,6 +88,7 @@ public struct i32: IHasI32
     /// </summary>
     public u32 unsafe_to_u32()
     {
+        ThrowIfMathModeNotSpecified();
         int csValue = this._csReadValue;
         if (csValue > u32.MAX || csValue < u32.MIN)
         {
@@ -97,6 +103,7 @@ public struct i32: IHasI32
     /// </summary>
     public i16 unsafe_to_i16()
     {
+        ThrowIfMathModeNotSpecified();
         int csValue = this._csReadValue;
         if (csValue > i16.MAX || csValue < i16.MIN)
         {
@@ -111,6 +118,7 @@ public struct i32: IHasI32
     /// </summary>
     public u16 unsafe_to_u16()
     {
+        ThrowIfMathModeNotSpecified();
         int csValue = this._csReadValue;
         if (csValue > u16.MAX || csValue < u16.MIN)
         {
@@ -125,6 +133,7 @@ public struct i32: IHasI32
     /// </summary>
     public i8 unsafe_to_i8()
     {
+        ThrowIfMathModeNotSpecified();
         int csValue = this._csReadValue;
         if (csValue > i8.MAX || csValue < i8.MIN)
         {
@@ -139,6 +148,7 @@ public struct i32: IHasI32
     /// </summary>
     public u8 unsafe_to_u8()
     {
+        ThrowIfMathModeNotSpecified();
         int csValue = this._csReadValue;
         if (csValue > u8.MAX || csValue < u8.MIN)
         {
@@ -173,36 +183,42 @@ public struct i32: IHasI32
     
     public static bool operator ==(i32 a, i32 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue == b._csReadValue;
         return result;
     }
 
     public static bool operator !=(i32 a, i32 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue != b._csReadValue;
         return result;
     }
 
     public static bool operator <(i32 a, i32 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue < b._csReadValue;
         return result;
     }
 
     public static bool operator <=(i32 a, i32 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue <= b._csReadValue;
         return result;
     }
 
     public static bool operator >(i32 a, i32 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue > b._csReadValue;
         return result;
     }
 
     public static bool operator >=(i32 a, i32 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue >= b._csReadValue;
         return result;
     }
@@ -211,6 +227,7 @@ public struct i32: IHasI32
     
     public static i32 operator +(i32 a, i32 b)
     {
+        ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b._csReadValue;
         if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `+` operation."); }
         if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `+` operation."); }
@@ -219,6 +236,7 @@ public struct i32: IHasI32
     }
     public static i64 operator +(i32 a, i64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b._csReadValue;
         
         i64 result = (long)value;

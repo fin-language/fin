@@ -25,6 +25,11 @@ public struct u16: IHasU16
         _csValue = value;
     }
 
+    private static void ThrowIfMathModeNotSpecified()
+    {
+        Math.ThrowIfModeNotSpecified();
+    }
+
     /// <summary>
     /// C# read only backing value.
     /// </summary>
@@ -113,6 +118,7 @@ public struct u16: IHasU16
     /// </summary>
     public i16 unsafe_to_i16()
     {
+        ThrowIfMathModeNotSpecified();
         ushort csValue = this._csReadValue;
         if (csValue > i16.MAX || csValue < i16.MIN)
         {
@@ -127,6 +133,7 @@ public struct u16: IHasU16
     /// </summary>
     public i8 unsafe_to_i8()
     {
+        ThrowIfMathModeNotSpecified();
         ushort csValue = this._csReadValue;
         if (csValue > i8.MAX || csValue < i8.MIN)
         {
@@ -141,6 +148,7 @@ public struct u16: IHasU16
     /// </summary>
     public u8 unsafe_to_u8()
     {
+        ThrowIfMathModeNotSpecified();
         ushort csValue = this._csReadValue;
         if (csValue > u8.MAX || csValue < u8.MIN)
         {
@@ -165,36 +173,42 @@ public struct u16: IHasU16
     
     public static bool operator ==(u16 a, u16 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue == b._csReadValue;
         return result;
     }
 
     public static bool operator !=(u16 a, u16 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue != b._csReadValue;
         return result;
     }
 
     public static bool operator <(u16 a, u16 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue < b._csReadValue;
         return result;
     }
 
     public static bool operator <=(u16 a, u16 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue <= b._csReadValue;
         return result;
     }
 
     public static bool operator >(u16 a, u16 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue > b._csReadValue;
         return result;
     }
 
     public static bool operator >=(u16 a, u16 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue >= b._csReadValue;
         return result;
     }
@@ -203,6 +217,7 @@ public struct u16: IHasU16
     
     public static u16 operator +(u16 a, u16 b)
     {
+        ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b._csReadValue;
         if (value < u16.MIN) { throw new OverflowException($"Underflow! `{a} (u16) + {b} (u16)` result `{value}` is beyond u16 type MIN limit of `{u16.MIN}`. Explicitly widen before `+` operation."); }
         if (value > u16.MAX) { throw new OverflowException($"Overflow! `{a} (u16) + {b} (u16)` result `{value}` is beyond u16 type MAX limit of `{u16.MAX}`. Explicitly widen before `+` operation."); }
@@ -211,6 +226,7 @@ public struct u16: IHasU16
     }
     public static i32 operator +(u16 a, IHasI8 b)
     {
+        ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b.value;
         if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `+` operation."); }
         if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `+` operation."); }
@@ -219,6 +235,7 @@ public struct u16: IHasU16
     }
     public static i32 operator +(u16 a, IHasI16 b)
     {
+        ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b.value;
         if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `+` operation."); }
         if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `+` operation."); }
@@ -227,6 +244,7 @@ public struct u16: IHasU16
     }
     public static u32 operator +(u16 a, u32 b)
     {
+        ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b._csReadValue;
         if (value < u32.MIN) { throw new OverflowException($"Underflow! `{a} (u32) + {b} (u32)` result `{value}` is beyond u32 type MIN limit of `{u32.MIN}`. Explicitly widen before `+` operation."); }
         if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) + {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `+` operation."); }
@@ -235,6 +253,7 @@ public struct u16: IHasU16
     }
     public static u64 operator +(u16 a, u64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b._csReadValue;
         
         u64 result = (ulong)value;

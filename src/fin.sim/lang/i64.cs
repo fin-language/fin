@@ -25,6 +25,11 @@ public struct i64: IHasI64
         _csValue = value;
     }
 
+    private static void ThrowIfMathModeNotSpecified()
+    {
+        Math.ThrowIfModeNotSpecified();
+    }
+
     /// <summary>
     /// C# read only backing value.
     /// </summary>
@@ -75,6 +80,7 @@ public struct i64: IHasI64
     /// </summary>
     public u64 unsafe_to_u64()
     {
+        ThrowIfMathModeNotSpecified();
         long csValue = this._csReadValue;
         decimal dv = csValue; // use decimal type when C# primitives are too small
         if (dv > u64.MAX || dv < u64.MIN)
@@ -90,6 +96,7 @@ public struct i64: IHasI64
     /// </summary>
     public i32 unsafe_to_i32()
     {
+        ThrowIfMathModeNotSpecified();
         long csValue = this._csReadValue;
         decimal dv = csValue; // use decimal type when C# primitives are too small
         if (dv > i32.MAX || dv < i32.MIN)
@@ -105,6 +112,7 @@ public struct i64: IHasI64
     /// </summary>
     public u32 unsafe_to_u32()
     {
+        ThrowIfMathModeNotSpecified();
         long csValue = this._csReadValue;
         decimal dv = csValue; // use decimal type when C# primitives are too small
         if (dv > u32.MAX || dv < u32.MIN)
@@ -120,6 +128,7 @@ public struct i64: IHasI64
     /// </summary>
     public i16 unsafe_to_i16()
     {
+        ThrowIfMathModeNotSpecified();
         long csValue = this._csReadValue;
         decimal dv = csValue; // use decimal type when C# primitives are too small
         if (dv > i16.MAX || dv < i16.MIN)
@@ -135,6 +144,7 @@ public struct i64: IHasI64
     /// </summary>
     public u16 unsafe_to_u16()
     {
+        ThrowIfMathModeNotSpecified();
         long csValue = this._csReadValue;
         decimal dv = csValue; // use decimal type when C# primitives are too small
         if (dv > u16.MAX || dv < u16.MIN)
@@ -150,6 +160,7 @@ public struct i64: IHasI64
     /// </summary>
     public i8 unsafe_to_i8()
     {
+        ThrowIfMathModeNotSpecified();
         long csValue = this._csReadValue;
         decimal dv = csValue; // use decimal type when C# primitives are too small
         if (dv > i8.MAX || dv < i8.MIN)
@@ -165,6 +176,7 @@ public struct i64: IHasI64
     /// </summary>
     public u8 unsafe_to_u8()
     {
+        ThrowIfMathModeNotSpecified();
         long csValue = this._csReadValue;
         decimal dv = csValue; // use decimal type when C# primitives are too small
         if (dv > u8.MAX || dv < u8.MIN)
@@ -205,36 +217,42 @@ public struct i64: IHasI64
     
     public static bool operator ==(i64 a, i64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue == b._csReadValue;
         return result;
     }
 
     public static bool operator !=(i64 a, i64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue != b._csReadValue;
         return result;
     }
 
     public static bool operator <(i64 a, i64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue < b._csReadValue;
         return result;
     }
 
     public static bool operator <=(i64 a, i64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue <= b._csReadValue;
         return result;
     }
 
     public static bool operator >(i64 a, i64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue > b._csReadValue;
         return result;
     }
 
     public static bool operator >=(i64 a, i64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var result = a._csReadValue >= b._csReadValue;
         return result;
     }
@@ -243,6 +261,7 @@ public struct i64: IHasI64
     
     public static i64 operator +(i64 a, i64 b)
     {
+        ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b._csReadValue;
         
         i64 result = (long)value;

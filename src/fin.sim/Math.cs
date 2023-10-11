@@ -1,9 +1,16 @@
-﻿namespace fin.sim.lang;
+﻿using System;
+
+namespace fin.sim.lang;
 
 public class Math
 {
     [simonly]
     public enum Mode {
+        /// <summary>
+        /// "Not specified" is the default mode. 
+        /// We avoid the name "UnSpecified" because the start matches "Unsafe" making auto complete mistakes more likely.
+        /// </summary>
+        NotSpecified,
         Checked,
         Unsafe,
         // Exception,
@@ -38,6 +45,19 @@ public class Math
         scope.implicit_err = implicit_err;
         mode = Mode.Checked;
         implicit_err = null;
+    }
+
+    /// <summary>
+    /// Will oneday have code analyzers to ensure math mode is specified. This works for now.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    [simonly]
+    public static void ThrowIfModeNotSpecified()
+    {
+        if (Math.CurrentMode == Math.Mode.NotSpecified)
+        {
+            throw new InvalidOperationException("Math mode must be specified for now (until fin default established).");
+        }
     }
 
     [simonly]

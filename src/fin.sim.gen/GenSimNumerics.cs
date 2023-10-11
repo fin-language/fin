@@ -141,6 +141,7 @@ public class GenSimNumerics
                     /// </summary>
                     public {{narrowTypeName}} unsafe_to_{{narrowTypeName}}()
                     {
+                        ThrowIfMathModeNotSpecified();
                         {{typeInfo.GetBackingTypeName()}} csValue = this._csReadValue;
                         {{overflowCheck.IndentNewLines("        ")}}
                         return ({{narrowTypeInfo.GetBackingTypeName()}})csValue;
@@ -202,6 +203,7 @@ public class GenSimNumerics
 
             public static {{resultType.fin_name}} operator {{op}}({{classType.fin_name}} a, {{otherTypeName}} b)
             {
+                ThrowIfMathModeNotSpecified();
                 var value = a._csReadValue {{op}} {{otherValueGetter}};
                 {{GenOverflowChecks(op, resultType).IndentNewLines("        ")}}
                 {{resultType.fin_name}} result = ({{resultType.GetBackingTypeName()}})value;
@@ -217,6 +219,7 @@ public class GenSimNumerics
         var template = $$"""
             public static {{fin_type}} operator {{op}}({{fin_type}} a, {{fin_type}} b)
             {
+                ThrowIfMathModeNotSpecified();
                 var value = a._csReadValue {{op}} b._csReadValue;
                 {{overflowChecks}}
                 {{fin_type}} result = ({{backing_type}})value;
@@ -231,6 +234,7 @@ public class GenSimNumerics
         var template = $$"""
             public static {{fin_type}} operator {{op}}({{fin_type}} a, {{fin_type}} b)
             {
+                ThrowIfMathModeNotSpecified();
                 var value = a._csReadValue {{op}} b._csReadValue;
                 {{fin_type}} result = ({{backing_type}})value;
                 return result;
@@ -254,6 +258,7 @@ public class GenSimNumerics
         var template = $$"""
             public static bool operator {{op}}({{classType}} a, {{otherType}} b)
             {
+                ThrowIfMathModeNotSpecified();
                 var result = a._csReadValue {{op}} b._csReadValue;
                 return result;
             }
@@ -350,6 +355,11 @@ public class GenSimNumerics
                     _csValue = value;
                 }
             
+                private static void ThrowIfMathModeNotSpecified()
+                {
+                    Math.ThrowIfModeNotSpecified();
+                }
+
                 /// <summary>
                 /// C# read only backing value.
                 /// </summary>
