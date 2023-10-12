@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using fin.sim.err;
+using FluentAssertions;
 using System;
 using Xunit;
 
@@ -73,7 +74,7 @@ public class IntegerTest
     }
 
     [Fact]
-    public void TestOverflowMessageU8()
+    public void Unsafe_TestOverflowMessageU8()
     {
         math.unsafe_mode();
         u8 a = 255, b = 255;
@@ -82,7 +83,20 @@ public class IntegerTest
     }
 
     [Fact]
-    public void TestUnderflowMessageI8()
+    public void UserErr_TestOverflowMessageU8()
+    {
+        Err err = new();
+        math.capture_errors(err);
+        u8 a = 255, b = 255;
+        var c = a + b;
+        err.provide_context();
+
+        err.has_error().Should().BeTrue();
+        err.get_error().Should().BeOfType<OverflowError>();
+    }
+
+    [Fact]
+    public void Unsafe_TestUnderflowMessageI8()
     {
         math.unsafe_mode();
         i8 a = -120, b = -120;
@@ -91,7 +105,7 @@ public class IntegerTest
     }
 
     [Fact]
-    public void UnsafeTo()
+    public void Unsafe_UnsafeTo()
     {
         math.unsafe_mode();
         i8 a = 127;
@@ -100,7 +114,7 @@ public class IntegerTest
     }
 
     [Fact]
-    public void UnsafeToExecption()
+    public void Unsafe_UnsafeToException()
     {
         math.unsafe_mode();
         i8 a = -120;

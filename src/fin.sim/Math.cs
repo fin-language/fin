@@ -1,4 +1,5 @@
-﻿using System;
+﻿using fin.sim.err;
+using System;
 
 namespace fin.sim.lang;
 
@@ -98,6 +99,10 @@ public class math
         implicitErr = scope.implicitErrArg;
     }
 
+    // TODOLOW - should this implicitly set error context?
+    // The generated code should ideally not waste time adding error context if no error is active.
+    // It could be implicitly captured in C# simulation, but generated code would only set it if an error was active upon funciton exit?
+    // Maybe someday. Too much work for now.
     public static void capture_errors(Err err)
     {
         mode = Mode.UserProvidedErr;

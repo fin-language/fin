@@ -1,13 +1,13 @@
-﻿using fin.sim.lang;
+﻿using fin.sim.err;
+using fin.sim.lang;
 using System.Reflection;
-using FinMath = fin.sim.lang.math;
 
 namespace fin.sim;
 
 [simonly]
 public class Scope
 {
-    public FinMath.Mode mathMode;
+    public math.Mode mathMode;
 
     /// <summary>
     /// Todo support
