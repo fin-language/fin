@@ -4,6 +4,7 @@ namespace fin.sim.lang;
 
 /// <summary>
 /// Lower case name because it is meant to be a language concept and not a Class type.
+/// Also required to not clash with C# System.Math.
 /// </summary>
 public class math
 {
@@ -14,9 +15,24 @@ public class math
         /// We avoid the name "UnSpecified" because the start matches "Unsafe" making auto complete mistakes more likely.
         /// </summary>
         NotSpecified,
-        Checked,
+        
+        /// <summary>
+        /// Checked during C# simulation (will throw sim exception).
+        /// Generated C code will be unchecked.
+        /// </summary>
         Unsafe,
-        // Exception,
+
+        /// <summary>
+        /// User provided Err object to track errors.
+        /// </summary>
+        UserProvidedErr,
+
+        /// <summary>
+        /// Using global implicit Err object to track errors.
+        /// </summary>
+        //ImplicitErr,
+
+        // Someday: Exception
     };
 
     /// <summary>
@@ -82,15 +98,10 @@ public class math
         implicitErr = scope.implicitErrArg;
     }
 
-    public static void capture_err(Err err)
+    public static void capture_errors(Err err)
     {
+        mode = Mode.UserProvidedErr;
         implicitErr = err;
-    }
-
-    [simonly]
-    public static void normal_mode()
-    {
-        mode = Mode.Checked;
     }
 
     [simonly]
@@ -98,4 +109,10 @@ public class math
     {
         mode = Mode.Unsafe;
     }
+
+    //[simonly]
+    //public static void normal_mode()
+    //{
+    //    mode = Mode.ImplicitErr;
+    //}
 }
