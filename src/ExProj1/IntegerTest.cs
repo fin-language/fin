@@ -36,6 +36,26 @@ public class IntegerTest
         return a + b;
     }
 
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/10
+    /// </summary>
+    [Fact]
+    public void LambdaScopeTest()
+    {
+        math.normal_mode();
+
+        u8 a = 1, b = 1;
+        Action action = () => {
+            math.CurrentMode.Should().Be(math.Mode.Checked);    //should inherit from parent scope
+            math.unsafe_mode(); // should not affect parent scope
+            var c = a + b;
+            math.CurrentMode.Should().Be(math.Mode.Unsafe);
+        };
+
+        math.CurrentMode.Should().Be(math.Mode.Checked);    //should not be effected by lambda
+        action();
+    }
+
     [Fact]
     public void ThrowIfModeNotSpecified()
     {

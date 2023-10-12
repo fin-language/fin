@@ -1,4 +1,5 @@
-﻿using System;
+﻿using fin.sim.lang;
+using System;
 using System.Collections.Generic;
 
 namespace fin.sim;
@@ -25,13 +26,17 @@ public class ScopeTracker
 
     public static void Push(Scope scope)
     {
-        fin.sim.lang.math.StoreSettingsAndDefault(scope);
         ScopeStack.Push(scope);
     }
 
     public static void Pop()
     {
         var scope = ScopeStack.Pop();
-        lang.math.RestoreSettings(scope);
+        math.RestoreSettings(scope);
+    }
+
+    public static Scope Peek()
+    {
+        return ScopeStack.Peek();
     }
 }

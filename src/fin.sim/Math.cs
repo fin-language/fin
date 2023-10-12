@@ -33,7 +33,7 @@ public class math
     /// NOTE: Do not specify initial values for fields marked with ThreadStaticAttribute, because such initialization occurs only once, when the class constructor executes, and therefore affects only one thread. If you do not specify an initial value, you can rely on the field being initialized to its default value if it is a value type, or to null if it is a reference type.
     [System.ThreadStatic]
     [simonly]
-    private static Err? implicit_err;
+    private static Err? implicitErr;
 
     /// <summary>
     /// Should not normally be used by application code.
@@ -44,10 +44,22 @@ public class math
     [simonly]
     internal static void StoreSettingsAndDefault(Scope scope)
     {
-        scope.mode = mode;
-        scope.implicit_err = implicit_err;
+        StoreSettings(scope);
+        DefaultSettings();
+    }
+
+    [simonly]
+    internal static void DefaultSettings()
+    {
         mode = Mode.NotSpecified;
-        implicit_err = null;
+        implicitErr = null;
+    }
+
+    [simonly]
+    internal static void StoreSettings(Scope scope)
+    {
+        scope.mathMode = mode;
+        scope.implicitErrArg = implicitErr;
     }
 
     /// <summary>
@@ -66,13 +78,13 @@ public class math
     [simonly]
     internal static void RestoreSettings(Scope scope)
     {
-        mode = scope.mode;
-        implicit_err = scope.implicit_err;
+        mode = scope.mathMode;
+        implicitErr = scope.implicitErrArg;
     }
 
     public static void capture_err(Err err)
     {
-        implicit_err = err;
+        implicitErr = err;
     }
 
     [simonly]

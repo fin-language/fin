@@ -1,7 +1,9 @@
-﻿using MethodDecorator.Fody.Interfaces;
+﻿using fin.sim.lang;
+using MethodDecorator.Fody.Interfaces;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace fin.sim;
 
@@ -17,29 +19,37 @@ public class MethodInterceptorAttribute : Attribute, IAspectMatchingRule, IMetho
     public int AttributePriority { get; set; }
     public int AspectPriority { get; set; }
 
-    // https://github.com/fin-language/fin/issues/10
-    private bool is_tracked = true;
-
     public MethodInterceptorAttribute() {}
 
     // instance, method and args can be captured here and stored in attribute instance fields
     // for future usage in OnEntry/OnExit/OnException
     public void Init(object? instance, MethodBase method, object[] args)
     {
-        DontDefaultMathModeInLambdaExpression(method);
+        var scope = new Scope(instance, method, args);
 
-        if (is_tracked)
-            ScopeTracker.Push(new Scope(instance, method, args));
+        math.StoreSettings(scope);
+
+        if (IsLambdaMethod(method))
+        {
+            // keep current settings from parent method
+        }
+        else
+        {
+            math.DefaultSettings();
+        }
+
+        ScopeTracker.Push(scope);
     }
 
     /// <summary>
     /// https://github.com/fin-language/fin/issues/10
     /// </summary>
     /// <param name="method"></param>
-    private void DontDefaultMathModeInLambdaExpression(MethodBase method)
+    private static bool IsLambdaMethod(MethodBase method)
     {
         bool isCompilerGeneratedMethod = method.DeclaringType!.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Length > 0;
-        is_tracked = !isCompilerGeneratedMethod;
+        // this works for now, but the implementation could probably be improved
+        return isCompilerGeneratedMethod;
     }
 
     public void OnEntry()
@@ -49,13 +59,11 @@ public class MethodInterceptorAttribute : Attribute, IAspectMatchingRule, IMetho
 
     public void OnExit()
     {
-        if (is_tracked)
-            ScopeTracker.Pop();
+        ScopeTracker.Pop();
     }
 
     public void OnException(Exception exception)
     {
-        if (is_tracked)
-            ScopeTracker.Pop();
+        ScopeTracker.Pop();
     }
 }
