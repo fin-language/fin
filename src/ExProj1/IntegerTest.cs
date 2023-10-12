@@ -8,15 +8,6 @@ namespace ExProj1;
 public class IntegerTest
 {
     [Fact]
-    public void UserProvidedErrorTracking()
-    {
-        Err err = new();
-        math.capture_errors(err);
-        i8 a = 1;
-        a.Should().NotBe(4);
-    }
-
-    [Fact]
     public void Test2()
     {
         math.unsafe_mode();
@@ -83,13 +74,14 @@ public class IntegerTest
     }
 
     [Fact]
-    public void UserErr_TestOverflowMessageU8()
+    public void UserProvidedErr_TestOverflowMessageU8()
     {
         Err err = new();
         math.capture_errors(err);
         u8 a = 255, b = 255;
         var c = a + b;
         err.provide_context();
+        c.Should().Be(254); // wrapped around
 
         err.has_error().Should().BeTrue();
         err.get_error().Should().BeOfType<OverflowError>();

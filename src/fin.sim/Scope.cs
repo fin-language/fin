@@ -12,7 +12,7 @@ public class Scope
     /// <summary>
     /// Todo support
     /// </summary>
-    public Err? implicitErrArg;
+    public Err? mathUserProvidedErr;
 
     // TODO array access setting...
 

@@ -201,13 +201,25 @@ public struct u8: IHasU8
     }
 
 
-    
     public static u8 operator +(u8 a, u8 b)
     {
         ThrowIfMathModeNotSpecified();
         var value = a._csReadValue + b._csReadValue;
-        if (value < u8.MIN) { throw new OverflowException($"Underflow! `{a} (u8) + {b} (u8)` result `{value}` is beyond u8 type MIN limit of `{u8.MIN}`. Explicitly widen before `+` operation."); }
-        if (value > u8.MAX) { throw new OverflowException($"Overflow! `{a} (u8) + {b} (u8)` result `{value}` is beyond u8 type MAX limit of `{u8.MAX}`. Explicitly widen before `+` operation."); }
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < MIN) { throw new OverflowException($"Underflow! `{a} (u8) + {b} (u8)` result `{value}` is beyond u8 type MIN limit of `{MIN}`. Explicitly widen before `+` operation."); }
+                if (value > MAX) { throw new OverflowException($"Overflow! `{a} (u8) + {b} (u8)` result `{value}` is beyond u8 type MAX limit of `{MAX}`. Explicitly widen before `+` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
         u8 result = (byte)value;
         return result;
     }

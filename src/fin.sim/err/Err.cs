@@ -86,6 +86,18 @@ public class Err
     }
 
     /// <summary>
+    /// If no error has been set, then set the error. See also <see cref="force_set"/>.
+    /// Doesn't provide error location context.
+    /// </summary>
+    public void add_without_context(Error error)
+    {
+        if (this.error == null)
+        {
+            this.error = error;
+        }
+    }
+
+    /// <summary>
     /// If an error has been set, this will add context to the error if it doesn't already have context.
     /// Useful for adding context to math errors.
     /// </summary>
