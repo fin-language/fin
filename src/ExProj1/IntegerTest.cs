@@ -22,11 +22,6 @@ public class IntegerTest
         (u32 <= u8).Should().BeTrue();
     }
 
-    private u8 add(u8 a, u8 b)
-    {
-        // this will throw because mode not specified
-        return a + b;
-    }
 
     /// <summary>
     /// https://github.com/fin-language/fin/issues/10
@@ -61,12 +56,18 @@ public class IntegerTest
     public void ThrowIfModeNotSpecifiedNestedFunc()
     {
         u8 a = 1, b = 1;
-        Action action = () => { add(a, b); };
+        Action action = () => { add_that_will_throw(a, b); };
         action.Should().Throw<InvalidOperationException>().WithMessage("*Math mode must be specified*");
     }
 
+    private u8 add_that_will_throw(u8 a, u8 b)
+    {
+        // this will throw because mode not specified
+        return a + b;
+    }
+
     [Fact]
-    public void Unsafe_TestOverflowMessageU8()
+    public void U8Overflow_UnsafeMode()
     {
         math.unsafe_mode();
         u8 a = 255, b = 255;
@@ -75,7 +76,7 @@ public class IntegerTest
     }
 
     [Fact]
-    public void UserProvidedErr_TestOverflowMessageU8()
+    public void U8Overflow_UserProvidedErr()
     {
         Err err = mem.stack(new Err());
         math.capture_errors(err);
@@ -90,12 +91,33 @@ public class IntegerTest
     }
 
     [Fact]
-    public void Unsafe_TestUnderflowMessageI8()
+    public void I8Underflow_UnsafeMode()
     {
         math.unsafe_mode();
         i8 a = -120, b = -120;
         Action action = () => { var c = a + b; };
         action.Should().Throw<OverflowException>().WithMessage("Underflow! `-120 (i8) + -120 (i8)` result `-240` is beyond i8 type MIN limit of `-128`. Explicitly widen before `+` operation.");
+    }
+
+    [Fact]
+    public void I8AddNegToMin()
+    {
+        math.unsafe_mode();
+        i8 a = -120, b = -8;
+        i8 c = a + b;
+        c.Should().Be(-128);
+    }
+
+    [Fact]
+    public void I8Underflow_UserProvidedErr()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+        i8 a = -120, b = -9;
+        i8 c = a + b;
+        c.Should().Be(127);
+        err.get_error().Should().BeOfType<UnderflowError>();
+        err.clear();
     }
 
     [Fact]
