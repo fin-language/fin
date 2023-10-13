@@ -161,9 +161,29 @@ public class IntegerTest
         i8 a = -120;
         i8 c = a - 20;
         c.Should().Be(127 - (140 - 128 - 1));
-        err.get_error().Should().BeOfType<UnderflowError>();
-        err.clear();
+        ErrorShouldBe<UnderflowError>(err);
     }
+
+    [Fact]
+    public void I8U8Mult_OK()
+    {
+        math.unsafe_mode();
+        i8 a = 127; u8 b = 10;
+        var c = a * b;
+        c.Should().BeOfType<i16>();
+        c.Should().Be(1270);
+    }
+
+    [Fact]
+    public void U8I8Mult_OK()
+    {
+        math.unsafe_mode();
+        u8 a = 127; i8 b = 10;
+        var c = a * b;
+        c.Should().BeOfType<i16>();
+        c.Should().Be(1270);
+    }
+
 
     [Fact]
     public void I8AddNegToMin()
@@ -304,6 +324,11 @@ public class IntegerTest
         a.unsafe_to_u8(); //sets err
     }
 
+    private static void ErrorShouldBe<T>(Err err)
+    {
+        err.get_error().Should().BeOfType<T>();
+        err.clear();
+    }
 
     //--------------------------------------------------------------------------------
 

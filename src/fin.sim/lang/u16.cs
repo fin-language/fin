@@ -252,8 +252,9 @@ public struct u16: IHasU16
 
     
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// Both operands stay of type u16 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static u16 operator +(u16 a, u16 b)
     {
@@ -279,8 +280,9 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// NOTE: before the `+` operation, both operands are treated as i32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static i32 operator +(u16 a, IHasI8 b)
     {
@@ -306,8 +308,9 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// NOTE: before the `+` operation, both operands are treated as i32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static i32 operator +(u16 a, IHasI16 b)
     {
@@ -333,8 +336,9 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// NOTE: before the `+` operation, both operands are treated as u32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static u32 operator +(u16 a, u32 b)
     {
@@ -360,8 +364,9 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// NOTE: before the `+` operation, both operands are treated as u64.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static u64 operator +(u16 a, u64 b)
     {
@@ -389,8 +394,9 @@ public struct u16: IHasU16
 
     
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// Both operands stay of type u16 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static u16 operator -(u16 a, u16 b)
     {
@@ -416,8 +422,9 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// NOTE: before the `-` operation, both operands are treated as i32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static i32 operator -(u16 a, IHasI8 b)
     {
@@ -443,8 +450,9 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// NOTE: before the `-` operation, both operands are treated as i32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static i32 operator -(u16 a, IHasI16 b)
     {
@@ -470,8 +478,9 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// NOTE: before the `-` operation, both operands are treated as u32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static u32 operator -(u16 a, u32 b)
     {
@@ -497,8 +506,9 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// NOTE: before the `-` operation, both operands are treated as u64.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static u64 operator -(u16 a, u64 b)
     {
@@ -523,6 +533,147 @@ public struct u16: IHasU16
         return result;
     }
 
+
+    
+    /// <summary>
+    /// Both operands stay of type u16 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
+    /// </summary>
+    public static u16 operator *(u16 a, u16 b)
+    {
+        ThrowIfMathModeNotSpecified();
+        var value = (uint)a._csReadValue * b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u16.MIN) { throw new OverflowException($"Underflow! `{a} (u16) * {b} (u16)` result `{value}` is beyond u16 type MIN limit of `{u16.MIN}`. Explicitly widen before `*` operation."); }
+                if (value > u16.MAX) { throw new OverflowException($"Overflow! `{a} (u16) * {b} (u16)` result `{value}` is beyond u16 type MAX limit of `{u16.MAX}`. Explicitly widen before `*` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u16.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        u16 result = unchecked((ushort)value);
+        return result;
+    }
+
+    /// <summary>
+    /// NOTE: before the `*` operation, both operands are treated as i32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
+    /// </summary>
+    public static i32 operator *(u16 a, IHasI8 b)
+    {
+        ThrowIfMathModeNotSpecified();
+        var value = (int)a._csReadValue * b.value; // use `var` as convenience. it will be int when operands are smaller than int.
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) * {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `*` operation."); }
+                if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) * {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `*` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u16.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        i32 result = unchecked((int)value);
+        return result;
+    }
+
+    /// <summary>
+    /// NOTE: before the `*` operation, both operands are treated as i32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
+    /// </summary>
+    public static i32 operator *(u16 a, IHasI16 b)
+    {
+        ThrowIfMathModeNotSpecified();
+        var value = (int)a._csReadValue * b.value; // use `var` as convenience. it will be int when operands are smaller than int.
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) * {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `*` operation."); }
+                if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) * {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `*` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u16.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        i32 result = unchecked((int)value);
+        return result;
+    }
+
+    /// <summary>
+    /// NOTE: before the `*` operation, both operands are treated as u32.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
+    /// </summary>
+    public static u32 operator *(u16 a, u32 b)
+    {
+        ThrowIfMathModeNotSpecified();
+        var value = (ulong)a._csReadValue * b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u32.MIN) { throw new OverflowException($"Underflow! `{a} (u32) * {b} (u32)` result `{value}` is beyond u32 type MIN limit of `{u32.MIN}`. Explicitly widen before `*` operation."); }
+                if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) * {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `*` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u16.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        u32 result = unchecked((uint)value);
+        return result;
+    }
+
+    /// <summary>
+    /// NOTE: before the `*` operation, both operands are treated as u64.<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
+    /// </summary>
+    public static u64 operator *(u16 a, u64 b)
+    {
+        ThrowIfMathModeNotSpecified();
+        var value = (decimal)a._csReadValue * b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `*` operation."); }
+                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `*` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u16.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        u64 result = unchecked((ulong)value);
+        return result;
+    }
 
 
 

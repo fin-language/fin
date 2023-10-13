@@ -332,8 +332,9 @@ public struct u64: IHasU64
 
     
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// Both operands stay of type u64 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static u64 operator +(u64 a, u64 b)
     {
@@ -361,8 +362,9 @@ public struct u64: IHasU64
 
     
     /// <summary>
-    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// Both operands stay of type u64 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static u64 operator -(u64 a, u64 b)
     {
@@ -387,6 +389,35 @@ public struct u64: IHasU64
         return result;
     }
 
+
+    
+    /// <summary>
+    /// Both operands stay of type u64 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
+    /// </summary>
+    public static u64 operator *(u64 a, u64 b)
+    {
+        ThrowIfMathModeNotSpecified();
+        var value = (decimal)a._csReadValue * b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `*` operation."); }
+                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `*` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u64.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        u64 result = unchecked((ulong)value);
+        return result;
+    }
 
 
 

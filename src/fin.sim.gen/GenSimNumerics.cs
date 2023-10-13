@@ -210,11 +210,19 @@ public class GenSimNumerics
         // large type allows us to detect overflow and give nice error messages
         var csLargerType = classFinType.LargeEnoughToDetectOverflow(otherType)?.GetBackingTypeName() ?? "decimal";
 
+        string noteAboutResult;
+
+        if (classFinType != otherType)
+            noteAboutResult = $"NOTE: before the `{op}` operation, both operands are treated as {resultType.fin_name}.";
+        else
+            noteAboutResult = $"Both operands stay of type {classFinType.fin_name} during this operation (no implicit promotion to platform dependent int).";
+
         var template = $$"""
 
             /// <summary>
-            /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
-            /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+            /// {{noteAboutResult}}<br/>
+            /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
+            /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
             /// </summary>
             public static {{resultType.fin_name}} operator {{op}}({{classFinType.fin_name}} a, {{otherTypeArgName}} b)
             {
@@ -413,7 +421,7 @@ public class GenSimNumerics
             
                 {{GenOverflowingOperators(typeInfo, "+") + "\n"}}
                 {{GenOverflowingOperators(typeInfo, "-") + "\n"}}
-            
+                {{GenOverflowingOperators(typeInfo, "*") + "\n"}}
             
                 public override string ToString()
                 {
