@@ -114,8 +114,11 @@ public class IntegerTest
         action.Should().Throw<OverflowException>().WithMessage("Overflow! `18446744073709551615 (u64) + 2 (u64)` result `18446744073709551617` is beyond u64 type MAX limit of `18446744073709551615`. Explicitly widen before `+` operation.");
     }
 
+
+    //--------------------------------------------------------------------------------
+
     [Fact]
-    public void Unsafe_UnsafeTo()
+    public void UnsafeTo_ModeUnsafe_OK()
     {
         math.unsafe_mode();
         i8 a = 127;
@@ -124,11 +127,33 @@ public class IntegerTest
     }
 
     [Fact]
-    public void Unsafe_UnsafeToException()
+    public void UnsafeTo_ModeUserProvidedErr_OK()
+    {
+        Err err = new();
+        math.capture_errors(err);
+        i8 a = 127;
+        u8 b = a.unsafe_to_u8(); // should not throw
+        b.Should().Be(127);
+    }
+
+    [Fact]
+    public void UnsafeTo_ModeUnsafe_Exception()
     {
         math.unsafe_mode();
-        i8 a = -120;
-        Action action = () => { var c = a.unsafe_to_u8(); };
-        action.Should().Throw<OverflowException>().WithMessage("i8 value `-120` cannot be converted to type u8.");
+        i8 a = -1;
+
+        Action action = () => { u8 b = a.unsafe_to_u8(); };
+        action.Should().Throw<OverflowException>().WithMessage("Underflow! i8 value `-1` cannot be converted to type u8.");
+    }
+
+    [Fact]
+    public void UnsafeTo_ModeUserProvidedErr()
+    {
+        Err err = new();
+        math.capture_errors(err);
+        i8 a = -1;
+        u8 b = a.unsafe_to_u8();
+        err.get_error().Should().BeOfType<UnderflowError>();
+        b.Should().Be(255);
     }
 }

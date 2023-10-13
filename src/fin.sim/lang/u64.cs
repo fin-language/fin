@@ -76,114 +76,191 @@ public struct u64: IHasU64
     
     /// <summary>
     /// Potentially unsafe conversion from u64 to i64.
-    /// This operation will throw during simulation if the value won't fit.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
     public i64 unsafe_to_i64()
     {
         ThrowIfMathModeNotSpecified();
-        ulong csValue = this._csReadValue;
-        decimal dv = csValue; // use decimal type when C# primitives are too small
-        if (dv > i64.MAX || dv < i64.MIN)
+        decimal value = this._csReadValue;
+
+        switch (math.CurrentMode)
         {
-            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type i64.");
+            case math.Mode.Unsafe:
+                if (value < i64.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type i64."); }
+                if (value > i64.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type i64."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < i64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > i64.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
         }
-        return (long)csValue;
+        
+        return unchecked((long)value);
     }
 
     /// <summary>
     /// Potentially unsafe conversion from u64 to i32.
-    /// This operation will throw during simulation if the value won't fit.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
     public i32 unsafe_to_i32()
     {
         ThrowIfMathModeNotSpecified();
-        ulong csValue = this._csReadValue;
-        decimal dv = csValue; // use decimal type when C# primitives are too small
-        if (dv > i32.MAX || dv < i32.MIN)
+        decimal value = this._csReadValue;
+
+        switch (math.CurrentMode)
         {
-            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type i32.");
+            case math.Mode.Unsafe:
+                if (value < i32.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type i32."); }
+                if (value > i32.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type i32."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < i32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > i32.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
         }
-        return (int)csValue;
+        
+        return unchecked((int)value);
     }
 
     /// <summary>
     /// Potentially unsafe conversion from u64 to u32.
-    /// This operation will throw during simulation if the value won't fit.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
     public u32 unsafe_to_u32()
     {
         ThrowIfMathModeNotSpecified();
-        ulong csValue = this._csReadValue;
-        decimal dv = csValue; // use decimal type when C# primitives are too small
-        if (dv > u32.MAX || dv < u32.MIN)
+        decimal value = this._csReadValue;
+
+        switch (math.CurrentMode)
         {
-            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type u32.");
+            case math.Mode.Unsafe:
+                if (value < u32.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type u32."); }
+                if (value > u32.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type u32."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u32.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
         }
-        return (uint)csValue;
+        
+        return unchecked((uint)value);
     }
 
     /// <summary>
     /// Potentially unsafe conversion from u64 to i16.
-    /// This operation will throw during simulation if the value won't fit.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
     public i16 unsafe_to_i16()
     {
         ThrowIfMathModeNotSpecified();
-        ulong csValue = this._csReadValue;
-        decimal dv = csValue; // use decimal type when C# primitives are too small
-        if (dv > i16.MAX || dv < i16.MIN)
+        decimal value = this._csReadValue;
+
+        switch (math.CurrentMode)
         {
-            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type i16.");
+            case math.Mode.Unsafe:
+                if (value < i16.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type i16."); }
+                if (value > i16.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type i16."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > i16.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
         }
-        return (short)csValue;
+        
+        return unchecked((short)value);
     }
 
     /// <summary>
     /// Potentially unsafe conversion from u64 to u16.
-    /// This operation will throw during simulation if the value won't fit.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
     public u16 unsafe_to_u16()
     {
         ThrowIfMathModeNotSpecified();
-        ulong csValue = this._csReadValue;
-        decimal dv = csValue; // use decimal type when C# primitives are too small
-        if (dv > u16.MAX || dv < u16.MIN)
+        decimal value = this._csReadValue;
+
+        switch (math.CurrentMode)
         {
-            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type u16.");
+            case math.Mode.Unsafe:
+                if (value < u16.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type u16."); }
+                if (value > u16.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type u16."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u16.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
         }
-        return (ushort)csValue;
+        
+        return unchecked((ushort)value);
     }
 
     /// <summary>
     /// Potentially unsafe conversion from u64 to i8.
-    /// This operation will throw during simulation if the value won't fit.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
     public i8 unsafe_to_i8()
     {
         ThrowIfMathModeNotSpecified();
-        ulong csValue = this._csReadValue;
-        decimal dv = csValue; // use decimal type when C# primitives are too small
-        if (dv > i8.MAX || dv < i8.MIN)
+        decimal value = this._csReadValue;
+
+        switch (math.CurrentMode)
         {
-            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type i8.");
+            case math.Mode.Unsafe:
+                if (value < i8.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type i8."); }
+                if (value > i8.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type i8."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < i8.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > i8.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
         }
-        return (sbyte)csValue;
+        
+        return unchecked((sbyte)value);
     }
 
     /// <summary>
     /// Potentially unsafe conversion from u64 to u8.
-    /// This operation will throw during simulation if the value won't fit.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
     public u8 unsafe_to_u8()
     {
         ThrowIfMathModeNotSpecified();
-        ulong csValue = this._csReadValue;
-        decimal dv = csValue; // use decimal type when C# primitives are too small
-        if (dv > u8.MAX || dv < u8.MIN)
+        decimal value = this._csReadValue;
+
+        switch (math.CurrentMode)
         {
-            throw new OverflowException($"u64 value `{csValue}` cannot be converted to type u8.");
+            case math.Mode.Unsafe:
+                if (value < u8.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type u8."); }
+                if (value > u8.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type u8."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u8.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u8.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
         }
-        return (byte)csValue;
+        
+        return unchecked((byte)value);
     }
 
 
@@ -254,15 +331,33 @@ public struct u64: IHasU64
 
 
     
+    /// <summary>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// </summary>
     public static u64 operator +(u64 a, u64 b)
     {
         ThrowIfMathModeNotSpecified();
         var value = (decimal)a._csReadValue + b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
-        if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `+` operation."); }
-        if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `+` operation."); }
-        u64 result = (ulong)value;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `+` operation."); }
+                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `+` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u64.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        u64 result = unchecked((ulong)value);
         return result;
     }
+
 
 
 

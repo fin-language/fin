@@ -1,3 +1,4 @@
+using System.Reflection;
 using Xunit;
 
 namespace fin.sim.gen;
@@ -103,43 +104,45 @@ public class GenSimNumerics
 
     private static string GenUnsafeToConversion(TypeInfo typeInfo, TypeInfo narrowTypeInfo)
     {
-        var narrowTypeName = narrowTypeInfo.fin_name;
-
-        string overflowCheck;
+        string narrowTypeName = narrowTypeInfo.fin_name;
+        string valueType;
 
         if (typeInfo.width == 64 || narrowTypeInfo.width == 64)
         {
-            overflowCheck = $$"""
-                decimal dv = csValue; // use decimal type when C# primitives are too small
-                if (dv > {{narrowTypeName}}.MAX || dv < {{narrowTypeName}}.MIN)
-
-                """;
+            valueType = "decimal";
         }
         else
         {
-            overflowCheck = $$"""
-                if (csValue > {{narrowTypeName}}.MAX || csValue < {{narrowTypeName}}.MIN)
-
-                """;
+            valueType = $"{typeInfo.GetBackingTypeName()}";
         }
-        overflowCheck += $$"""
-                {
-                    throw new OverflowException($"{{typeInfo.fin_name}} value `{csValue}` cannot be converted to type {{narrowTypeName}}.");
-                }
-                """;
 
         var code = $$"""
 
                     /// <summary>
                     /// Potentially unsafe conversion from {{typeInfo.fin_name}} to {{narrowTypeName}}.
-                    /// This operation will throw during simulation if the value won't fit.
+                    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+                    /// or an exception will be thrown during simulation (if math mode is unsafe).
                     /// </summary>
                     public {{narrowTypeName}} unsafe_to_{{narrowTypeName}}()
                     {
                         ThrowIfMathModeNotSpecified();
-                        {{typeInfo.GetBackingTypeName()}} csValue = this._csReadValue;
-                        {{overflowCheck.IndentNewLines("        ")}}
-                        return ({{narrowTypeInfo.GetBackingTypeName()}})csValue;
+                        {{valueType}} value = this._csReadValue;
+
+                        switch (math.CurrentMode)
+                        {
+                            case math.Mode.Unsafe:
+                                if (value < {{narrowTypeName}}.MIN) { throw new OverflowException($"Underflow! {{typeInfo.fin_name}} value `{value}` cannot be converted to type {{narrowTypeName}}."); }
+                                if (value > {{narrowTypeName}}.MAX) { throw new OverflowException($"Overflow! {{typeInfo.fin_name}} value `{value}` cannot be converted to type {{narrowTypeName}}."); }
+                                break;
+                            case math.Mode.UserProvidedErr:
+                                if (value < {{narrowTypeName}}.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                                if (value > {{narrowTypeName}}.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                                break;
+                            default:
+                                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+                        }
+                        
+                        return unchecked(({{narrowTypeInfo.GetBackingTypeName()}})value);
                     }
 
                 """;
@@ -193,30 +196,48 @@ public class GenSimNumerics
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="classType"></param>
+    /// <param name="classFinType"></param>
     /// <param name="otherType"></param>
     /// <param name="otherTypeArgName">Sometimes it has to be something like IHasU8.</param>
     /// <param name="resultType"></param>
     /// <param name="op"></param>
     /// <param name="otherValueGetter"></param>
     /// <returns></returns>
-    private static string GenOverflowingOperator(TypeInfo classType, TypeInfo otherType, string otherTypeArgName, TypeInfo resultType, string op, string? otherValueGetter = null)
+    private static string GenOverflowingOperator(TypeInfo classFinType, TypeInfo otherType, string otherTypeArgName, TypeInfo resultType, string op, string? otherValueGetter = null)
     {
         otherValueGetter ??= $"b._csReadValue";
 
         // large type allows us to detect overflow and give nice error messages
-        var csLargerType = classType.LargeEnoughToDetectOverflow(otherType)?.GetBackingTypeName() ?? "decimal";
+        var csLargerType = classFinType.LargeEnoughToDetectOverflow(otherType)?.GetBackingTypeName() ?? "decimal";
 
         var template = $$"""
 
-            public static {{resultType.fin_name}} operator {{op}}({{classType.fin_name}} a, {{otherTypeArgName}} b)
+            /// <summary>
+            /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
+            /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+            /// </summary>
+            public static {{resultType.fin_name}} operator {{op}}({{classFinType.fin_name}} a, {{otherTypeArgName}} b)
             {
                 ThrowIfMathModeNotSpecified();
                 var value = ({{csLargerType}})a._csReadValue {{op}} {{otherValueGetter}}; // use `var` as convenience. it will be int when operands are smaller than int.
-                {{GenOverflowChecks(op, resultType).IndentNewLines("        ")}}
-                {{resultType.fin_name}} result = ({{resultType.GetBackingTypeName()}})value;
+
+                switch (math.CurrentMode)
+                {
+                    case math.Mode.Unsafe:
+                        {{GenOverflowChecks(op, resultType).IndentNewLines("                ")}}
+                        break;
+                    case math.Mode.UserProvidedErr:
+                        if (value < {{classFinType.fin_name}}.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                        if (value > {{classFinType.fin_name}}.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                        break;
+                    default:
+                        throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+                }
+
+                {{resultType.fin_name}} result = unchecked(({{resultType.GetBackingTypeName()}})value);
                 return result;
             }
+
         """;
 
         return template;
