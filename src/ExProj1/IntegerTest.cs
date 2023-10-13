@@ -67,7 +67,7 @@ public class IntegerTest
     }
 
     [Fact]
-    public void U8Overflow_UnsafeMode()
+    public void U8AddOverflow_UnsafeMode()
     {
         math.unsafe_mode();
         u8 a = 255, b = 255;
@@ -76,7 +76,7 @@ public class IntegerTest
     }
 
     [Fact]
-    public void U8Overflow_UserProvidedErr()
+    public void U8AddOverflow_UserProvidedErr()
     {
         Err err = mem.stack(new Err());
         math.capture_errors(err);
@@ -91,12 +91,78 @@ public class IntegerTest
     }
 
     [Fact]
-    public void I8Underflow_UnsafeMode()
+    public void U8SubUnderflow_UnsafeMode()
+    {
+        math.unsafe_mode();
+        u8 a = 1;
+        Action action = () => { var c = a - 5; };
+        action.Should().Throw<OverflowException>().WithMessage("Underflow! `1 (u8) - 5 (u8)` result `-4` is beyond u8 type MIN limit of `0`. Explicitly widen before `-` operation.");
+    }
+
+    [Fact]
+    public void U8SubUnderflow_UserProvidedErr()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+        u8 a = 0, b = 1;
+        var c = a - b;
+        err.provide_context();
+        c.Should().Be(255); // wrapped around
+
+        err.has_error().Should().BeTrue();
+        err.get_error().Should().BeOfType<UnderflowError>();
+        err.clear();
+    }
+
+    [Fact]
+    public void I8AddUnderflow_UnsafeMode()
     {
         math.unsafe_mode();
         i8 a = -120, b = -120;
         Action action = () => { var c = a + b; };
         action.Should().Throw<OverflowException>().WithMessage("Underflow! `-120 (i8) + -120 (i8)` result `-240` is beyond i8 type MIN limit of `-128`. Explicitly widen before `+` operation.");
+    }
+
+    [Fact]
+    public void I8AddUnderflow_UserProvidedErr()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+        i8 a = -120, b = -9;
+        i8 c = a + b;
+        c.Should().Be(127);
+        err.get_error().Should().BeOfType<UnderflowError>();
+        err.clear();
+    }
+
+    [Fact]
+    public void I8SubUnderflow_UnsafeMode()
+    {
+        math.unsafe_mode();
+        i8 a = -120;
+        Action action = () => { var c = a - 9; };
+        action.Should().Throw<OverflowException>().WithMessage("Underflow! `-120 (i8) - 9 (i8)` result `-129` is beyond i8 type MIN limit of `-128`. Explicitly widen before `-` operation.");
+    }
+
+    [Fact]
+    public void I8SubOverflow_UnsafeMode()
+    {
+        math.unsafe_mode();
+        i8 a = 127, b = -1;
+        Action action = () => { var c = a - b; };
+        action.Should().Throw<OverflowException>().WithMessage("Overflow! `127 (i8) - -1 (i8)` result `128` is beyond i8 type MAX limit of `127`. Explicitly widen before `-` operation.");
+    }
+
+    [Fact]
+    public void I8SubUnderflow_UserProvidedErr()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+        i8 a = -120;
+        i8 c = a - 20;
+        c.Should().Be(127 - (140 - 128 - 1));
+        err.get_error().Should().BeOfType<UnderflowError>();
+        err.clear();
     }
 
     [Fact]
@@ -109,15 +175,12 @@ public class IntegerTest
     }
 
     [Fact]
-    public void I8Underflow_UserProvidedErr()
+    public void I8Sub1()
     {
-        Err err = mem.stack(new Err());
-        math.capture_errors(err);
-        i8 a = -120, b = -9;
-        i8 c = a + b;
-        c.Should().Be(127);
-        err.get_error().Should().BeOfType<UnderflowError>();
-        err.clear();
+        math.unsafe_mode();
+        i8 a = -120;
+        i8 c = a - 5;
+        c.Should().Be(-125);
     }
 
     [Fact]

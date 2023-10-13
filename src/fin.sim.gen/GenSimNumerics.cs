@@ -412,6 +412,7 @@ public class GenSimNumerics
                 {{GenComparisonOperators(typeInfo, ">=") + "\n"}}
             
                 {{GenOverflowingOperators(typeInfo, "+") + "\n"}}
+                {{GenOverflowingOperators(typeInfo, "-") + "\n"}}
             
             
                 public override string ToString()

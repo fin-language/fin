@@ -364,6 +364,35 @@ public struct i64: IHasI64
     }
 
 
+    
+    /// <summary>
+    /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.
+    /// When math mode is `user provided err`, this operation will add an error if the value won't fit.
+    /// </summary>
+    public static i64 operator -(i64 a, i64 b)
+    {
+        ThrowIfMathModeNotSpecified();
+        var value = (decimal)a._csReadValue - b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `-` operation."); }
+                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < i64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > i64.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        i64 result = unchecked((long)value);
+        return result;
+    }
+
+
 
 
     public override string ToString()
