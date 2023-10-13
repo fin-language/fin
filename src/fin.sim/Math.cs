@@ -75,8 +75,8 @@ public class math
     [simonly]
     internal static void StoreSettings(Scope scope)
     {
-        scope.mathMode = mode;
-        scope.mathUserProvidedErr = userProvidedErr;
+        scope.prevMathMode = mode;
+        scope.prevMathUserProvidedErr = userProvidedErr;
     }
 
     /// <summary>
@@ -95,8 +95,8 @@ public class math
     [simonly]
     internal static void RestoreSettings(Scope scope)
     {
-        mode = scope.mathMode;
-        userProvidedErr = scope.mathUserProvidedErr;
+        mode = scope.prevMathMode;
+        userProvidedErr = scope.prevMathUserProvidedErr;
     }
 
     // TODOLOW - should this implicitly set error context?

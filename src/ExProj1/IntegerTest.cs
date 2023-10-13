@@ -34,7 +34,8 @@ public class IntegerTest
     [Fact]
     public void LambdaScopeTest()
     {
-        math.capture_errors(new Err());
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
 
         u8 a = 1, b = 1;
         Action action = () => {
@@ -76,7 +77,7 @@ public class IntegerTest
     [Fact]
     public void UserProvidedErr_TestOverflowMessageU8()
     {
-        Err err = new();
+        Err err = mem.stack(new Err());
         math.capture_errors(err);
         u8 a = 255, b = 255;
         var c = a + b;
@@ -85,6 +86,7 @@ public class IntegerTest
 
         err.has_error().Should().BeTrue();
         err.get_error().Should().BeOfType<OverflowError>();
+        err.clear();
     }
 
     [Fact]
@@ -129,7 +131,7 @@ public class IntegerTest
     [Fact]
     public void UnsafeTo_ModeUserProvidedErr_OK()
     {
-        Err err = new();
+        Err err = mem.stack(new Err());
         math.capture_errors(err);
         i8 a = 127;
         u8 b = a.unsafe_to_u8(); // should not throw
@@ -149,11 +151,80 @@ public class IntegerTest
     [Fact]
     public void UnsafeTo_ModeUserProvidedErr()
     {
-        Err err = new();
+        Err err = mem.stack(new Err());
         math.capture_errors(err);
         i8 a = -1;
         u8 b = a.unsafe_to_u8();
         err.get_error().Should().BeOfType<UnderflowError>();
         b.Should().Be(255);
+
+        err.clear(); // require for simulation to not throw
     }
+
+
+    //--------------------------------------------------------------------------------
+
+
+    [Fact]
+    public void Err_NotChecked_Simple()
+    {
+        Action action = () => {
+            Err err = mem.stack(new Err());
+            add_underflow_error(err);
+        };
+
+        action.Should().Throw<ErrMisuseException>();
+    }
+
+    [Fact]
+    public void Err_NotChecked_Nested()
+    {
+        Action action = () => { method_that_doesnt_clear_err(); };
+        action.Should().Throw<ErrMisuseException>();
+    }
+
+    private static void method_that_doesnt_clear_err()
+    {
+        Err err = mem.stack(new Err());
+        add_underflow_error(err);
+        err.get_error().Should().BeOfType<UnderflowError>();
+    }
+
+    [Fact]
+    public void Err_ClearWithoutCheck()
+    {
+        Action action = () => {
+            Err err = mem.stack(new Err());
+            add_underflow_error(err);
+            err.clear();
+        };
+        action.Should().Throw<ErrMisuseException>();
+    }
+
+    [Fact]
+    public void Err_DisregardError()
+    {
+        Err err = mem.stack(new Err());
+        add_underflow_error(err);
+        err.disregard_any_error();
+    }
+
+
+    //--------------------------------------------------------------------------------
+
+    private static void add_underflow_error(Err err)
+    {
+        math.capture_errors(err);
+        i8 a = -1;
+        a.unsafe_to_u8(); //sets err
+    }
+
 }
+
+
+
+
+
+
+
+

@@ -29,9 +29,15 @@ public class ScopeTracker
         ScopeStack.Push(scope);
     }
 
-    public static void Pop()
+    public static void PopAndDestroyStackObjects()
     {
         var scope = ScopeStack.Pop();
+
+        foreach (var item in scope.stackAllocatedObjects)
+        {
+            item.SimDestruct();
+        }
+
         math.RestoreSettings(scope);
     }
 

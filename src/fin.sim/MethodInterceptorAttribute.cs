@@ -19,6 +19,8 @@ public class MethodInterceptorAttribute : Attribute, IAspectMatchingRule, IMetho
     public int AttributePriority { get; set; }
     public int AspectPriority { get; set; }
 
+    private bool _alreadyExited = false;
+
     public MethodInterceptorAttribute() {}
 
     // instance, method and args can be captured here and stored in attribute instance fields
@@ -59,11 +61,33 @@ public class MethodInterceptorAttribute : Attribute, IAspectMatchingRule, IMetho
 
     public void OnExit()
     {
-        ScopeTracker.Pop();
+        try
+        {
+            ScopeTracker.PopAndDestroyStackObjects();
+        }
+        catch (Exception)
+        {
+            this._alreadyExited = true; // this prevents this.OnException from being called and trying to pop stack twice
+            throw;
+        }
     }
 
     public void OnException(Exception exception)
     {
-        ScopeTracker.Pop();
+        if (this._alreadyExited)
+        {
+            // don't pop stack if we already did that
+            return;
+        }
+
+        try
+        {
+            ScopeTracker.PopAndDestroyStackObjects();
+        }
+        catch (Exception)
+        {
+            // don't throw if we're already throwing
+            // TODOLOW differentiate between non-catchable simulation exceptions and catchable exceptions (when added)
+        }
     }
 }

@@ -47,6 +47,6 @@ public class ScopeTest
     [Fact]
     public void Test2()
     {
-        ScopeTracker.CurrentScope.mathMode.Should().Be(math.Mode.NotSpecified);
+        ScopeTracker.CurrentScope.prevMathMode.Should().Be(math.Mode.NotSpecified);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using fin.sim.err;
 using fin.sim.lang;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace fin.sim;
@@ -7,12 +8,14 @@ namespace fin.sim;
 [simonly]
 public class Scope
 {
-    public math.Mode mathMode;
+    public math.Mode prevMathMode;
 
     /// <summary>
     /// Todo support
     /// </summary>
-    public Err? mathUserProvidedErr;
+    public Err? prevMathUserProvidedErr;
+
+    public List<FinObj> stackAllocatedObjects = new();
 
     // TODO array access setting...
 

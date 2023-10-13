@@ -6,7 +6,7 @@ public class Error
     public string? method_name;
     public int line;
 
-    public void set_context(string method_name, string source_file_path, int source_line_number = 0)
+    public void set_context(string? method_name, string? source_file_path, int source_line_number = 0)
     {
         this.method_name = method_name;
         this.file = source_file_path;
