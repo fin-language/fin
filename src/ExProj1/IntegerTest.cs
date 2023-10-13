@@ -219,6 +219,24 @@ public class IntegerTest
         a.unsafe_to_u8(); //sets err
     }
 
+
+    //--------------------------------------------------------------------------------
+
+    //test that checks if C# << causes overflow exception
+    [Fact]
+    public void CSharpLangTest_ShiftLeft()
+    {
+        Action action = () =>
+        {
+            checked
+            {
+                byte a = 255;
+                a = ((byte)(a << 1));
+            }
+        };
+
+        action.Should().Throw<OverflowException>();
+    }
 }
 
 
