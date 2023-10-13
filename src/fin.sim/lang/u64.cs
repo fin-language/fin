@@ -257,8 +257,9 @@ public struct u64: IHasU64
     public static u64 operator +(u64 a, u64 b)
     {
         ThrowIfMathModeNotSpecified();
-        var value = a._csReadValue + b._csReadValue;
-        
+        var value = (decimal)a._csReadValue + b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
+        if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `+` operation."); }
+        if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `+` operation."); }
         u64 result = (ulong)value;
         return result;
     }

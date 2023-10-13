@@ -201,32 +201,20 @@ public struct u8: IHasU8
     }
 
 
+    
     public static u8 operator +(u8 a, u8 b)
     {
         ThrowIfMathModeNotSpecified();
-        var value = a._csReadValue + b._csReadValue;
-
-        switch (math.CurrentMode)
-        {
-            case math.Mode.Unsafe:
-                if (value < MIN) { throw new OverflowException($"Underflow! `{a} (u8) + {b} (u8)` result `{value}` is beyond u8 type MIN limit of `{MIN}`. Explicitly widen before `+` operation."); }
-                if (value > MAX) { throw new OverflowException($"Overflow! `{a} (u8) + {b} (u8)` result `{value}` is beyond u8 type MAX limit of `{MAX}`. Explicitly widen before `+` operation."); }
-                break;
-            case math.Mode.UserProvidedErr:
-                if (value < MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
-                if (value > MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
-                break;
-            default:
-                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
-        }
-
+        var value = (ushort)a._csReadValue + b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
+        if (value < u8.MIN) { throw new OverflowException($"Underflow! `{a} (u8) + {b} (u8)` result `{value}` is beyond u8 type MIN limit of `{u8.MIN}`. Explicitly widen before `+` operation."); }
+        if (value > u8.MAX) { throw new OverflowException($"Overflow! `{a} (u8) + {b} (u8)` result `{value}` is beyond u8 type MAX limit of `{u8.MAX}`. Explicitly widen before `+` operation."); }
         u8 result = (byte)value;
         return result;
     }
     public static i16 operator +(u8 a, IHasI8 b)
     {
         ThrowIfMathModeNotSpecified();
-        var value = a._csReadValue + b.value;
+        var value = (short)a._csReadValue + b.value; // use `var` as convenience. it will be int when operands are smaller than int.
         if (value < i16.MIN) { throw new OverflowException($"Underflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MIN limit of `{i16.MIN}`. Explicitly widen before `+` operation."); }
         if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `+` operation."); }
         i16 result = (short)value;
@@ -235,7 +223,7 @@ public struct u8: IHasU8
     public static u16 operator +(u8 a, u16 b)
     {
         ThrowIfMathModeNotSpecified();
-        var value = a._csReadValue + b._csReadValue;
+        var value = (uint)a._csReadValue + b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
         if (value < u16.MIN) { throw new OverflowException($"Underflow! `{a} (u16) + {b} (u16)` result `{value}` is beyond u16 type MIN limit of `{u16.MIN}`. Explicitly widen before `+` operation."); }
         if (value > u16.MAX) { throw new OverflowException($"Overflow! `{a} (u16) + {b} (u16)` result `{value}` is beyond u16 type MAX limit of `{u16.MAX}`. Explicitly widen before `+` operation."); }
         u16 result = (ushort)value;
@@ -244,7 +232,7 @@ public struct u8: IHasU8
     public static u32 operator +(u8 a, u32 b)
     {
         ThrowIfMathModeNotSpecified();
-        var value = a._csReadValue + b._csReadValue;
+        var value = (ulong)a._csReadValue + b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
         if (value < u32.MIN) { throw new OverflowException($"Underflow! `{a} (u32) + {b} (u32)` result `{value}` is beyond u32 type MIN limit of `{u32.MIN}`. Explicitly widen before `+` operation."); }
         if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) + {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `+` operation."); }
         u32 result = (uint)value;
@@ -253,8 +241,9 @@ public struct u8: IHasU8
     public static u64 operator +(u8 a, u64 b)
     {
         ThrowIfMathModeNotSpecified();
-        var value = a._csReadValue + b._csReadValue;
-        
+        var value = (decimal)a._csReadValue + b._csReadValue; // use `var` as convenience. it will be int when operands are smaller than int.
+        if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `+` operation."); }
+        if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `+` operation."); }
         u64 result = (ulong)value;
         return result;
     }

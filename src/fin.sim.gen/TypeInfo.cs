@@ -240,6 +240,19 @@ public class TypeInfo
         return null;
     }
 
+    public TypeInfo? LargeEnoughToDetectOverflow(TypeInfo other)
+    {
+        int maxExistingWidth = Math.Max(this.width, other.width);
+        int newWidth = maxExistingWidth * 2;
+
+        if (newWidth > 64)
+            return null;
+
+        bool atleastOneSigned = this.is_signed || other.is_signed;
+        var signChar = atleastOneSigned ? 'i' : 'u';
+
+        return new TypeInfo("" + signChar + newWidth);
+    }
 
     public bool Equals(TypeInfo other)
     {

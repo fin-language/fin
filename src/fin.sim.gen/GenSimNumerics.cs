@@ -39,11 +39,6 @@ public class GenSimNumerics
 
     private static string GenOverflowChecks(string op, TypeInfo typeInfo)
     {
-        if (typeInfo.width >= 64)
-        {
-            return "";
-        }
-
         string finType = typeInfo.fin_name;
 
         var overflowChecks = $$"""
@@ -152,11 +147,11 @@ public class GenSimNumerics
         return code;
     }
 
-    private static string GenOverflowingOperator(TypeInfo classType, string op)
+    private static string GenOverflowingOperators(TypeInfo classType, string op)
     {
         var result = "";
 
-        result += GenOverflowingOperator(classType, classType.fin_name, classType, op);
+        result += GenOverflowingOperator(classType, classType, classType.fin_name, classType, op);
 
         //for mixing signed and unsigned
         foreach (var otherType in types)
@@ -168,7 +163,7 @@ public class GenSimNumerics
 
             if (classType.is_signed == false && classType.CanPromoteToOrViceVersa(otherType) == false)
             {
-                result += GenOverflowingOperator(classType, "IHas" + otherType.fin_name.ToUpper(), resultType, op, otherValueGetter: $"b.value");
+                result += GenOverflowingOperator(classType, otherType, "IHas" + otherType.fin_name.ToUpper(), resultType, op, otherValueGetter: $"b.value");
             }
         }
 
@@ -188,23 +183,36 @@ public class GenSimNumerics
             if (resultType.width <= classType.width) continue;
             if (classType.CanPromoteTo(otherType) && classType.is_signed == otherType.is_signed)
             {
-                result += GenOverflowingOperator(classType, otherType.fin_name, resultType, op);
+                result += GenOverflowingOperator(classType, otherType, otherType.fin_name, resultType, op);
             }
         }
 
         return result;
     }
 
-    private static string GenOverflowingOperator(TypeInfo classType, string otherTypeName, TypeInfo resultType, string op, string? otherValueGetter = null)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="classType"></param>
+    /// <param name="otherType"></param>
+    /// <param name="otherTypeArgName">Sometimes it has to be something like IHasU8.</param>
+    /// <param name="resultType"></param>
+    /// <param name="op"></param>
+    /// <param name="otherValueGetter"></param>
+    /// <returns></returns>
+    private static string GenOverflowingOperator(TypeInfo classType, TypeInfo otherType, string otherTypeArgName, TypeInfo resultType, string op, string? otherValueGetter = null)
     {
-        otherValueGetter = otherValueGetter ?? $"b._csReadValue";
+        otherValueGetter ??= $"b._csReadValue";
+
+        // large type allows us to detect overflow and give nice error messages
+        var csLargerType = classType.LargeEnoughToDetectOverflow(otherType)?.GetBackingTypeName() ?? "decimal";
 
         var template = $$"""
 
-            public static {{resultType.fin_name}} operator {{op}}({{classType.fin_name}} a, {{otherTypeName}} b)
+            public static {{resultType.fin_name}} operator {{op}}({{classType.fin_name}} a, {{otherTypeArgName}} b)
             {
                 ThrowIfMathModeNotSpecified();
-                var value = a._csReadValue {{op}} {{otherValueGetter}};
+                var value = ({{csLargerType}})a._csReadValue {{op}} {{otherValueGetter}}; // use `var` as convenience. it will be int when operands are smaller than int.
                 {{GenOverflowChecks(op, resultType).IndentNewLines("        ")}}
                 {{resultType.fin_name}} result = ({{resultType.GetBackingTypeName()}})value;
                 return result;
@@ -214,37 +222,7 @@ public class GenSimNumerics
         return template;
     }
 
-    private static string GenOverflowingOperator(string fin_type, string backing_type, string op, string overflowChecks)
-    {
-        var template = $$"""
-            public static {{fin_type}} operator {{op}}({{fin_type}} a, {{fin_type}} b)
-            {
-                ThrowIfMathModeNotSpecified();
-                var value = a._csReadValue {{op}} b._csReadValue;
-                {{overflowChecks}}
-                {{fin_type}} result = ({{backing_type}})value;
-                return result;
-            }
-        """;
-        return template;
-    }
-
-    private static string GenNonOverflowingOperator(string fin_type, string backing_type, string op)
-    {
-        var template = $$"""
-            public static {{fin_type}} operator {{op}}({{fin_type}} a, {{fin_type}} b)
-            {
-                ThrowIfMathModeNotSpecified();
-                var value = a._csReadValue {{op}} b._csReadValue;
-                {{fin_type}} result = ({{backing_type}})value;
-                return result;
-            }
-        """;
-
-        return template;
-    }
-
-    private static string GenComparisonOperator(TypeInfo classType, string op)
+    private static string GenComparisonOperators(TypeInfo classType, string op)
     {
         var result = "";
 
@@ -405,14 +383,14 @@ public class GenSimNumerics
                 {{wrappingConversions.Trim()}}
             
                 {{header("comparisons")}}
-                {{GenComparisonOperator(typeInfo, "==") + "\n"}}
-                {{GenComparisonOperator(typeInfo, "!=") + "\n"}}
-                {{GenComparisonOperator(typeInfo, "<") + "\n"}}
-                {{GenComparisonOperator(typeInfo, "<=") + "\n"}}
-                {{GenComparisonOperator(typeInfo, ">") + "\n"}}
-                {{GenComparisonOperator(typeInfo, ">=") + "\n"}}
+                {{GenComparisonOperators(typeInfo, "==") + "\n"}}
+                {{GenComparisonOperators(typeInfo, "!=") + "\n"}}
+                {{GenComparisonOperators(typeInfo, "<") + "\n"}}
+                {{GenComparisonOperators(typeInfo, "<=") + "\n"}}
+                {{GenComparisonOperators(typeInfo, ">") + "\n"}}
+                {{GenComparisonOperators(typeInfo, ">=") + "\n"}}
             
-                {{GenOverflowingOperator(typeInfo, "+") + "\n"}}
+                {{GenOverflowingOperators(typeInfo, "+") + "\n"}}
             
             
                 public override string ToString()

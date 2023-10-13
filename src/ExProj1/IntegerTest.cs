@@ -97,6 +97,24 @@ public class IntegerTest
     }
 
     [Fact]
+    public void Unsafe_TestOverflowI32()
+    {
+        math.unsafe_mode();
+        i32 a = i32.MAX, b = 2;
+        Action action = () => { var c = a + b; };
+        action.Should().Throw<OverflowException>().WithMessage("Overflow! `2147483647 (i32) + 2 (i32)` result `2147483649` is beyond i32 type MAX limit of `2147483647`. Explicitly widen before `+` operation.");
+    }
+
+    [Fact]
+    public void Unsafe_TestOverflowU64()
+    {
+        math.unsafe_mode();
+        u64 a = u64.MAX, b = 2;
+        Action action = () => { var c = a + b; };
+        action.Should().Throw<OverflowException>().WithMessage("Overflow! `18446744073709551615 (u64) + 2 (u64)` result `18446744073709551617` is beyond u64 type MAX limit of `18446744073709551615`. Explicitly widen before `+` operation.");
+    }
+
+    [Fact]
     public void Unsafe_UnsafeTo()
     {
         math.unsafe_mode();
