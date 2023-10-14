@@ -9,6 +9,28 @@ public class GenSimNumericsTestsSimple
     {
         var path = TestHelper.GetThisDir() + "../fin.sim.test/IntegerCombinationTest.cs";
 
+        string code = "";
+
+        var types = GenSimNumerics.types;
+
+        foreach (var type in types)
+        {
+            foreach (var type2 in types)
+            {
+                var resultType = type.GetResultType(type2);
+
+                if (resultType.width > 64)
+                    code += "//";
+
+                code += $"{{ var c = {type.fin_name} + {type2.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); }}";
+
+                if (resultType.width > 64)
+                    code += "  // not allowed for now (need 128 bit or extra logic)";
+
+                code += "\n";
+            }
+        }
+
         var template = $$"""
             // NOTE!!! Auto generated
             using FluentAssertions;
@@ -32,8 +54,7 @@ public class GenSimNumericsTestsSimple
                     u32 u32 = 1;
                     u64 u64 = 1;
 
-                    { var c = i8 + i8; c.Should().BeOfType<i8>(); }
-                    { var c = i8 + u8; c.Should().BeOfType<i16>(); }
+                    {{code.IndentNewLines("        ")}}
                 }
             }
             """;

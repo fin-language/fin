@@ -90,38 +90,6 @@ public class TypeInfo
         return backing_type;
     }
 
-    public static TypeInfo GetSingleUnsignedType(TypeInfo a, TypeInfo b)
-    {
-        TypeInfo result_a = (a.is_signed == false) ? a : null;
-        TypeInfo result_b = (b.is_signed == false) ? b : null;
-
-        if (result_a != null && result_b != null)
-        {
-            throw new Exception("only one should be");
-        }
-
-        return result_a ?? result_b;
-    }
-
-    public static TypeInfo GetSingleSignedType(TypeInfo a, TypeInfo b)
-    {
-        TypeInfo result_a = (a.is_signed) ? a : null;
-        TypeInfo result_b = (b.is_signed) ? b : null;
-
-        if (result_a != null && result_b != null)
-        {
-            throw new Exception("only one should be");
-        }
-
-        return result_a ?? result_b;
-    }
-
-    public (TypeInfo unsigned, TypeInfo signed) DetermineUnsignedSigned(TypeInfo a, TypeInfo b)
-    {
-        (TypeInfo unsigned, TypeInfo signed) result = (GetSingleUnsignedType(a, b), GetSingleSignedType(a, b));
-        return result;
-    }
-
     public TypeInfo GetResultType(TypeInfo other)
     {
         int width = Math.Max(this.width, other.width);
