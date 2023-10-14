@@ -6,6 +6,21 @@ using System;
 
 namespace fin.sim.lang;
 
+public struct _i8_kind
+{
+    internal sbyte _csValue;
+
+    public sbyte value => _csValue;
+
+    public _i8_kind(sbyte csValue)
+    {
+        _csValue = csValue;
+    }
+
+    public static implicit operator _i8_kind(sbyte num) { return new _i8_kind(num); }
+}
+
+
 public struct u8: IHasU8
 {
     public const byte MAX = 255;
@@ -248,6 +263,29 @@ public struct u8: IHasU8
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
     public static i16 operator +(u8 a, IHasI8 b)
+    {
+        ThrowIfMathModeNotSpecified();
+        var value = (short)a._csReadValue + b.value; // use `var` as convenience. it will be int when operands are smaller than int.
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < i16.MIN) { throw new OverflowException($"Underflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MIN limit of `{i16.MIN}`. Explicitly widen before `+` operation."); }
+                if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `+` operation."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u8.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u8.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+
+        i16 result = unchecked((short)value);
+        return result;
+    }
+
+    public static i16 operator +(u8 a, _i8_kind b)
     {
         ThrowIfMathModeNotSpecified();
         var value = (short)a._csReadValue + b.value; // use `var` as convenience. it will be int when operands are smaller than int.

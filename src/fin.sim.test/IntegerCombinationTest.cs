@@ -124,7 +124,7 @@ public class IntegerCombinationTest
         { var c = i64 + 254; c.Should().BeOfType<i64>(); c.Should().Be(255); }
         { var c = i64 + 65534; c.Should().BeOfType<i64>(); c.Should().Be(65535); }
         { var c = i64 + 4294967294; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
-        { var c = u8 + 126; c.Should().BeOfType<u8>(); c.Should().Be(127); }
+        { var c = u8 + 126; c.Should().BeOfType<u8>(); c.Should().Be(127); } // error
         { var c = u8 + 32766; c.Should().BeOfType<u16>(); c.Should().Be(32767); }
         { var c = u8 + 2147483646; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
         { var c = u8 + 9223372036854775806; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
@@ -176,7 +176,7 @@ public class IntegerCombinationTest
         { var c = i16 + 1; c.Should().BeOfType<i16>(); c.Should().Be(2); }
         { var c = i32 + 1; c.Should().BeOfType<i32>(); c.Should().Be(2); }
         { var c = i64 + 1; c.Should().BeOfType<i64>(); c.Should().Be(2); }
-        { var c = u8 + 1; c.Should().BeOfType<u8>(); c.Should().Be(2); }
+        { var c = u8 + 1; c.Should().BeOfType<u8>(); c.Should().Be(2); } //error
         { var c = u16 + 1; c.Should().BeOfType<u16>(); c.Should().Be(2); }
         { var c = u32 + 1; c.Should().BeOfType<u32>(); c.Should().Be(2); }
         { var c = u64 + 1; c.Should().BeOfType<u64>(); c.Should().Be(2); }
@@ -212,7 +212,7 @@ public class IntegerCombinationTest
         { var c = i64 + -32768; c.Should().BeOfType<i64>(); c.Should().Be(-32767); }
         { var c = i64 + -2147483648; c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }
         { var c = i64 + -9223372036854775808; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        { var c = u8 + /* required cast */ (-128); c.Should().BeOfType<i16>(); c.Should().Be(-127); }
+        { var c = u8 + -128; c.Should().BeOfType<i16>(); c.Should().Be(-127); }
         { var c = u8 + /* required cast */ (i16)(-32768); c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
         { var c = u8 + /* required cast */ (i32)(-2147483648); c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
         { var c = u8 + /* required cast */ (i64)(-9223372036854775808); c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
