@@ -225,6 +225,11 @@ public class TypeInfo
         return new TypeInfo("" + signChar + newWidth);
     }
 
+    public override string ToString()
+    {
+        return fin_name;
+    }
+
     public bool Equals(TypeInfo other)
     {
         return fin_name.Equals(other.fin_name);

@@ -88,7 +88,8 @@ public class GenSimNumericsTestsSimple
     /// <returns></returns>
     private static string GenPositiveLiteralTestCode(TypeInfo[] types)
     {
-        string code = "";
+        string finPlusLiteral = "";
+        string literalPlusFin = "";
 
         foreach (var type in types)
         {
@@ -101,7 +102,18 @@ public class GenSimNumericsTestsSimple
 
                 TypeInfo resultType = type.GetResultType(literalType);
 
-                code += $"{{ var c = {type.fin_name} + {value}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
+                finPlusLiteral += $"{{ var c = {type.fin_name} + {value}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
+
+                // https://github.com/fin-language/fin/issues/12
+                if (literalType.Equals(type) || literalType.CanPromoteTo(type))
+                {
+                    literalPlusFin += $"{{ var c = {value} + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
+                }
+                else
+                {
+                    literalPlusFin += $"{{ var c = ({literalType.fin_name}){value} + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
+                    literalPlusFin += $"//        cast above required for https://github.com/fin-language/fin/issues/12\n";
+                }
             }
         }
 
@@ -119,7 +131,11 @@ public class GenSimNumericsTestsSimple
                 u32 u32 = 1;
                 u64 u64 = 1;
 
-                {{code.IndentNewLines("    ")}}
+                // fin + literal tests
+                {{finPlusLiteral.IndentNewLines("    ")}}
+            
+                // literal + fin tests
+                {{literalPlusFin.IndentNewLines("    ")}}
             }
             """;
         return testCode;
@@ -132,11 +148,13 @@ public class GenSimNumericsTestsSimple
     /// <returns></returns>
     private static string GenPositive1LiteralTestCode(TypeInfo[] types)
     {
-        string code = "";
+        string finPlusLiteral = "";
+        string literalPlusFin = "";
 
         foreach (var type in types)
         {
-            code += $"{{ var c = {type.fin_name} + 1; c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(2); }}\n";
+            finPlusLiteral += $"{{ var c = {type.fin_name} + 1; c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(2); }}\n";
+            literalPlusFin += $"{{ var c = 1 + {type.fin_name}; c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(2); }}\n";
         }
 
         var testCode = $$"""
@@ -153,7 +171,11 @@ public class GenSimNumericsTestsSimple
                 u32 u32 = 1;
                 u64 u64 = 1;
 
-                {{code.IndentNewLines("    ")}}
+                // fin + literal tests
+                {{finPlusLiteral.IndentNewLines("    ")}}
+            
+                // literal + fin tests
+                {{literalPlusFin.IndentNewLines("    ")}}
             }
             """;
         return testCode;
@@ -167,7 +189,8 @@ public class GenSimNumericsTestsSimple
     /// <returns></returns>
     private static string GenAddNegLiteralTestCode(TypeInfo[] types)
     {
-        string code = "";
+        string finPlusLiteral = "";
+        string literalPlusFin = "";
 
         foreach (var type in types)
         {
@@ -179,10 +202,36 @@ public class GenSimNumericsTestsSimple
                     continue;
 
                 string value = type2.GetMinValue() + "";
-                if (type.is_unsigned)
-                    value = $"/* required cast */ ({type2.fin_name})({value})";
+                if (type.is_signed)
+                {
+                    finPlusLiteral += $"{{ var c = {type.fin_name} + {value}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                }
+                else
+                {
+                    // https://github.com/fin-language/fin/issues/11
+                    finPlusLiteral += $"{{ var c = {type.fin_name} + ({type2.fin_name})({value}); c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                    finPlusLiteral += $"//             cast above required for https://github.com/fin-language/fin/issues/11\n";
+                }
 
-                code += $"{{ var c = {type.fin_name} + {value}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                // https://github.com/fin-language/fin/issues/11
+                // https://github.com/fin-language/fin/issues/12
+                if (type2.Equals(type) || type2.CanPromoteTo(type))
+                {
+                    literalPlusFin += $"{{ var c = {value} + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                }
+                else
+                {
+                    if (type.is_signed)
+                    {
+                        literalPlusFin += $"{{ var c = ({type2.fin_name})({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                        literalPlusFin += $"//        cast above required for https://github.com/fin-language/fin/issues/12\n";
+                    }
+                    else
+                    {
+                        literalPlusFin += $"{{ var c = ({type2.fin_name})({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                        literalPlusFin += $"//        cast above required for https://github.com/fin-language/fin/issues/11\n";
+                    }
+                }
             }
         }
 
@@ -200,7 +249,11 @@ public class GenSimNumericsTestsSimple
                 u32 u32 = 1;
                 u64 u64 = 1;
 
-                {{code.IndentNewLines("    ")}}
+                // fin + literal tests
+                {{finPlusLiteral.IndentNewLines("    ")}}
+            
+                // literal + fin tests
+                {{literalPlusFin.IndentNewLines("    ")}}
             }
             """;
         return testCode;
@@ -215,7 +268,8 @@ public class GenSimNumericsTestsSimple
     /// <returns></returns>
     private static string GenAddNeg1LiteralTestCode(TypeInfo[] types)
     {
-        string code = "";
+        string finPlusLiteral = "";
+        string literalPlusFin = "";
 
         var neg1Type = new TypeInfo("i8");
 
@@ -226,10 +280,16 @@ public class GenSimNumericsTestsSimple
                 continue;
 
             string value = "-1";
+            string preLineInfo = "";
             if (type.is_unsigned)
-                value = $"/* required cast */ (i8)({value})";
+            {
+                value = $"(i8)({value})";
+                preLineInfo = "// cast required for now https://github.com/fin-language/fin/issues/11\n";
+            }
 
-            code += $"{{ var c = {type.fin_name} + {value}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be(0); }}\n";
+            finPlusLiteral += $"{preLineInfo}{{ var c = {type.fin_name} + {value}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be(0); }}\n";
+
+            literalPlusFin += $"{preLineInfo}{{ var c = {value} + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be(0); }}\n";
         }
 
         var testCode = $$"""
@@ -246,7 +306,11 @@ public class GenSimNumericsTestsSimple
                 u32 u32 = 1;
                 u64 u64 = 1;
 
-                {{code.IndentNewLines("    ")}}
+                // fin + literal tests
+                {{finPlusLiteral.IndentNewLines("    ")}}
+
+                // literal + fin tests
+                {{literalPlusFin.IndentNewLines("    ")}}
             }
             """;
         return testCode;
