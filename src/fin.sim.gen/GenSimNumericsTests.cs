@@ -7,6 +7,7 @@ public class GenSimNumericsTests
     public void GenTests()
     {
         const string dir_path = @"..\..\..\";
+
         var output = $@"
 //NOTE! AUTO GENERATED
 

@@ -1,7 +1,4 @@
-using FluentAssertions;
-using Xunit;
-
-namespace ExProj1;
+namespace fin.sim.test;
 
 public class Sample
 {

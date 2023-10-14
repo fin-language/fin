@@ -1,9 +1,9 @@
 ﻿using fin.sim.err;
+using fin.sim.lang;
 using FluentAssertions;
 using System;
-using Xunit;
 
-namespace ExProj1;
+namespace fin.sim.test;
 
 public class IntegerTest
 {
