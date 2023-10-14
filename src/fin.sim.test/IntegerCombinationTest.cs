@@ -212,7 +212,7 @@ public class IntegerCombinationTest
         { var c = i64 + -32768; c.Should().BeOfType<i64>(); c.Should().Be(-32767); }
         { var c = i64 + -2147483648; c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }
         { var c = i64 + -9223372036854775808; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        { var c = u8 + /* required cast */ (-128); c.Should().BeOfType<i16>(); c.Should().Be(-127); }
+        { var c = u8 + /* required cast */ (i8)(-128); c.Should().BeOfType<i16>(); c.Should().Be(-127); }
         { var c = u8 + /* required cast */ (i16)(-32768); c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
         { var c = u8 + /* required cast */ (i32)(-2147483648); c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
         { var c = u8 + /* required cast */ (i64)(-9223372036854775808); c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
