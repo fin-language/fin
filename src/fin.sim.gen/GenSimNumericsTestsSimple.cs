@@ -89,20 +89,13 @@ public class GenSimNumericsTestsSimple
         {
             foreach (var type2 in types)
             {
-                if (type.is_signed != type2.is_signed)
-                    continue;
-
                 var resultType = type.GetResultType(type2);
 
-                if (resultType.width > 64)
-                    code += "//";
-
-                code += $"{{ var c = {type.fin_name} + {type2.GetMaxValue() - 1}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMaxValue()}); }}";
-
-                if (resultType.width > 64)
-                    code += "  // not allowed for now (need 128 bit or extra logic)";
-
-                code += "\n";
+                if (resultType.width <= 64)
+                {
+                    code += $"{{ var c = {type.fin_name} + 1; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be(2); }}\n";
+                    code += $"{{ var c = {type.fin_name} + {type2.GetMaxValue() - 1}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMaxValue()}); }}\n";
+                }
             }
         }
 
@@ -111,10 +104,10 @@ public class GenSimNumericsTestsSimple
             public void SameSignLiteralTest()
             {
                 math.unsafe_mode();
-                //i8 i8 = 1;
-                //i16 i16 = 1;
-                //i32 i32 = 1;
-                //i64 i64 = 1;
+                i8 i8 = 1;
+                i16 i16 = 1;
+                i32 i32 = 1;
+                i64 i64 = 1;
                 u8 u8 = 1;
                 u16 u16 = 1;
                 u32 u32 = 1;
@@ -138,25 +131,15 @@ public class GenSimNumericsTestsSimple
 
         foreach (var type in types)
         {
-            if (type.is_signed)
-                continue;
-
             foreach (var type2 in types)
             {
-                if (!type2.is_signed)
-                    continue;
-
                 var resultType = type.GetResultType(type2);
 
-                if (resultType.width > 64)
-                    code += "//";
-
-                code += $"{{ var c = {type.fin_name} + {type2.GetMinValue()}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMaxValue() + 1}); }}";
-
-                if (resultType.width > 64)
-                    code += "  // not allowed for now (need 128 bit or extra logic)";
-
-                code += "\n";
+                if (resultType.width <= 64 && type2.is_signed)
+                {
+                    code += $"{{ var c = {type.fin_name} + -1; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be(0); }}\n";
+                    code += $"{{ var c = {type.fin_name} + {type2.GetMinValue()}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                }
             }
         }
 
