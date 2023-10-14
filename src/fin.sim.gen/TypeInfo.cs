@@ -123,7 +123,7 @@ public class TypeInfo
         return result;
     }
 
-    public TypeInfo GetResultTypeFromLiteral(decimal literal_value)
+    public TypeInfo? GetResultTypeFromLiteral(decimal literal_value)
     {
         TypeInfo result;
         int new_width = width;
@@ -136,6 +136,9 @@ public class TypeInfo
             {
 
                 result = new TypeInfo("" + sign_char + new_width);
+
+                if (result.width > 64)
+                    return null;
 
                 decimal max = result.GetMaxValue();
                 decimal min = result.GetMinValue();
