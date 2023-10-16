@@ -51,6 +51,14 @@ public struct i64: IHasI64
     }
 
     /// <summary>
+    /// Useful for when you need to specify an integer literal's type that could be many types.<br/>
+    /// For example, in the code below, the `2` integer literal could be many different int types, but we want an i16.
+    /// <code>var c = i64.from(2) + my_i64;</code>
+    /// See https://github.com/fin-language/fin/issues/13
+    /// </summary>
+    public static i64 from(i64 value) => value;
+
+    /// <summary>
     /// Implicit conversion from C# numeric type to fin numeric type.
     /// </summary>
     public static implicit operator i64(long num) { return new i64(num); }

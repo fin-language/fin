@@ -13,6 +13,7 @@ public class UnitTest1
         var c = a + b;
 
         a = u8.MAX;
+        
         //a = a + 1;
         //a++;
 

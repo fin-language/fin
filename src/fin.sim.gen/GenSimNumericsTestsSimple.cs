@@ -111,8 +111,8 @@ public class GenSimNumericsTestsSimple
                 }
                 else
                 {
-                    literalPlusFin += $"{{ var c = ({literalType.fin_name}){value} + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
-                    literalPlusFin += $"//        cast above required for https://github.com/fin-language/fin/issues/12\n";
+                    literalPlusFin += $"{{ var c = {literalType.fin_name}.from({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
+                    literalPlusFin += $"//        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12\n";
                 }
             }
         }
@@ -209,8 +209,8 @@ public class GenSimNumericsTestsSimple
                 else
                 {
                     // https://github.com/fin-language/fin/issues/11
-                    finPlusLiteral += $"{{ var c = {type.fin_name} + ({type2.fin_name})({value}); c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
-                    finPlusLiteral += $"//             cast above required for https://github.com/fin-language/fin/issues/11\n";
+                    finPlusLiteral += $"{{ var c = {type.fin_name} + {type2.fin_name}.from({value}); c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                    finPlusLiteral += $"//             conversion above required for https://github.com/fin-language/fin/issues/11\n";
                 }
 
                 // https://github.com/fin-language/fin/issues/11
@@ -223,13 +223,19 @@ public class GenSimNumericsTestsSimple
                 {
                     if (type.is_signed)
                     {
-                        literalPlusFin += $"{{ var c = ({type2.fin_name})({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
-                        literalPlusFin += $"//        cast above required for https://github.com/fin-language/fin/issues/12\n";
+                        literalPlusFin += $"//↓↓ Specifying literal type required for https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12\n";
+                        literalPlusFin += "{\n";
+                        literalPlusFin += $"    {{ var c = {type2.fin_name}.from({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}  // .from() is preferred\n";
+                        literalPlusFin += $"    {{ var c = ({type2.fin_name})({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                        literalPlusFin += "}\n";
                     }
                     else
                     {
-                        literalPlusFin += $"{{ var c = ({type2.fin_name})({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
-                        literalPlusFin += $"//        cast above required for https://github.com/fin-language/fin/issues/11\n";
+                        literalPlusFin += $"//↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, \n";
+                        literalPlusFin += "{\n";
+                        literalPlusFin += $"    {{ var c = {type2.fin_name}.from({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}  // .from() is preferred\n";
+                        literalPlusFin += $"    {{ var c = ({type2.fin_name})({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({type2.GetMinValue() + 1}); }}\n";
+                        literalPlusFin += "}\n";
                     }
                 }
             }
@@ -283,8 +289,9 @@ public class GenSimNumericsTestsSimple
             string preLineInfo = "";
             if (type.is_unsigned)
             {
-                value = $"(i8)({value})";
-                preLineInfo = "// cast required for now https://github.com/fin-language/fin/issues/11\n";
+                //value = $"(i8)({value})";
+                value = $"i8.from({value})";
+                preLineInfo = $"//↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, \n";
             }
 
             finPlusLiteral += $"{preLineInfo}{{ var c = {type.fin_name} + {value}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be(0); }}\n";

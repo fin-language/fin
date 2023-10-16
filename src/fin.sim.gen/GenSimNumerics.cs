@@ -388,6 +388,14 @@ public class GenSimNumerics
                 }
             
                 /// <summary>
+                /// Useful for when you need to specify an integer literal's type that could be many types.<br/>
+                /// For example, in the code below, the `2` integer literal could be many different int types, but we want an i16.
+                /// <code>var c = {{typeInfo.fin_name}}.from(2) + my_{{typeInfo.fin_name}};</code>
+                /// See https://github.com/fin-language/fin/issues/13
+                /// </summary>
+                public static {{typeInfo.fin_name}} from({{typeInfo.fin_name}} value) => value;
+
+                /// <summary>
                 /// Implicit conversion from C# numeric type to fin numeric type.
                 /// </summary>
                 public static implicit operator {{typeInfo.fin_name}}({{backing_type}} num) { return new {{typeInfo.fin_name}}(num); }

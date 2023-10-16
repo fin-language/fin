@@ -51,6 +51,14 @@ public struct i8: IHasI8
     }
 
     /// <summary>
+    /// Useful for when you need to specify an integer literal's type that could be many types.<br/>
+    /// For example, in the code below, the `2` integer literal could be many different int types, but we want an i16.
+    /// <code>var c = i8.from(2) + my_i8;</code>
+    /// See https://github.com/fin-language/fin/issues/13
+    /// </summary>
+    public static i8 from(i8 value) => value;
+
+    /// <summary>
     /// Implicit conversion from C# numeric type to fin numeric type.
     /// </summary>
     public static implicit operator i8(sbyte num) { return new i8(num); }

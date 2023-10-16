@@ -161,38 +161,38 @@ public class IntegerCombinationTest
     
         // literal + fin tests
         { var c = 126 + i8; c.Should().BeOfType<i8>(); c.Should().Be(127); }
-        { var c = (i16)32766 + i8; c.Should().BeOfType<i16>(); c.Should().Be(32767); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i32)2147483646 + i8; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i64)9223372036854775806 + i8; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i16)254 + i8; c.Should().BeOfType<i16>(); c.Should().Be(255); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i32)65534 + i8; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i64)4294967294 + i8; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = i16.from(32766) + i8; c.Should().BeOfType<i16>(); c.Should().Be(32767); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = i32.from(2147483646) + i8; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = i64.from(9223372036854775806) + i8; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = i16.from(254) + i8; c.Should().BeOfType<i16>(); c.Should().Be(255); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = i32.from(65534) + i8; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = i64.from(4294967294) + i8; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i16; c.Should().BeOfType<i16>(); c.Should().Be(127); }
         { var c = 32766 + i16; c.Should().BeOfType<i16>(); c.Should().Be(32767); }
-        { var c = (i32)2147483646 + i16; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i64)9223372036854775806 + i16; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = i32.from(2147483646) + i16; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = i64.from(9223372036854775806) + i16; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + i16; c.Should().BeOfType<i16>(); c.Should().Be(255); }
-        { var c = (i32)65534 + i16; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i64)4294967294 + i16; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = i32.from(65534) + i16; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = i64.from(4294967294) + i16; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i32; c.Should().BeOfType<i32>(); c.Should().Be(127); }
         { var c = 32766 + i32; c.Should().BeOfType<i32>(); c.Should().Be(32767); }
         { var c = 2147483646 + i32; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
-        { var c = (i64)9223372036854775806 + i32; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = i64.from(9223372036854775806) + i32; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + i32; c.Should().BeOfType<i32>(); c.Should().Be(255); }
         { var c = 65534 + i32; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
-        { var c = (i64)4294967294 + i32; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = i64.from(4294967294) + i32; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i64; c.Should().BeOfType<i64>(); c.Should().Be(127); }
         { var c = 32766 + i64; c.Should().BeOfType<i64>(); c.Should().Be(32767); }
         { var c = 2147483646 + i64; c.Should().BeOfType<i64>(); c.Should().Be(2147483647); }
@@ -201,41 +201,41 @@ public class IntegerCombinationTest
         { var c = 65534 + i64; c.Should().BeOfType<i64>(); c.Should().Be(65535); }
         { var c = 4294967294 + i64; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
         { var c = 126 + u8; c.Should().BeOfType<u8>(); c.Should().Be(127); }
-        { var c = (u16)32766 + u8; c.Should().BeOfType<u16>(); c.Should().Be(32767); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (u32)2147483646 + u8; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (u64)9223372036854775806 + u8; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = u16.from(32766) + u8; c.Should().BeOfType<u16>(); c.Should().Be(32767); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = u32.from(2147483646) + u8; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = u64.from(9223372036854775806) + u8; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + u8; c.Should().BeOfType<u8>(); c.Should().Be(255); }
-        { var c = (u16)65534 + u8; c.Should().BeOfType<u16>(); c.Should().Be(65535); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (u32)4294967294 + u8; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (u64)18446744073709551614 + u8; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = u16.from(65534) + u8; c.Should().BeOfType<u16>(); c.Should().Be(65535); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = u32.from(4294967294) + u8; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = u64.from(18446744073709551614) + u8; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + u16; c.Should().BeOfType<u16>(); c.Should().Be(127); }
         { var c = 32766 + u16; c.Should().BeOfType<u16>(); c.Should().Be(32767); }
-        { var c = (u32)2147483646 + u16; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (u64)9223372036854775806 + u16; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = u32.from(2147483646) + u16; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = u64.from(9223372036854775806) + u16; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + u16; c.Should().BeOfType<u16>(); c.Should().Be(255); }
         { var c = 65534 + u16; c.Should().BeOfType<u16>(); c.Should().Be(65535); }
-        { var c = (u32)4294967294 + u16; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (u64)18446744073709551614 + u16; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = u32.from(4294967294) + u16; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
+        { var c = u64.from(18446744073709551614) + u16; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + u32; c.Should().BeOfType<u32>(); c.Should().Be(127); }
         { var c = 32766 + u32; c.Should().BeOfType<u32>(); c.Should().Be(32767); }
         { var c = 2147483646 + u32; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
-        { var c = (u64)9223372036854775806 + u32; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = u64.from(9223372036854775806) + u32; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + u32; c.Should().BeOfType<u32>(); c.Should().Be(255); }
         { var c = 65534 + u32; c.Should().BeOfType<u32>(); c.Should().Be(65535); }
         { var c = 4294967294 + u32; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
-        { var c = (u64)18446744073709551614 + u32; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        { var c = u64.from(18446744073709551614) + u32; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
+        //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + u64; c.Should().BeOfType<u64>(); c.Should().Be(127); }
         { var c = 32766 + u64; c.Should().BeOfType<u64>(); c.Should().Be(32767); }
         { var c = 2147483646 + u64; c.Should().BeOfType<u64>(); c.Should().Be(2147483647); }
@@ -313,79 +313,133 @@ public class IntegerCombinationTest
         { var c = i64 + -32768; c.Should().BeOfType<i64>(); c.Should().Be(-32767); }
         { var c = i64 + -2147483648; c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }
         { var c = i64 + -9223372036854775808; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        { var c = u8 + (i8)(-128); c.Should().BeOfType<i16>(); c.Should().Be(-127); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u8 + (i16)(-32768); c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u8 + (i32)(-2147483648); c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u8 + (i64)(-9223372036854775808); c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u16 + (i8)(-128); c.Should().BeOfType<i32>(); c.Should().Be(-127); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u16 + (i16)(-32768); c.Should().BeOfType<i32>(); c.Should().Be(-32767); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u16 + (i32)(-2147483648); c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u16 + (i64)(-9223372036854775808); c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u32 + (i8)(-128); c.Should().BeOfType<i64>(); c.Should().Be(-127); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u32 + (i16)(-32768); c.Should().BeOfType<i64>(); c.Should().Be(-32767); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u32 + (i32)(-2147483648); c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = u32 + (i64)(-9223372036854775808); c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //             cast above required for https://github.com/fin-language/fin/issues/11
+        { var c = u8 + i8.from(-128); c.Should().BeOfType<i16>(); c.Should().Be(-127); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u8 + i16.from(-32768); c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u8 + i32.from(-2147483648); c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u8 + i64.from(-9223372036854775808); c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u16 + i8.from(-128); c.Should().BeOfType<i32>(); c.Should().Be(-127); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u16 + i16.from(-32768); c.Should().BeOfType<i32>(); c.Should().Be(-32767); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u16 + i32.from(-2147483648); c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u16 + i64.from(-9223372036854775808); c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u32 + i8.from(-128); c.Should().BeOfType<i64>(); c.Should().Be(-127); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u32 + i16.from(-32768); c.Should().BeOfType<i64>(); c.Should().Be(-32767); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u32 + i32.from(-2147483648); c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
+        { var c = u32 + i64.from(-9223372036854775808); c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        //             conversion above required for https://github.com/fin-language/fin/issues/11
         
     
         // literal + fin tests
         { var c = -128 + i8; c.Should().BeOfType<i8>(); c.Should().Be(-127); }
-        { var c = (i16)(-32768) + i8; c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i32)(-2147483648) + i8; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i64)(-9223372036854775808) + i8; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        //↓↓ Specifying literal type required for https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12
+        {
+            { var c = i16.from(-32768) + i8; c.Should().BeOfType<i16>(); c.Should().Be(-32767); }  // .from() is preferred
+            { var c = (i16)(-32768) + i8; c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
+        }
+        //↓↓ Specifying literal type required for https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12
+        {
+            { var c = i32.from(-2147483648) + i8; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }  // .from() is preferred
+            { var c = (i32)(-2147483648) + i8; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
+        }
+        //↓↓ Specifying literal type required for https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12
+        {
+            { var c = i64.from(-9223372036854775808) + i8; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }  // .from() is preferred
+            { var c = (i64)(-9223372036854775808) + i8; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        }
         { var c = -128 + i16; c.Should().BeOfType<i16>(); c.Should().Be(-127); }
         { var c = -32768 + i16; c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
-        { var c = (i32)(-2147483648) + i16; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
-        { var c = (i64)(-9223372036854775808) + i16; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        //↓↓ Specifying literal type required for https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12
+        {
+            { var c = i32.from(-2147483648) + i16; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }  // .from() is preferred
+            { var c = (i32)(-2147483648) + i16; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
+        }
+        //↓↓ Specifying literal type required for https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12
+        {
+            { var c = i64.from(-9223372036854775808) + i16; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }  // .from() is preferred
+            { var c = (i64)(-9223372036854775808) + i16; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        }
         { var c = -128 + i32; c.Should().BeOfType<i32>(); c.Should().Be(-127); }
         { var c = -32768 + i32; c.Should().BeOfType<i32>(); c.Should().Be(-32767); }
         { var c = -2147483648 + i32; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
-        { var c = (i64)(-9223372036854775808) + i32; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/12
+        //↓↓ Specifying literal type required for https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12
+        {
+            { var c = i64.from(-9223372036854775808) + i32; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }  // .from() is preferred
+            { var c = (i64)(-9223372036854775808) + i32; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        }
         { var c = -128 + i64; c.Should().BeOfType<i64>(); c.Should().Be(-127); }
         { var c = -32768 + i64; c.Should().BeOfType<i64>(); c.Should().Be(-32767); }
         { var c = -2147483648 + i64; c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }
         { var c = -9223372036854775808 + i64; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        { var c = (i8)(-128) + u8; c.Should().BeOfType<i16>(); c.Should().Be(-127); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i16)(-32768) + u8; c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i32)(-2147483648) + u8; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i64)(-9223372036854775808) + u8; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i8)(-128) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-127); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i16)(-32768) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-32767); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i32)(-2147483648) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i64)(-9223372036854775808) + u16; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i8)(-128) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-127); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i16)(-32768) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-32767); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i32)(-2147483648) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
-        { var c = (i64)(-9223372036854775808) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
-        //        cast above required for https://github.com/fin-language/fin/issues/11
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i8.from(-128) + u8; c.Should().BeOfType<i16>(); c.Should().Be(-127); }  // .from() is preferred
+            { var c = (i8)(-128) + u8; c.Should().BeOfType<i16>(); c.Should().Be(-127); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i16.from(-32768) + u8; c.Should().BeOfType<i16>(); c.Should().Be(-32767); }  // .from() is preferred
+            { var c = (i16)(-32768) + u8; c.Should().BeOfType<i16>(); c.Should().Be(-32767); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i32.from(-2147483648) + u8; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }  // .from() is preferred
+            { var c = (i32)(-2147483648) + u8; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i64.from(-9223372036854775808) + u8; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }  // .from() is preferred
+            { var c = (i64)(-9223372036854775808) + u8; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i8.from(-128) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-127); }  // .from() is preferred
+            { var c = (i8)(-128) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-127); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i16.from(-32768) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-32767); }  // .from() is preferred
+            { var c = (i16)(-32768) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-32767); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i32.from(-2147483648) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }  // .from() is preferred
+            { var c = (i32)(-2147483648) + u16; c.Should().BeOfType<i32>(); c.Should().Be(-2147483647); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i64.from(-9223372036854775808) + u16; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }  // .from() is preferred
+            { var c = (i64)(-9223372036854775808) + u16; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i8.from(-128) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-127); }  // .from() is preferred
+            { var c = (i8)(-128) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-127); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i16.from(-32768) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-32767); }  // .from() is preferred
+            { var c = (i16)(-32768) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-32767); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i32.from(-2147483648) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }  // .from() is preferred
+            { var c = (i32)(-2147483648) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-2147483647); }
+        }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        {
+            { var c = i64.from(-9223372036854775808) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }  // .from() is preferred
+            { var c = (i64)(-9223372036854775808) + u32; c.Should().BeOfType<i64>(); c.Should().Be(-9223372036854775807); }
+        }
         
     }
 
@@ -407,12 +461,12 @@ public class IntegerCombinationTest
         { var c = i16 + -1; c.Should().BeOfType<i16>(); c.Should().Be(0); }
         { var c = i32 + -1; c.Should().BeOfType<i32>(); c.Should().Be(0); }
         { var c = i64 + -1; c.Should().BeOfType<i64>(); c.Should().Be(0); }
-        // cast required for now https://github.com/fin-language/fin/issues/11
-        { var c = u8 + (i8)(-1); c.Should().BeOfType<i16>(); c.Should().Be(0); }
-        // cast required for now https://github.com/fin-language/fin/issues/11
-        { var c = u16 + (i8)(-1); c.Should().BeOfType<i32>(); c.Should().Be(0); }
-        // cast required for now https://github.com/fin-language/fin/issues/11
-        { var c = u32 + (i8)(-1); c.Should().BeOfType<i64>(); c.Should().Be(0); }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        { var c = u8 + i8.from(-1); c.Should().BeOfType<i16>(); c.Should().Be(0); }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        { var c = u16 + i8.from(-1); c.Should().BeOfType<i32>(); c.Should().Be(0); }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        { var c = u32 + i8.from(-1); c.Should().BeOfType<i64>(); c.Should().Be(0); }
         
     
         // literal + fin tests
@@ -420,12 +474,12 @@ public class IntegerCombinationTest
         { var c = -1 + i16; c.Should().BeOfType<i16>(); c.Should().Be(0); }
         { var c = -1 + i32; c.Should().BeOfType<i32>(); c.Should().Be(0); }
         { var c = -1 + i64; c.Should().BeOfType<i64>(); c.Should().Be(0); }
-        // cast required for now https://github.com/fin-language/fin/issues/11
-        { var c = (i8)(-1) + u8; c.Should().BeOfType<i16>(); c.Should().Be(0); }
-        // cast required for now https://github.com/fin-language/fin/issues/11
-        { var c = (i8)(-1) + u16; c.Should().BeOfType<i32>(); c.Should().Be(0); }
-        // cast required for now https://github.com/fin-language/fin/issues/11
-        { var c = (i8)(-1) + u32; c.Should().BeOfType<i64>(); c.Should().Be(0); }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        { var c = i8.from(-1) + u8; c.Should().BeOfType<i16>(); c.Should().Be(0); }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        { var c = i8.from(-1) + u16; c.Should().BeOfType<i32>(); c.Should().Be(0); }
+        //↓↓ Unsigned case always requires specifying literal type for negatives https://github.com/fin-language/fin/issues/11, https://github.com/fin-language/fin/issues/13, https://github.com/fin-language/fin/issues/12, 
+        { var c = i8.from(-1) + u32; c.Should().BeOfType<i64>(); c.Should().Be(0); }
         
     }
 

@@ -51,6 +51,14 @@ public struct u16: IHasU16
     }
 
     /// <summary>
+    /// Useful for when you need to specify an integer literal's type that could be many types.<br/>
+    /// For example, in the code below, the `2` integer literal could be many different int types, but we want an i16.
+    /// <code>var c = u16.from(2) + my_u16;</code>
+    /// See https://github.com/fin-language/fin/issues/13
+    /// </summary>
+    public static u16 from(u16 value) => value;
+
+    /// <summary>
     /// Implicit conversion from C# numeric type to fin numeric type.
     /// </summary>
     public static implicit operator u16(ushort num) { return new u16(num); }
