@@ -648,6 +648,675 @@ public struct u8: IHasU8
 
 
 
+    //################################################################
+    // shift methods (unsigned only for now)
+    //################################################################
+    
+        
+    /// <summary>
+    /// Left shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_lshift(i8 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_rshift(i8 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Left shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_lshift(i16 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_rshift(i16 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Left shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_lshift(i32 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_rshift(i32 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Left shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_lshift(i64 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_rshift(i64 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Left shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_lshift(u8 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_rshift(u8 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Left shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_lshift(u16 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_rshift(u16 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Left shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_lshift(u32 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_rshift(u32 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Left shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_lshift(u64 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits discarding overflow bits without error.
+    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// </summary>
+    public u8 wrap_rshift(u64 rotate_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        u8 value;
+    
+        if (rotate_amount < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (rotate_amount >= 8)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
+        return value;
+    }
+    
+
+
+
+    //################################################################
+    // misc
+    //################################################################
+    
+
     public override string ToString()
     {
         return _csReadValue.ToString();

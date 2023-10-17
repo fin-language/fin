@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Xunit;
 
@@ -170,14 +171,6 @@ public class GenSimNumerics
             }
         }
 
-        //foreach (var otherType in types)
-        //{
-        //    TypeInfo resultType = classType.GetResultType(otherType);
-        //    if (resultType.width > 64) continue;
-
-        //    result += GenOverflowingOperator(classType, otherType.fin_name, resultType, op);
-        //}
-
         //{ i32 result = i16 + 65534; Assert.Equal<int>(65535, result); }
         foreach (var otherType in types)
         {
@@ -273,6 +266,21 @@ public class GenSimNumerics
         return template.Trim();
     }
 
+    private static string GenWrapShiftMethods(TypeInfo classType)
+    {
+        var result = "";
+
+        if (classType.is_signed)
+            return ""; // unsigned only for now
+
+        foreach (var shiftType in types)
+        {
+            result += AddShiftCode(classType, shiftType, is_left: true);
+            result += AddShiftCode(classType, shiftType, is_left: false);
+        }
+        return result.Indent("    ");
+    }
+
     internal static List<TypeInfo> GetWideningConversions(TypeInfo typeInfo)
     {
         List<TypeInfo> wideningConversions = new();
@@ -319,6 +327,60 @@ public class GenSimNumerics
             }
             wideningConversions.Add(new TypeInfo("" + sign_char + width));
         }
+    }
+
+    private static string AddShiftCode(TypeInfo actualTypeName, TypeInfo shiftAmountType, bool is_left)
+    {
+        string op = is_left ? "<<" : ">>";
+        string title = is_left ? "Left" : "Right";
+        string func_suffix = is_left ? "lshift" : "rshift";
+
+        string template = $$"""
+
+            /// <summary>
+            /// {{title}} shifts the bits discarding overflow bits without error.
+            /// Sim exception or Error if shift by negative amount or amount larger than type.
+            /// </summary>
+            public {{actualTypeName}} wrap_{{func_suffix}}({{shiftAmountType}} rotate_amount)
+            {
+                ThrowIfMathModeNotSpecified();
+                {{actualTypeName}} value;
+
+                if (rotate_amount < 0)
+                {
+                    switch (math.CurrentMode)
+                    {
+                        case math.Mode.Unsafe:
+                            throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                        case math.Mode.UserProvidedErr:
+                            math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                            break;
+                        default:
+                            throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+                    }
+                }
+
+                if (rotate_amount >= 8)
+                {
+                    switch (math.CurrentMode)
+                    {
+                        case math.Mode.Unsafe:
+                            throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                        case math.Mode.UserProvidedErr:
+                            math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                            break;
+                        default:
+                            throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+                    }
+                }
+
+                value = unchecked((byte)(this._csReadValue {{op}} (int)(rotate_amount._csReadValue)));
+                return value;
+            }
+
+            """;
+
+        return template;
     }
 
     private static string RenderTemplate(TypeInfo typeInfo, string backing_type, string implicitWidening, string explicitWidening, string narrowingConversions, string wrappingConversions)
@@ -431,6 +493,12 @@ public class GenSimNumerics
                 {{GenOverflowingOperators(typeInfo, "-") + "\n"}}
                 {{GenOverflowingOperators(typeInfo, "*") + "\n"}}
             
+                {{header("shift methods (unsigned only for now)")}}
+                {{GenWrapShiftMethods(typeInfo) + "\n"}}
+            
+
+                {{header("misc")}}
+
                 public override string ToString()
                 {
                     return _csReadValue.ToString();
