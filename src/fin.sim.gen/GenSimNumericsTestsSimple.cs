@@ -5,6 +5,8 @@ namespace fin.sim.gen;
 
 public class GenSimNumericsTestsSimple
 {
+    private const string Indent = "    ";
+
     [Fact]
     public void MakeAll()
     {
@@ -14,24 +16,70 @@ public class GenSimNumericsTestsSimple
 
         var fileTemplate = $$"""
             // NOTE!!! Auto generated
+            using System;
+            
             namespace fin.sim.test;
 
             public class IntegerCombinationTest
             {
-                {{GenTest1Code(types).IndentNewLines("    ")}}
+                {{GenTest1Code(types).IndentNewLines(Indent)}}
 
-                {{GenPositiveLiteralTestCode(types).IndentNewLines("    ")}}
+                {{GenPositiveLiteralTestCode(types).IndentNewLines(Indent)}}
 
-                {{GenPositive1LiteralTestCode(types).IndentNewLines("    ")}}
+                {{GenPositive1LiteralTestCode(types).IndentNewLines(Indent)}}
 
-                {{GenAddNegLiteralTestCode(types).IndentNewLines("    ")}}
+                {{GenAddNegLiteralTestCode(types).IndentNewLines(Indent)}}
 
-                {{GenAddNeg1LiteralTestCode(types).IndentNewLines("    ")}}
+                {{GenAddNeg1LiteralTestCode(types).IndentNewLines(Indent)}}
 
+                {{GenLeftShiftLiteralTest(types).IndentNewLines(Indent)}}
             }
             """;
 
         File.WriteAllText(path: path, fileTemplate);
+    }
+
+    private static string GenLeftShiftLiteralTest(TypeInfo[] types)
+    {
+        string code = "";
+
+        foreach (var type in types)
+        {
+            if (type.is_signed)
+                continue; // only for unsigned right now
+            var var_name = type.fin_name;
+
+            code += $"{{ var c = {var_name}.wrap_lshift(1); c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(1 * 2); }}\n";
+            code += $"{{ var c = {var_name}.wrap_lshift({type.width} - 1); c = c.wrap_lshift(1); c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(0, \"should have overflowed\"); }}\n";
+            code += $"{{ var c = {var_name}.wrap_lshift({type.width - 1}); c = c.wrap_lshift(1); c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(0, \"should have overflowed\"); }}\n";
+            code += $$"""{ Action a = () => { {{var_name}}.wrap_lshift({{type.width}}); }; a.Should().Throw<OverflowException>("shifting by size of integer type"); }{{"\n"}}""";
+            code += $$"""{ Action a = () => { {{var_name}}.wrap_lshift({{type.width+1}}); }; a.Should().Throw<OverflowException>("shifting by more than size of integer type"); }{{"\n"}}""";
+
+            foreach (var type2 in types)
+            {
+                decimal value = type2.GetMaxValue() - 1;
+                code += $"{{ var c = {var_name}.wrap_lshift({type2.fin_name}); c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(1 * 2); }}\n";
+                code += $"{{ var c = {var_name}.wrap_lshift(({type2.fin_name})1); c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(1 * 2); }}\n";
+            }
+        }
+
+        return $$"""
+            [Fact]
+            public void wrap_lshift_LiteralTest()
+            {
+                math.unsafe_mode();
+                i8 i8 = 1;
+                i16 i16 = 1;
+                i32 i32 = 1;
+                i64 i64 = 1;
+                u8 u8 = 1;
+                u16 u16 = 1;
+                u32 u32 = 1;
+                u64 u64 = 1;
+
+                {{code.IndentNewLines(Indent)}}
+            }
+            """;
     }
 
     /// <summary>
@@ -52,6 +100,7 @@ public class GenSimNumericsTestsSimple
                 if (resultType.width > 64)
                     code += "//";
 
+                code += $"{{ var c = {type.fin_name} + {type2.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); }}";
                 code += $"{{ var c = {type.fin_name} + {type2.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); }}";
 
                 if (resultType.width > 64)
@@ -75,7 +124,7 @@ public class GenSimNumericsTestsSimple
                 u32 u32 = 1;
                 u64 u64 = 1;
 
-                {{code.IndentNewLines("    ")}}
+                {{code.IndentNewLines(Indent)}}
             }
             """;
         return test1;
@@ -112,6 +161,7 @@ public class GenSimNumericsTestsSimple
                 else
                 {
                     literalPlusFin += $"{{ var c = {literalType.fin_name}.from({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
+                    literalPlusFin += $"{{ var c = ({literalType.fin_name})({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
                     literalPlusFin += $"//        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12\n";
                 }
             }
@@ -132,10 +182,10 @@ public class GenSimNumericsTestsSimple
                 u64 u64 = 1;
 
                 // fin + literal tests
-                {{finPlusLiteral.IndentNewLines("    ")}}
+                {{finPlusLiteral.IndentNewLines(Indent)}}
             
                 // literal + fin tests
-                {{literalPlusFin.IndentNewLines("    ")}}
+                {{literalPlusFin.IndentNewLines(Indent)}}
             }
             """;
         return testCode;
@@ -172,10 +222,10 @@ public class GenSimNumericsTestsSimple
                 u64 u64 = 1;
 
                 // fin + literal tests
-                {{finPlusLiteral.IndentNewLines("    ")}}
+                {{finPlusLiteral.IndentNewLines(Indent)}}
             
                 // literal + fin tests
-                {{literalPlusFin.IndentNewLines("    ")}}
+                {{literalPlusFin.IndentNewLines(Indent)}}
             }
             """;
         return testCode;
@@ -256,10 +306,10 @@ public class GenSimNumericsTestsSimple
                 u64 u64 = 1;
 
                 // fin + literal tests
-                {{finPlusLiteral.IndentNewLines("    ")}}
+                {{finPlusLiteral.IndentNewLines(Indent)}}
             
                 // literal + fin tests
-                {{literalPlusFin.IndentNewLines("    ")}}
+                {{literalPlusFin.IndentNewLines(Indent)}}
             }
             """;
         return testCode;
@@ -314,10 +364,10 @@ public class GenSimNumericsTestsSimple
                 u64 u64 = 1;
 
                 // fin + literal tests
-                {{finPlusLiteral.IndentNewLines("    ")}}
+                {{finPlusLiteral.IndentNewLines(Indent)}}
 
                 // literal + fin tests
-                {{literalPlusFin.IndentNewLines("    ")}}
+                {{literalPlusFin.IndentNewLines(Indent)}}
             }
             """;
         return testCode;

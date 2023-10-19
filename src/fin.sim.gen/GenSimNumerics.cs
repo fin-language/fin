@@ -167,7 +167,7 @@ public class GenSimNumerics
 
             if (classType.is_signed == false && classType.CanPromoteToOrViceVersa(otherType) == false)
             {
-                result += GenOverflowingOperator(classType, otherType, "IHas" + otherType.fin_name.ToUpper(), resultType, op, otherValueGetter: $"b.value");
+                result += GenOverflowingOperator(classType, otherType, GenIHasTypeName(otherType), resultType, op, otherValueGetter: $"b.value");
             }
         }
 
@@ -184,6 +184,11 @@ public class GenSimNumerics
         }
 
         return result;
+    }
+
+    private static string GenIHasTypeName(TypeInfo otherType)
+    {
+        return "IHas" + otherType.fin_name.ToUpper();
     }
 
     /// <summary>
@@ -329,29 +334,38 @@ public class GenSimNumerics
         }
     }
 
-    private static string AddShiftCode(TypeInfo actualTypeName, TypeInfo shiftAmountType, bool is_left)
+    private static string AddShiftCode(TypeInfo actualType, TypeInfo shiftAmountType, bool is_left)
     {
         string op = is_left ? "<<" : ">>";
         string title = is_left ? "Left" : "Right";
         string func_suffix = is_left ? "lshift" : "rshift";
+        string shiftAmountTypeStr = shiftAmountType.fin_name;
+        string shiftValueGetter = $"shift_amount._csReadValue";
+
+        if (shiftAmountType.is_signed)
+        {
+            shiftAmountTypeStr = GenIHasTypeName(shiftAmountType);
+            shiftValueGetter = "shift_amount.value._csReadValue";
+        }
 
         string template = $$"""
 
             /// <summary>
-            /// {{title}} shifts the bits discarding overflow bits without error.
+            /// {{title}} shifts the bits discarding overflow bits without error.<br/>
+            /// Does not change the value of this object.<br/>
             /// Sim exception or Error if shift by negative amount or amount larger than type.
             /// </summary>
-            public {{actualTypeName}} wrap_{{func_suffix}}({{shiftAmountType}} rotate_amount)
+            public {{actualType}} wrap_{{func_suffix}}({{shiftAmountTypeStr}} shift_amount)
             {
                 ThrowIfMathModeNotSpecified();
-                {{actualTypeName}} value;
+                var shift_amount_value = {{shiftValueGetter}};
 
-                if (rotate_amount < 0)
+                if (shift_amount_value < 0)
                 {
                     switch (math.CurrentMode)
                     {
                         case math.Mode.Unsafe:
-                            throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                            throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                         case math.Mode.UserProvidedErr:
                             math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                             break;
@@ -360,12 +374,12 @@ public class GenSimNumerics
                     }
                 }
 
-                if (rotate_amount >= 8)
+                if (shift_amount_value >= {{actualType.width}})
                 {
                     switch (math.CurrentMode)
                     {
                         case math.Mode.Unsafe:
-                            throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                            throw new OverflowException($"Overshift! Shifting a {{actualType}} integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                         case math.Mode.UserProvidedErr:
                             math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                             break;
@@ -374,8 +388,8 @@ public class GenSimNumerics
                     }
                 }
 
-                value = unchecked((byte)(this._csReadValue {{op}} (int)(rotate_amount._csReadValue)));
-                return value;
+                {{actualType}} result = unchecked((byte)(this._csReadValue {{op}} (int)shift_amount_value));
+                return result;
             }
 
             """;
@@ -405,7 +419,7 @@ public class GenSimNumerics
 
             namespace fin.sim.lang;
 
-            public struct {{typeInfo.fin_name}}: IHas{{typeInfo.fin_name.ToUpper()}}
+            public struct {{typeInfo.fin_name}}: {{GenIHasTypeName(typeInfo)}}
             {
                 public const {{backing_type}} MAX = {{typeInfo.GetMaxValue()}};
                 public const {{backing_type}} MIN = {{typeInfo.GetMinValue()}};

@@ -691,20 +691,21 @@ public struct u16: IHasU16
     
         
     /// <summary>
-    /// Left shifts the bits discarding overflow bits without error.
+    /// Left shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_lshift(i8 rotate_amount)
+    public u16 wrap_lshift(IHasI8 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -713,12 +714,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -727,25 +728,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.
+    /// Right shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_rshift(i8 rotate_amount)
+    public u16 wrap_rshift(IHasI8 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -754,12 +756,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -768,25 +770,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Left shifts the bits discarding overflow bits without error.
+    /// Left shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_lshift(i16 rotate_amount)
+    public u16 wrap_lshift(IHasI16 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -795,12 +798,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -809,25 +812,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.
+    /// Right shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_rshift(i16 rotate_amount)
+    public u16 wrap_rshift(IHasI16 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -836,12 +840,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -850,25 +854,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Left shifts the bits discarding overflow bits without error.
+    /// Left shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_lshift(i32 rotate_amount)
+    public u16 wrap_lshift(IHasI32 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -877,12 +882,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -891,25 +896,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.
+    /// Right shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_rshift(i32 rotate_amount)
+    public u16 wrap_rshift(IHasI32 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -918,12 +924,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -932,25 +938,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Left shifts the bits discarding overflow bits without error.
+    /// Left shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_lshift(i64 rotate_amount)
+    public u16 wrap_lshift(IHasI64 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -959,12 +966,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -973,25 +980,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.
+    /// Right shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_rshift(i64 rotate_amount)
+    public u16 wrap_rshift(IHasI64 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1000,12 +1008,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1014,25 +1022,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Left shifts the bits discarding overflow bits without error.
+    /// Left shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_lshift(u8 rotate_amount)
+    public u16 wrap_lshift(u8 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1041,12 +1050,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1055,25 +1064,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.
+    /// Right shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_rshift(u8 rotate_amount)
+    public u16 wrap_rshift(u8 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1082,12 +1092,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1096,25 +1106,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Left shifts the bits discarding overflow bits without error.
+    /// Left shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_lshift(u16 rotate_amount)
+    public u16 wrap_lshift(u16 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1123,12 +1134,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1137,25 +1148,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.
+    /// Right shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_rshift(u16 rotate_amount)
+    public u16 wrap_rshift(u16 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1164,12 +1176,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1178,25 +1190,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Left shifts the bits discarding overflow bits without error.
+    /// Left shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_lshift(u32 rotate_amount)
+    public u16 wrap_lshift(u32 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1205,12 +1218,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1219,25 +1232,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.
+    /// Right shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_rshift(u32 rotate_amount)
+    public u16 wrap_rshift(u32 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1246,12 +1260,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1260,25 +1274,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Left shifts the bits discarding overflow bits without error.
+    /// Left shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_lshift(u64 rotate_amount)
+    public u16 wrap_lshift(u64 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1287,12 +1302,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1301,25 +1316,26 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue << (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.
+    /// Right shifts the bits discarding overflow bits without error.<br/>
+    /// Does not change the value of this object.<br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type.
     /// </summary>
-    public u16 wrap_rshift(u64 rotate_amount)
+    public u16 wrap_rshift(u64 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
-        u16 value;
+        var shift_amount_value = shift_amount._csReadValue;
     
-        if (rotate_amount < 0)
+        if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{rotate_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1328,12 +1344,12 @@ public struct u16: IHasU16
             }
         }
     
-        if (rotate_amount >= 8)
+        if (shift_amount_value >= 16)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a value `{this._csReadValue}` more than its bit width is undefined behavior in C.");
+                    throw new OverflowException($"Overshift! Shifting a u16 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1342,8 +1358,8 @@ public struct u16: IHasU16
             }
         }
     
-        value = unchecked((byte)(this._csReadValue >> (int)(rotate_amount._csReadValue)));
-        return value;
+        u16 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        return result;
     }
     
 

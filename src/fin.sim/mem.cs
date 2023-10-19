@@ -11,9 +11,12 @@ public class mem
     /// <typeparam name="T"></typeparam>
     /// <param name="obj"></param>
     /// <returns></returns>
-    public static T stack<T>(T obj) where T : FinObj
+    public static T stack<T>(T obj)
     {
-        ScopeTracker.Peek().stackAllocatedObjects.Add(obj);
+        // TODO remove when we have fin array types.
+        if (obj is FinObj finObj)
+            ScopeTracker.Peek().stackAllocatedObjects.Add(finObj);
+
         return obj;
     }
 

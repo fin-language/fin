@@ -1,4 +1,6 @@
 // NOTE!!! Auto generated
+using System;
+
 namespace fin.sim.test;
 
 public class IntegerCombinationTest
@@ -16,70 +18,70 @@ public class IntegerCombinationTest
         u32 u32 = 1;
         u64 u64 = 1;
     
-        { var c = i8 + i8; c.Should().BeOfType<i8>(); }
-        { var c = i8 + i16; c.Should().BeOfType<i16>(); }
-        { var c = i8 + i32; c.Should().BeOfType<i32>(); }
-        { var c = i8 + i64; c.Should().BeOfType<i64>(); }
-        { var c = i8 + u8; c.Should().BeOfType<i16>(); }
-        { var c = i8 + u16; c.Should().BeOfType<i32>(); }
-        { var c = i8 + u32; c.Should().BeOfType<i64>(); }
-        //{ var c = i8 + u64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
-        { var c = i16 + i8; c.Should().BeOfType<i16>(); }
-        { var c = i16 + i16; c.Should().BeOfType<i16>(); }
-        { var c = i16 + i32; c.Should().BeOfType<i32>(); }
-        { var c = i16 + i64; c.Should().BeOfType<i64>(); }
-        { var c = i16 + u8; c.Should().BeOfType<i16>(); }
-        { var c = i16 + u16; c.Should().BeOfType<i32>(); }
-        { var c = i16 + u32; c.Should().BeOfType<i64>(); }
-        //{ var c = i16 + u64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
-        { var c = i32 + i8; c.Should().BeOfType<i32>(); }
-        { var c = i32 + i16; c.Should().BeOfType<i32>(); }
-        { var c = i32 + i32; c.Should().BeOfType<i32>(); }
-        { var c = i32 + i64; c.Should().BeOfType<i64>(); }
-        { var c = i32 + u8; c.Should().BeOfType<i32>(); }
-        { var c = i32 + u16; c.Should().BeOfType<i32>(); }
-        { var c = i32 + u32; c.Should().BeOfType<i64>(); }
-        //{ var c = i32 + u64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
-        { var c = i64 + i8; c.Should().BeOfType<i64>(); }
-        { var c = i64 + i16; c.Should().BeOfType<i64>(); }
-        { var c = i64 + i32; c.Should().BeOfType<i64>(); }
-        { var c = i64 + i64; c.Should().BeOfType<i64>(); }
-        { var c = i64 + u8; c.Should().BeOfType<i64>(); }
-        { var c = i64 + u16; c.Should().BeOfType<i64>(); }
-        { var c = i64 + u32; c.Should().BeOfType<i64>(); }
-        //{ var c = i64 + u64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
-        { var c = u8 + i8; c.Should().BeOfType<i16>(); }
-        { var c = u8 + i16; c.Should().BeOfType<i16>(); }
-        { var c = u8 + i32; c.Should().BeOfType<i32>(); }
-        { var c = u8 + i64; c.Should().BeOfType<i64>(); }
-        { var c = u8 + u8; c.Should().BeOfType<u8>(); }
-        { var c = u8 + u16; c.Should().BeOfType<u16>(); }
-        { var c = u8 + u32; c.Should().BeOfType<u32>(); }
-        { var c = u8 + u64; c.Should().BeOfType<u64>(); }
-        { var c = u16 + i8; c.Should().BeOfType<i32>(); }
-        { var c = u16 + i16; c.Should().BeOfType<i32>(); }
-        { var c = u16 + i32; c.Should().BeOfType<i32>(); }
-        { var c = u16 + i64; c.Should().BeOfType<i64>(); }
-        { var c = u16 + u8; c.Should().BeOfType<u16>(); }
-        { var c = u16 + u16; c.Should().BeOfType<u16>(); }
-        { var c = u16 + u32; c.Should().BeOfType<u32>(); }
-        { var c = u16 + u64; c.Should().BeOfType<u64>(); }
-        { var c = u32 + i8; c.Should().BeOfType<i64>(); }
-        { var c = u32 + i16; c.Should().BeOfType<i64>(); }
-        { var c = u32 + i32; c.Should().BeOfType<i64>(); }
-        { var c = u32 + i64; c.Should().BeOfType<i64>(); }
-        { var c = u32 + u8; c.Should().BeOfType<u32>(); }
-        { var c = u32 + u16; c.Should().BeOfType<u32>(); }
-        { var c = u32 + u32; c.Should().BeOfType<u32>(); }
-        { var c = u32 + u64; c.Should().BeOfType<u64>(); }
-        //{ var c = u64 + i8; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
-        //{ var c = u64 + i16; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
-        //{ var c = u64 + i32; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
-        //{ var c = u64 + i64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
-        { var c = u64 + u8; c.Should().BeOfType<u64>(); }
-        { var c = u64 + u16; c.Should().BeOfType<u64>(); }
-        { var c = u64 + u32; c.Should().BeOfType<u64>(); }
-        { var c = u64 + u64; c.Should().BeOfType<u64>(); }
+        { var c = i8 + i8; c.Should().BeOfType<i8>(); }{ var c = i8 + i8; c.Should().BeOfType<i8>(); }
+        { var c = i8 + i16; c.Should().BeOfType<i16>(); }{ var c = i8 + i16; c.Should().BeOfType<i16>(); }
+        { var c = i8 + i32; c.Should().BeOfType<i32>(); }{ var c = i8 + i32; c.Should().BeOfType<i32>(); }
+        { var c = i8 + i64; c.Should().BeOfType<i64>(); }{ var c = i8 + i64; c.Should().BeOfType<i64>(); }
+        { var c = i8 + u8; c.Should().BeOfType<i16>(); }{ var c = i8 + u8; c.Should().BeOfType<i16>(); }
+        { var c = i8 + u16; c.Should().BeOfType<i32>(); }{ var c = i8 + u16; c.Should().BeOfType<i32>(); }
+        { var c = i8 + u32; c.Should().BeOfType<i64>(); }{ var c = i8 + u32; c.Should().BeOfType<i64>(); }
+        //{ var c = i8 + u64; c.Should().BeOfType<i128>(); }{ var c = i8 + u64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
+        { var c = i16 + i8; c.Should().BeOfType<i16>(); }{ var c = i16 + i8; c.Should().BeOfType<i16>(); }
+        { var c = i16 + i16; c.Should().BeOfType<i16>(); }{ var c = i16 + i16; c.Should().BeOfType<i16>(); }
+        { var c = i16 + i32; c.Should().BeOfType<i32>(); }{ var c = i16 + i32; c.Should().BeOfType<i32>(); }
+        { var c = i16 + i64; c.Should().BeOfType<i64>(); }{ var c = i16 + i64; c.Should().BeOfType<i64>(); }
+        { var c = i16 + u8; c.Should().BeOfType<i16>(); }{ var c = i16 + u8; c.Should().BeOfType<i16>(); }
+        { var c = i16 + u16; c.Should().BeOfType<i32>(); }{ var c = i16 + u16; c.Should().BeOfType<i32>(); }
+        { var c = i16 + u32; c.Should().BeOfType<i64>(); }{ var c = i16 + u32; c.Should().BeOfType<i64>(); }
+        //{ var c = i16 + u64; c.Should().BeOfType<i128>(); }{ var c = i16 + u64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
+        { var c = i32 + i8; c.Should().BeOfType<i32>(); }{ var c = i32 + i8; c.Should().BeOfType<i32>(); }
+        { var c = i32 + i16; c.Should().BeOfType<i32>(); }{ var c = i32 + i16; c.Should().BeOfType<i32>(); }
+        { var c = i32 + i32; c.Should().BeOfType<i32>(); }{ var c = i32 + i32; c.Should().BeOfType<i32>(); }
+        { var c = i32 + i64; c.Should().BeOfType<i64>(); }{ var c = i32 + i64; c.Should().BeOfType<i64>(); }
+        { var c = i32 + u8; c.Should().BeOfType<i32>(); }{ var c = i32 + u8; c.Should().BeOfType<i32>(); }
+        { var c = i32 + u16; c.Should().BeOfType<i32>(); }{ var c = i32 + u16; c.Should().BeOfType<i32>(); }
+        { var c = i32 + u32; c.Should().BeOfType<i64>(); }{ var c = i32 + u32; c.Should().BeOfType<i64>(); }
+        //{ var c = i32 + u64; c.Should().BeOfType<i128>(); }{ var c = i32 + u64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
+        { var c = i64 + i8; c.Should().BeOfType<i64>(); }{ var c = i64 + i8; c.Should().BeOfType<i64>(); }
+        { var c = i64 + i16; c.Should().BeOfType<i64>(); }{ var c = i64 + i16; c.Should().BeOfType<i64>(); }
+        { var c = i64 + i32; c.Should().BeOfType<i64>(); }{ var c = i64 + i32; c.Should().BeOfType<i64>(); }
+        { var c = i64 + i64; c.Should().BeOfType<i64>(); }{ var c = i64 + i64; c.Should().BeOfType<i64>(); }
+        { var c = i64 + u8; c.Should().BeOfType<i64>(); }{ var c = i64 + u8; c.Should().BeOfType<i64>(); }
+        { var c = i64 + u16; c.Should().BeOfType<i64>(); }{ var c = i64 + u16; c.Should().BeOfType<i64>(); }
+        { var c = i64 + u32; c.Should().BeOfType<i64>(); }{ var c = i64 + u32; c.Should().BeOfType<i64>(); }
+        //{ var c = i64 + u64; c.Should().BeOfType<i128>(); }{ var c = i64 + u64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
+        { var c = u8 + i8; c.Should().BeOfType<i16>(); }{ var c = u8 + i8; c.Should().BeOfType<i16>(); }
+        { var c = u8 + i16; c.Should().BeOfType<i16>(); }{ var c = u8 + i16; c.Should().BeOfType<i16>(); }
+        { var c = u8 + i32; c.Should().BeOfType<i32>(); }{ var c = u8 + i32; c.Should().BeOfType<i32>(); }
+        { var c = u8 + i64; c.Should().BeOfType<i64>(); }{ var c = u8 + i64; c.Should().BeOfType<i64>(); }
+        { var c = u8 + u8; c.Should().BeOfType<u8>(); }{ var c = u8 + u8; c.Should().BeOfType<u8>(); }
+        { var c = u8 + u16; c.Should().BeOfType<u16>(); }{ var c = u8 + u16; c.Should().BeOfType<u16>(); }
+        { var c = u8 + u32; c.Should().BeOfType<u32>(); }{ var c = u8 + u32; c.Should().BeOfType<u32>(); }
+        { var c = u8 + u64; c.Should().BeOfType<u64>(); }{ var c = u8 + u64; c.Should().BeOfType<u64>(); }
+        { var c = u16 + i8; c.Should().BeOfType<i32>(); }{ var c = u16 + i8; c.Should().BeOfType<i32>(); }
+        { var c = u16 + i16; c.Should().BeOfType<i32>(); }{ var c = u16 + i16; c.Should().BeOfType<i32>(); }
+        { var c = u16 + i32; c.Should().BeOfType<i32>(); }{ var c = u16 + i32; c.Should().BeOfType<i32>(); }
+        { var c = u16 + i64; c.Should().BeOfType<i64>(); }{ var c = u16 + i64; c.Should().BeOfType<i64>(); }
+        { var c = u16 + u8; c.Should().BeOfType<u16>(); }{ var c = u16 + u8; c.Should().BeOfType<u16>(); }
+        { var c = u16 + u16; c.Should().BeOfType<u16>(); }{ var c = u16 + u16; c.Should().BeOfType<u16>(); }
+        { var c = u16 + u32; c.Should().BeOfType<u32>(); }{ var c = u16 + u32; c.Should().BeOfType<u32>(); }
+        { var c = u16 + u64; c.Should().BeOfType<u64>(); }{ var c = u16 + u64; c.Should().BeOfType<u64>(); }
+        { var c = u32 + i8; c.Should().BeOfType<i64>(); }{ var c = u32 + i8; c.Should().BeOfType<i64>(); }
+        { var c = u32 + i16; c.Should().BeOfType<i64>(); }{ var c = u32 + i16; c.Should().BeOfType<i64>(); }
+        { var c = u32 + i32; c.Should().BeOfType<i64>(); }{ var c = u32 + i32; c.Should().BeOfType<i64>(); }
+        { var c = u32 + i64; c.Should().BeOfType<i64>(); }{ var c = u32 + i64; c.Should().BeOfType<i64>(); }
+        { var c = u32 + u8; c.Should().BeOfType<u32>(); }{ var c = u32 + u8; c.Should().BeOfType<u32>(); }
+        { var c = u32 + u16; c.Should().BeOfType<u32>(); }{ var c = u32 + u16; c.Should().BeOfType<u32>(); }
+        { var c = u32 + u32; c.Should().BeOfType<u32>(); }{ var c = u32 + u32; c.Should().BeOfType<u32>(); }
+        { var c = u32 + u64; c.Should().BeOfType<u64>(); }{ var c = u32 + u64; c.Should().BeOfType<u64>(); }
+        //{ var c = u64 + i8; c.Should().BeOfType<i128>(); }{ var c = u64 + i8; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
+        //{ var c = u64 + i16; c.Should().BeOfType<i128>(); }{ var c = u64 + i16; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
+        //{ var c = u64 + i32; c.Should().BeOfType<i128>(); }{ var c = u64 + i32; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
+        //{ var c = u64 + i64; c.Should().BeOfType<i128>(); }{ var c = u64 + i64; c.Should().BeOfType<i128>(); }  // not allowed for now (need 128 bit or extra logic)
+        { var c = u64 + u8; c.Should().BeOfType<u64>(); }{ var c = u64 + u8; c.Should().BeOfType<u64>(); }
+        { var c = u64 + u16; c.Should().BeOfType<u64>(); }{ var c = u64 + u16; c.Should().BeOfType<u64>(); }
+        { var c = u64 + u32; c.Should().BeOfType<u64>(); }{ var c = u64 + u32; c.Should().BeOfType<u64>(); }
+        { var c = u64 + u64; c.Should().BeOfType<u64>(); }{ var c = u64 + u64; c.Should().BeOfType<u64>(); }
         
     }
 
@@ -162,36 +164,48 @@ public class IntegerCombinationTest
         // literal + fin tests
         { var c = 126 + i8; c.Should().BeOfType<i8>(); c.Should().Be(127); }
         { var c = i16.from(32766) + i8; c.Should().BeOfType<i16>(); c.Should().Be(32767); }
+        { var c = (i16)(32766) + i8; c.Should().BeOfType<i16>(); c.Should().Be(32767); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i32.from(2147483646) + i8; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
+        { var c = (i32)(2147483646) + i8; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i64.from(9223372036854775806) + i8; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        { var c = (i64)(9223372036854775806) + i8; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i16.from(254) + i8; c.Should().BeOfType<i16>(); c.Should().Be(255); }
+        { var c = (i16)(254) + i8; c.Should().BeOfType<i16>(); c.Should().Be(255); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i32.from(65534) + i8; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
+        { var c = (i32)(65534) + i8; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i64.from(4294967294) + i8; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        { var c = (i64)(4294967294) + i8; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i16; c.Should().BeOfType<i16>(); c.Should().Be(127); }
         { var c = 32766 + i16; c.Should().BeOfType<i16>(); c.Should().Be(32767); }
         { var c = i32.from(2147483646) + i16; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
+        { var c = (i32)(2147483646) + i16; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i64.from(9223372036854775806) + i16; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        { var c = (i64)(9223372036854775806) + i16; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + i16; c.Should().BeOfType<i16>(); c.Should().Be(255); }
         { var c = i32.from(65534) + i16; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
+        { var c = (i32)(65534) + i16; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i64.from(4294967294) + i16; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        { var c = (i64)(4294967294) + i16; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i32; c.Should().BeOfType<i32>(); c.Should().Be(127); }
         { var c = 32766 + i32; c.Should().BeOfType<i32>(); c.Should().Be(32767); }
         { var c = 2147483646 + i32; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
         { var c = i64.from(9223372036854775806) + i32; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        { var c = (i64)(9223372036854775806) + i32; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + i32; c.Should().BeOfType<i32>(); c.Should().Be(255); }
         { var c = 65534 + i32; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
         { var c = i64.from(4294967294) + i32; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        { var c = (i64)(4294967294) + i32; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i64; c.Should().BeOfType<i64>(); c.Should().Be(127); }
         { var c = 32766 + i64; c.Should().BeOfType<i64>(); c.Should().Be(32767); }
@@ -202,39 +216,51 @@ public class IntegerCombinationTest
         { var c = 4294967294 + i64; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
         { var c = 126 + u8; c.Should().BeOfType<u8>(); c.Should().Be(127); }
         { var c = u16.from(32766) + u8; c.Should().BeOfType<u16>(); c.Should().Be(32767); }
+        { var c = (u16)(32766) + u8; c.Should().BeOfType<u16>(); c.Should().Be(32767); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = u32.from(2147483646) + u8; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
+        { var c = (u32)(2147483646) + u8; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = u64.from(9223372036854775806) + u8; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
+        { var c = (u64)(9223372036854775806) + u8; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + u8; c.Should().BeOfType<u8>(); c.Should().Be(255); }
         { var c = u16.from(65534) + u8; c.Should().BeOfType<u16>(); c.Should().Be(65535); }
+        { var c = (u16)(65534) + u8; c.Should().BeOfType<u16>(); c.Should().Be(65535); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = u32.from(4294967294) + u8; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
+        { var c = (u32)(4294967294) + u8; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = u64.from(18446744073709551614) + u8; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
+        { var c = (u64)(18446744073709551614) + u8; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + u16; c.Should().BeOfType<u16>(); c.Should().Be(127); }
         { var c = 32766 + u16; c.Should().BeOfType<u16>(); c.Should().Be(32767); }
         { var c = u32.from(2147483646) + u16; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
+        { var c = (u32)(2147483646) + u16; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = u64.from(9223372036854775806) + u16; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
+        { var c = (u64)(9223372036854775806) + u16; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + u16; c.Should().BeOfType<u16>(); c.Should().Be(255); }
         { var c = 65534 + u16; c.Should().BeOfType<u16>(); c.Should().Be(65535); }
         { var c = u32.from(4294967294) + u16; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
+        { var c = (u32)(4294967294) + u16; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = u64.from(18446744073709551614) + u16; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
+        { var c = (u64)(18446744073709551614) + u16; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + u32; c.Should().BeOfType<u32>(); c.Should().Be(127); }
         { var c = 32766 + u32; c.Should().BeOfType<u32>(); c.Should().Be(32767); }
         { var c = 2147483646 + u32; c.Should().BeOfType<u32>(); c.Should().Be(2147483647); }
         { var c = u64.from(9223372036854775806) + u32; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
+        { var c = (u64)(9223372036854775806) + u32; c.Should().BeOfType<u64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + u32; c.Should().BeOfType<u32>(); c.Should().Be(255); }
         { var c = 65534 + u32; c.Should().BeOfType<u32>(); c.Should().Be(65535); }
         { var c = 4294967294 + u32; c.Should().BeOfType<u32>(); c.Should().Be(4294967295); }
         { var c = u64.from(18446744073709551614) + u32; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
+        { var c = (u64)(18446744073709551614) + u32; c.Should().BeOfType<u64>(); c.Should().Be(18446744073709551615); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + u64; c.Should().BeOfType<u64>(); c.Should().Be(127); }
         { var c = 32766 + u64; c.Should().BeOfType<u64>(); c.Should().Be(32767); }
@@ -495,10 +521,91 @@ public class IntegerCombinationTest
         u16 u16 = 1;
         u32 u32 = 1;
         u64 u64 = 1;
-
-        // fin + literal tests
-        { var c = u8.wrap_lshift(i8); c.Should().BeOfType<u8>(); c.Should().Be(2); }
-        { var c = u8.wrap_lshift(u8); c.Should().BeOfType<u8>(); c.Should().Be(2); }
+    
+        { var c = u8.wrap_lshift(1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift(8 - 1); c = c.wrap_lshift(1); c.Should().BeOfType<u8>(); c.Should().Be(0, "should have overflowed"); }
+        { var c = u8.wrap_lshift(7); c = c.wrap_lshift(1); c.Should().BeOfType<u8>(); c.Should().Be(0, "should have overflowed"); }
+        { Action a = () => { u8.wrap_lshift(8); }; a.Should().Throw<OverflowException>("shifting by size of integer type"); }
+        { Action a = () => { u8.wrap_lshift(9); }; a.Should().Throw<OverflowException>("shifting by more than size of integer type"); }
+        { var c = u8.wrap_lshift(i8); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((i8)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift(i16); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((i16)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift(i32); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((i32)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift(i64); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((i64)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift(u8); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((u8)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift(u16); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((u16)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift(u32); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((u32)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift(u64); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((u64)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(16 - 1); c = c.wrap_lshift(1); c.Should().BeOfType<u16>(); c.Should().Be(0, "should have overflowed"); }
+        { var c = u16.wrap_lshift(15); c = c.wrap_lshift(1); c.Should().BeOfType<u16>(); c.Should().Be(0, "should have overflowed"); }
+        { Action a = () => { u16.wrap_lshift(16); }; a.Should().Throw<OverflowException>("shifting by size of integer type"); }
+        { Action a = () => { u16.wrap_lshift(17); }; a.Should().Throw<OverflowException>("shifting by more than size of integer type"); }
+        { var c = u16.wrap_lshift(i8); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((i8)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(i16); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((i16)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(i32); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((i32)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(i64); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((i64)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(u8); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((u8)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(u16); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((u16)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(u32); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((u32)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift(u64); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((u64)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(32 - 1); c = c.wrap_lshift(1); c.Should().BeOfType<u32>(); c.Should().Be(0, "should have overflowed"); }
+        { var c = u32.wrap_lshift(31); c = c.wrap_lshift(1); c.Should().BeOfType<u32>(); c.Should().Be(0, "should have overflowed"); }
+        { Action a = () => { u32.wrap_lshift(32); }; a.Should().Throw<OverflowException>("shifting by size of integer type"); }
+        { Action a = () => { u32.wrap_lshift(33); }; a.Should().Throw<OverflowException>("shifting by more than size of integer type"); }
+        { var c = u32.wrap_lshift(i8); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((i8)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(i16); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((i16)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(i32); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((i32)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(i64); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((i64)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(u8); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((u8)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(u16); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((u16)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(u32); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((u32)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift(u64); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((u64)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(64 - 1); c = c.wrap_lshift(1); c.Should().BeOfType<u64>(); c.Should().Be(0, "should have overflowed"); }
+        { var c = u64.wrap_lshift(63); c = c.wrap_lshift(1); c.Should().BeOfType<u64>(); c.Should().Be(0, "should have overflowed"); }
+        { Action a = () => { u64.wrap_lshift(64); }; a.Should().Throw<OverflowException>("shifting by size of integer type"); }
+        { Action a = () => { u64.wrap_lshift(65); }; a.Should().Throw<OverflowException>("shifting by more than size of integer type"); }
+        { var c = u64.wrap_lshift(i8); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((i8)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(i16); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((i16)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(i32); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((i32)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(i64); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((i64)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(u8); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((u8)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(u16); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((u16)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(u32); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((u32)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift(u64); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((u64)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        
     }
-
 }
