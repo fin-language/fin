@@ -1,4 +1,4 @@
-using fin.sim.err;
+using fin.lang.err;
 using FluentAssertions;
 using Xunit;
 

@@ -1,2 +1,2 @@
-global using fin.sim;
-global using fin.sim.lang;
+global using fin.lang;
+global using fin.lang;
