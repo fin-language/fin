@@ -178,46 +178,286 @@ public struct u8: IHasU8
     // comparisons
     //################################################################
     
+    
+    /// <summary>
+    /// Both operands stay of type u8 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator ==(u8 a, u8 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue == b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue == b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `==` operation, both operands are treated as i16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator ==(u8 a, IHasI8 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue == b.value;
+    }
+    /// <summary>
+    /// NOTE: before the `==` operation, both operands are treated as u16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator ==(u8 a, u16 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue == b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `==` operation, both operands are treated as u32.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator ==(u8 a, u32 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue == b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `==` operation, both operands are treated as u64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator ==(u8 a, u64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue == b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type u8 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator !=(u8 a, u8 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue != b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue != b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `!=` operation, both operands are treated as i16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator !=(u8 a, IHasI8 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue != b.value;
+    }
+    /// <summary>
+    /// NOTE: before the `!=` operation, both operands are treated as u16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator !=(u8 a, u16 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue != b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `!=` operation, both operands are treated as u32.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator !=(u8 a, u32 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue != b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `!=` operation, both operands are treated as u64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator !=(u8 a, u64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue != b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type u8 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator <(u8 a, u8 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue < b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue < b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `<` operation, both operands are treated as i16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <(u8 a, IHasI8 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue < b.value;
+    }
+    /// <summary>
+    /// NOTE: before the `<` operation, both operands are treated as u16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <(u8 a, u16 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue < b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `<` operation, both operands are treated as u32.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <(u8 a, u32 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue < b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `<` operation, both operands are treated as u64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <(u8 a, u64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue < b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type u8 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator <=(u8 a, u8 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue <= b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue <= b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `<=` operation, both operands are treated as i16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <=(u8 a, IHasI8 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue <= b.value;
+    }
+    /// <summary>
+    /// NOTE: before the `<=` operation, both operands are treated as u16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <=(u8 a, u16 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue <= b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `<=` operation, both operands are treated as u32.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <=(u8 a, u32 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue <= b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `<=` operation, both operands are treated as u64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <=(u8 a, u64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue <= b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type u8 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator >(u8 a, u8 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue > b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue > b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `>` operation, both operands are treated as i16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >(u8 a, IHasI8 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue > b.value;
+    }
+    /// <summary>
+    /// NOTE: before the `>` operation, both operands are treated as u16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >(u8 a, u16 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue > b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `>` operation, both operands are treated as u32.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >(u8 a, u32 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue > b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `>` operation, both operands are treated as u64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >(u8 a, u64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue > b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type u8 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator >=(u8 a, u8 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue >= b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue >= b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `>=` operation, both operands are treated as i16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >=(u8 a, IHasI8 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue >= b.value;
+    }
+    /// <summary>
+    /// NOTE: before the `>=` operation, both operands are treated as u16.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >=(u8 a, u16 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue >= b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `>=` operation, both operands are treated as u32.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >=(u8 a, u32 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue >= b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `>=` operation, both operands are treated as u64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >=(u8 a, u64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue >= b._csReadValue;
     }
 
 

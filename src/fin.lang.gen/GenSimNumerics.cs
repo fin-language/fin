@@ -156,39 +156,17 @@ public class GenSimNumerics
     private static string GenOverflowingOperators(TypeInfo classType, string op)
     {
         var result = "";
+        var operations = OperationFigurer.DetermineTypes(classType, "b");
 
-        result += GenOverflowingOperator(classType, classType, classType.fin_name, classType, op);
-
-        //for mixing signed and unsigned
-        foreach (var otherType in types)
+        foreach (var opData in operations)
         {
-            if (classType.is_signed == otherType.is_signed) continue;    //only care about mixing
-
-            TypeInfo resultType = classType.GetResultType(otherType);
-            if (resultType.width > 64) continue;
-
-            if (classType.is_signed == false && classType.CanPromoteToOrViceVersa(otherType) == false)
-            {
-                result += GenOverflowingOperator(classType, otherType, GenIHasTypeName(otherType), resultType, op, otherValueGetter: $"b.value");
-            }
-        }
-
-        //{ i32 result = i16 + 65534; Assert.Equal<int>(65535, result); }
-        foreach (var otherType in types)
-        {
-            TypeInfo resultType = classType.GetResultType(otherType);
-            if (resultType.width > 64) continue;
-            if (resultType.width <= classType.width) continue;
-            if (classType.CanPromoteTo(otherType) && classType.is_signed == otherType.is_signed)
-            {
-                result += GenOverflowingOperator(classType, otherType, otherType.fin_name, resultType, op);
-            }
+            result += GenOverflowingOperator(opData.classType, opData.otherType, opData.otherTypeArgName, opData.resultType, op, otherValueGetter: opData.otherValueGetter);
         }
 
         return result;
     }
 
-    private static string GenIHasTypeName(TypeInfo otherType)
+    public static string GenIHasTypeName(TypeInfo otherType)
     {
         return "IHas" + otherType.fin_name.ToUpper();
     }
@@ -203,10 +181,8 @@ public class GenSimNumerics
     /// <param name="op"></param>
     /// <param name="otherValueGetter"></param>
     /// <returns></returns>
-    private static string GenOverflowingOperator(TypeInfo classFinType, TypeInfo otherType, string otherTypeArgName, TypeInfo resultType, string op, string? otherValueGetter = null)
+    private static string GenOverflowingOperator(TypeInfo classFinType, TypeInfo otherType, string otherTypeArgName, TypeInfo resultType, string op, string otherValueGetter = "b._csReadValue")
     {
-        otherValueGetter ??= $"b._csReadValue";
-
         // large type allows us to detect overflow and give nice error messages
         var csLargerType = classFinType.LargeEnoughToDetectOverflow(otherType)?.GetBackingTypeName() ?? "decimal";
 
@@ -254,23 +230,39 @@ public class GenSimNumerics
     private static string GenComparisonOperators(TypeInfo classType, string op)
     {
         var result = "";
+        var operations = OperationFigurer.DetermineTypes(classType, "b");
 
-        result += GenComparisonOperator(classType.fin_name, op, classType.fin_name);
+        foreach (var data in operations)
+        {
+            result += GenComparisonOperator(data.classType, data.otherType, data.otherTypeArgName, data.resultType, op, otherValueGetter: data.otherValueGetter);
+        }
 
-        return result;
+        return result.IndentNewLines(Indent);
     }
 
-    private static string GenComparisonOperator(string classType, string op, string otherType)
+    private static string GenComparisonOperator(TypeInfo classFinType, TypeInfo otherType, string otherTypeArgName, TypeInfo resultType, string op, string otherValueGetter = "b._csReadValue")
     {
+        string noteAboutResult;
+
+        if (classFinType != otherType)
+            noteAboutResult = $"NOTE: before the `{op}` operation, both operands are treated as {resultType.fin_name}.";
+        else
+            noteAboutResult = $"Both operands stay of type {classFinType.fin_name} during this operation (no implicit promotion to platform dependent int).";
+
         var template = $$"""
-            public static bool operator {{op}}({{classType}} a, {{otherType}} b)
+
+            /// <summary>
+            /// {{noteAboutResult}}<br/>
+            /// Error free operation.
+            /// </summary>
+            public static bool operator {{op}}({{classFinType.fin_name}} a, {{otherTypeArgName}} b)
             {
-                ThrowIfMathModeNotSpecified();
-                var result = a._csReadValue {{op}} b._csReadValue;
-                return result;
+                //ThrowIfMathModeNotSpecified(); // not required as this is error free
+                return a._csReadValue {{op}} {{otherValueGetter}};
             }
-        """;
-        return template.Trim();
+            """;
+
+        return template;
     }
 
     private static string GenWrapShiftMethods(TypeInfo classType)

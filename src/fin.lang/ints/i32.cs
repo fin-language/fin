@@ -249,46 +249,124 @@ public struct i32: IHasI32
     // comparisons
     //################################################################
     
+    
+    /// <summary>
+    /// Both operands stay of type i32 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator ==(i32 a, i32 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue == b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue == b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `==` operation, both operands are treated as i64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator ==(i32 a, i64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue == b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type i32 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator !=(i32 a, i32 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue != b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue != b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `!=` operation, both operands are treated as i64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator !=(i32 a, i64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue != b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type i32 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator <(i32 a, i32 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue < b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue < b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `<` operation, both operands are treated as i64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <(i32 a, i64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue < b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type i32 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator <=(i32 a, i32 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue <= b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue <= b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `<=` operation, both operands are treated as i64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator <=(i32 a, i64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue <= b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type i32 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator >(i32 a, i32 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue > b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue > b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `>` operation, both operands are treated as i64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >(i32 a, i64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue > b._csReadValue;
     }
 
+    
+    /// <summary>
+    /// Both operands stay of type i32 during this operation (no implicit promotion to platform dependent int).<br/>
+    /// Error free operation.
+    /// </summary>
     public static bool operator >=(i32 a, i32 b)
     {
-        ThrowIfMathModeNotSpecified();
-        var result = a._csReadValue >= b._csReadValue;
-        return result;
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue >= b._csReadValue;
+    }
+    /// <summary>
+    /// NOTE: before the `>=` operation, both operands are treated as i64.<br/>
+    /// Error free operation.
+    /// </summary>
+    public static bool operator >=(i32 a, i64 b)
+    {
+        //ThrowIfMathModeNotSpecified(); // not required as this is error free
+        return a._csReadValue >= b._csReadValue;
     }
 
 
