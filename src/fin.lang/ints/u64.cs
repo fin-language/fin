@@ -437,7 +437,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_lshift(IHasI8 shift_amount)
     {
@@ -479,7 +480,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Right shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_rshift(IHasI8 shift_amount)
     {
@@ -521,7 +523,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_lshift(IHasI16 shift_amount)
     {
@@ -563,7 +566,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Right shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_rshift(IHasI16 shift_amount)
     {
@@ -605,7 +609,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_lshift(IHasI32 shift_amount)
     {
@@ -647,7 +652,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Right shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_rshift(IHasI32 shift_amount)
     {
@@ -689,7 +695,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_lshift(IHasI64 shift_amount)
     {
@@ -731,7 +738,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Right shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_rshift(IHasI64 shift_amount)
     {
@@ -773,7 +781,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_lshift(u8 shift_amount)
     {
@@ -815,7 +824,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Right shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_rshift(u8 shift_amount)
     {
@@ -857,7 +867,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_lshift(u16 shift_amount)
     {
@@ -899,7 +910,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Right shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_rshift(u16 shift_amount)
     {
@@ -941,7 +953,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_lshift(u32 shift_amount)
     {
@@ -983,7 +996,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Right shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_rshift(u32 shift_amount)
     {
@@ -1025,7 +1039,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_lshift(u64 shift_amount)
     {
@@ -1067,7 +1082,8 @@ public struct u64: IHasU64
     /// <summary>
     /// Right shifts the bits discarding overflow bits without error.<br/>
     /// Does not change the value of this object.<br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type.
+    /// Transpiles to C99 code something like <code>(uint64_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
     /// </summary>
     public u64 wrap_rshift(u64 shift_amount)
     {

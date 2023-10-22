@@ -342,6 +342,8 @@ public class GenSimNumerics
         string shiftAmountTypeStr = shiftAmountType.fin_name;
         string shiftValueGetter = $"shift_amount._csReadValue";
 
+        string xmlOp = is_left ? "&lt;&lt;" : "&gt;&gt;";
+
         if (shiftAmountType.is_signed)
         {
             shiftAmountTypeStr = GenIHasTypeName(shiftAmountType);
@@ -353,7 +355,8 @@ public class GenSimNumerics
             /// <summary>
             /// {{title}} shifts the bits discarding overflow bits without error.<br/>
             /// Does not change the value of this object.<br/>
-            /// Sim exception or Error if shift by negative amount or amount larger than type.
+            /// Transpiles to C99 code something like <code>({{actualType.GetC99BackingTypeName()}})(my_num {{xmlOp}} shift_amount)</code><br/>
+            /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
             /// </summary>
             public {{actualType}} wrap_{{func_suffix}}({{shiftAmountTypeStr}} shift_amount)
             {

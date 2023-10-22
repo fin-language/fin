@@ -90,6 +90,23 @@ public class TypeInfo
         return backing_type;
     }
 
+    public string GetC99BackingTypeName()
+    {
+        string backing_type = fin_name switch
+        {
+            "i8" => "int8_t",
+            "i16" => "int16_t",
+            "i32" => "int32_t",
+            "i64" => "int64_t",
+            "u8" => "uint8_t",
+            "u16" => "uint16_t",
+            "u32" => "uint32_t",
+            "u64" => "uint64_t",
+            _ => throw new Exception(),
+        };
+        return backing_type;
+    }
+
     public TypeInfo GetResultType(TypeInfo other)
     {
         int width = Math.Max(this.width, other.width);
