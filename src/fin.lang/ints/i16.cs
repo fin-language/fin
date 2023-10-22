@@ -258,7 +258,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i16.MIN) { throw new OverflowException($"Underflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MIN limit of `{i16.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) + {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -286,7 +286,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) + {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -314,7 +314,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -344,7 +344,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i16.MIN) { throw new OverflowException($"Underflow! `{a} (i16) - {b} (i16)` result `{value}` is beyond i16 type MIN limit of `{i16.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) - {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) - {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -372,7 +372,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) - {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) - {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) - {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -400,7 +400,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -430,7 +430,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i16.MIN) { throw new OverflowException($"Underflow! `{a} (i16) * {b} (i16)` result `{value}` is beyond i16 type MIN limit of `{i16.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) * {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > i16.MAX) { throw new OverflowException($"Overflow! `{a} (i16) * {b} (i16)` result `{value}` is beyond i16 type MAX limit of `{i16.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -458,7 +458,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i32.MIN) { throw new OverflowException($"Underflow! `{a} (i32) * {b} (i32)` result `{value}` is beyond i32 type MIN limit of `{i32.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) * {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > i32.MAX) { throw new OverflowException($"Overflow! `{a} (i32) * {b} (i32)` result `{value}` is beyond i32 type MAX limit of `{i32.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -486,7 +486,7 @@ public struct i16: IHasI16
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < i16.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -508,6 +508,18 @@ public struct i16: IHasI16
     
     
 
+    
+    //################################################################
+    // bit methods (unsigned only for now)
+    //################################################################
+    
+    
+
+    
+
+    
+
+    
 
 
     //################################################################

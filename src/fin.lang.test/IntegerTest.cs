@@ -347,6 +347,54 @@ public class IntegerTest
 
         action.Should().Throw<OverflowException>();
     }
+
+    //--------------------------------------------------------------------------------
+
+    [Fact]
+    public void U8BitAnd()
+    {
+        // math.unsafe_mode(); // not required because no error is possible
+        u8 a = 0b_1111_0000;
+        u8 result = a & 0b_0001_1111;
+        result.Should().Be(0b_0001_0000);
+    }
+
+    [Fact]
+    public void U32BitAnd()
+    {
+        // math.unsafe_mode(); // not required because no error is possible
+        u32 mask = 0b_0000_0000_0000_0000_0000_0000_0001_1111;
+        u8 a = 0b_1111_0000;
+        { u32 result = a & mask; result.Should().Be(0b_0001_0000); }
+        { u32 result = a & 0b_1000_0000_0000_0000_0000_0000_0001_1111; result.Should().Be(0b_0001_0000); }
+    }
+
+    [Fact]
+    public void U8BitOr()
+    {
+        // math.unsafe_mode(); // not required because no error is possible
+        u8 a = 0b_1111_0000;
+        u8 result = a | 0b_0001_1111;
+        result.Should().Be(0b_1111_1111);
+    }
+
+    [Fact]
+    public void U8BitXor()
+    {
+        // math.unsafe_mode(); // not required because no error is possible
+        u8 a = 0b_1111_0000;
+        u8 result = a ^ 0b_0001_1111;
+        result.Should().Be(0b_1110_1111);
+    }
+
+    [Fact]
+    public void U8BitInvert()
+    {
+        // math.unsafe_mode(); // not required because no error is possible
+        u8 a = 0b_1111_0000;
+        u8 result = ~a;
+        result.Should().Be(0b_0000_1111);
+    }
 }
 
 

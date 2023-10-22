@@ -18,9 +18,16 @@ public static class StringUtilExtensions
         return StringUtils.Indent(str, indent);
     }
 
-    public static string IndentNewLines(this string str, string indent)
+    public static string IndentNewLines(this string str, string indent, int indentCount = 1)
     {
-        return StringUtils.IndentNewLines(str, indent);
+        var effectiveIndent = indent;
+
+        for (int i = 1; i < indentCount; i++)
+        {
+            effectiveIndent += indent;
+        }
+
+        return StringUtils.IndentNewLines(str, effectiveIndent);
     }
 
     public static string[] SplitIntoLinesOrEmpty(this string str)

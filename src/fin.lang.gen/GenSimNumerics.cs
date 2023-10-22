@@ -6,6 +6,8 @@ namespace fin.lang.gen;
 
 public class GenSimNumerics
 {
+    internal const string Indent = "    ";
+
     internal static readonly TypeInfo[] types = { 
         new TypeInfo("i8"), new TypeInfo("i16"), new TypeInfo("i32"), new TypeInfo("i64"), new TypeInfo("u8"), new TypeInfo("u16"), new TypeInfo("u32"), new TypeInfo("u64"),
     };
@@ -230,7 +232,7 @@ public class GenSimNumerics
                 switch (math.CurrentMode)
                 {
                     case math.Mode.Unsafe:
-                        {{GenOverflowChecks(op, resultType).IndentNewLines("                ")}}
+                        {{GenOverflowChecks(op, resultType).IndentNewLines(Indent, 3)}}
                         break;
                     case math.Mode.UserProvidedErr:
                         if (value < {{classFinType.fin_name}}.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -283,7 +285,7 @@ public class GenSimNumerics
             result += AddShiftCode(classType, shiftType, is_left: true);
             result += AddShiftCode(classType, shiftType, is_left: false);
         }
-        return result.Indent("    ");
+        return result.Indent(Indent);
     }
 
     internal static List<TypeInfo> GetWideningConversions(TypeInfo typeInfo)
@@ -342,8 +344,6 @@ public class GenSimNumerics
         string shiftAmountTypeStr = shiftAmountType.fin_name;
         string shiftValueGetter = $"shift_amount._csReadValue";
 
-        string xmlOp = is_left ? "&lt;&lt;" : "&gt;&gt;";
-
         if (shiftAmountType.is_signed)
         {
             shiftAmountTypeStr = GenIHasTypeName(shiftAmountType);
@@ -355,7 +355,7 @@ public class GenSimNumerics
             /// <summary>
             /// {{title}} shifts the bits discarding overflow bits without error.<br/>
             /// Does not change the value of this object.<br/>
-            /// Transpiles to C99 code something like <code>({{actualType.GetC99BackingTypeName()}})(my_num {{xmlOp}} shift_amount)</code><br/>
+            /// Transpiles to C99 code something like {{DocHelper.Code($"({actualType.GetC99BackingTypeName()})(my_num {op} shift_amount)")}}<br/>
             /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
             /// </summary>
             public {{actualType}} wrap_{{func_suffix}}({{shiftAmountTypeStr}} shift_amount)
@@ -410,7 +410,7 @@ public class GenSimNumerics
                 // {title}
                 {marker}
 
-                """.IndentNewLines("    ");
+                """.IndentNewLines(Indent);
         }
 
         return $$"""
@@ -512,7 +512,12 @@ public class GenSimNumerics
             
                 {{header("shift methods (unsigned only for now)")}}
                 {{GenWrapShiftMethods(typeInfo) + "\n"}}
-            
+                
+                {{header("bit methods (unsigned only for now)")}}
+                {{BitOperationGen.Gen(typeInfo, "&") + "\n"}}
+                {{BitOperationGen.Gen(typeInfo, "^") + "\n"}}
+                {{BitOperationGen.Gen(typeInfo, "|") + "\n"}}
+                {{BitOperationGen.GenUnary(typeInfo, "~") + "\n"}}
 
                 {{header("misc")}}
 

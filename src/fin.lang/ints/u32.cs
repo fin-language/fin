@@ -312,7 +312,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < u32.MIN) { throw new OverflowException($"Underflow! `{a} (u32) + {b} (u32)` result `{value}` is beyond u32 type MIN limit of `{u32.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) + {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) + {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -340,7 +340,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -368,7 +368,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -396,7 +396,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) + {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -424,7 +424,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -454,7 +454,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < u32.MIN) { throw new OverflowException($"Underflow! `{a} (u32) - {b} (u32)` result `{value}` is beyond u32 type MIN limit of `{u32.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) - {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) - {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -482,7 +482,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -510,7 +510,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -538,7 +538,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) - {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -566,7 +566,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) - {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) - {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) - {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -596,7 +596,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < u32.MIN) { throw new OverflowException($"Underflow! `{a} (u32) * {b} (u32)` result `{value}` is beyond u32 type MIN limit of `{u32.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) * {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > u32.MAX) { throw new OverflowException($"Overflow! `{a} (u32) * {b} (u32)` result `{value}` is beyond u32 type MAX limit of `{u32.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -624,7 +624,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -652,7 +652,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -680,7 +680,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < i64.MIN) { throw new OverflowException($"Underflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MIN limit of `{i64.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > i64.MAX) { throw new OverflowException($"Overflow! `{a} (i64) * {b} (i64)` result `{value}` is beyond i64 type MAX limit of `{i64.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -708,7 +708,7 @@ public struct u32: IHasU32
         {
             case math.Mode.Unsafe:
                 if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -1418,6 +1418,161 @@ public struct u32: IHasU32
     }
     
 
+    
+    //################################################################
+    // bit methods (unsigned only for now)
+    //################################################################
+    
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a &amp; b)</code>.
+    /// </summary>
+    public static u32 operator &(u32 a, u8 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue & b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a &amp; b)</code>.
+    /// </summary>
+    public static u32 operator &(u32 a, u16 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue & b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a &amp; b)</code>.
+    /// </summary>
+    public static u32 operator &(u32 a, u32 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue & b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a &amp; b)</code>.
+    /// </summary>
+    public static u64 operator &(u32 a, u64 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue & b._csReadValue);
+        return result;
+    }
+    
+
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a ^ b)</code>.
+    /// </summary>
+    public static u32 operator ^(u32 a, u8 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue ^ b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a ^ b)</code>.
+    /// </summary>
+    public static u32 operator ^(u32 a, u16 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue ^ b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a ^ b)</code>.
+    /// </summary>
+    public static u32 operator ^(u32 a, u32 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue ^ b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a ^ b)</code>.
+    /// </summary>
+    public static u64 operator ^(u32 a, u64 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue ^ b._csReadValue);
+        return result;
+    }
+    
+
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a | b)</code>.
+    /// </summary>
+    public static u32 operator |(u32 a, u8 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue | b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a | b)</code>.
+    /// </summary>
+    public static u32 operator |(u32 a, u16 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue | b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(a | b)</code>.
+    /// </summary>
+    public static u32 operator |(u32 a, u32 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(a._csReadValue | b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a | b)</code>.
+    /// </summary>
+    public static u64 operator |(u32 a, u64 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue | b._csReadValue);
+        return result;
+    }
+    
+
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u32)(~)</code>.
+    /// </summary>
+    public static u32 operator ~(u32 a)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u32)(~a._csReadValue);
+        return result;
+    }
+    
 
 
     //################################################################

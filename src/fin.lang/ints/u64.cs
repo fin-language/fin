@@ -353,7 +353,7 @@ public struct u64: IHasU64
         {
             case math.Mode.Unsafe:
                 if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `+` operation."); }
-                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `+` operation."); }
+            if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) + {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `+` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -383,7 +383,7 @@ public struct u64: IHasU64
         {
             case math.Mode.Unsafe:
                 if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) - {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `-` operation."); }
-                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) - {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `-` operation."); }
+            if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) - {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `-` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -413,7 +413,7 @@ public struct u64: IHasU64
         {
             case math.Mode.Unsafe:
                 if (value < u64.MIN) { throw new OverflowException($"Underflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MIN limit of `{u64.MIN}`. Explicitly widen before `*` operation."); }
-                if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `*` operation."); }
+            if (value > u64.MAX) { throw new OverflowException($"Overflow! `{a} (u64) * {b} (u64)` result `{value}` is beyond u64 type MAX limit of `{u64.MAX}`. Explicitly widen before `*` operation."); }
                 break;
             case math.Mode.UserProvidedErr:
                 if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
@@ -1123,6 +1123,161 @@ public struct u64: IHasU64
     }
     
 
+    
+    //################################################################
+    // bit methods (unsigned only for now)
+    //################################################################
+    
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a &amp; b)</code>.
+    /// </summary>
+    public static u64 operator &(u64 a, u8 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue & b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a &amp; b)</code>.
+    /// </summary>
+    public static u64 operator &(u64 a, u16 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue & b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a &amp; b)</code>.
+    /// </summary>
+    public static u64 operator &(u64 a, u32 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue & b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a &amp; b)</code>.
+    /// </summary>
+    public static u64 operator &(u64 a, u64 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue & b._csReadValue);
+        return result;
+    }
+    
+
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a ^ b)</code>.
+    /// </summary>
+    public static u64 operator ^(u64 a, u8 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue ^ b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a ^ b)</code>.
+    /// </summary>
+    public static u64 operator ^(u64 a, u16 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue ^ b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a ^ b)</code>.
+    /// </summary>
+    public static u64 operator ^(u64 a, u32 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue ^ b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a ^ b)</code>.
+    /// </summary>
+    public static u64 operator ^(u64 a, u64 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue ^ b._csReadValue);
+        return result;
+    }
+    
+
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a | b)</code>.
+    /// </summary>
+    public static u64 operator |(u64 a, u8 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue | b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a | b)</code>.
+    /// </summary>
+    public static u64 operator |(u64 a, u16 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue | b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a | b)</code>.
+    /// </summary>
+    public static u64 operator |(u64 a, u32 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue | b._csReadValue);
+        return result;
+    }
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(a | b)</code>.
+    /// </summary>
+    public static u64 operator |(u64 a, u64 b)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(a._csReadValue | b._csReadValue);
+        return result;
+    }
+    
+
+    
+    /// <summary>
+    /// Error free operation.<br/>
+    /// Transpiles to <code>(u64)(~)</code>.
+    /// </summary>
+    public static u64 operator ~(u64 a)
+    {
+        // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
+        var result = (u64)(~a._csReadValue);
+        return result;
+    }
+    
 
 
     //################################################################

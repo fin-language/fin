@@ -10,6 +10,7 @@ public class GenSimNumericsTests
 
         var output = $@"
 //NOTE! AUTO GENERATED
+// TODO comparison operator tests for all types
 
 using Xunit;
 using FluentAssertions;
