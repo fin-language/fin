@@ -5,6 +5,16 @@ namespace fin.lang.test;
 public class UnitTest1
 {
     [Fact]
+    public void simonly_run_Test()
+    {
+        simonly.run(() =>
+        {
+            int a = 1 << 22;
+            a.Should().Be(4194304);
+        });
+    }
+
+    [Fact]
     public void Test1()
     {
         math.unsafe_mode();
