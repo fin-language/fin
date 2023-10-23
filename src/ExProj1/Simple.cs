@@ -1,4 +1,4 @@
-using fin.lang.err;
+using finlang.err;
 using FluentAssertions;
 using Xunit;
 
