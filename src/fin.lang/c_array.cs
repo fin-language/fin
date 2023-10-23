@@ -2,7 +2,7 @@
 
 namespace fin.lang;
 
-public class c_array<T>
+public class c_array<T> : FinObj
 {
     /// <summary>
     /// Only accessible for test/simulation C# code. Not accessible to fin application code. Doesn't exist in generated C code.
