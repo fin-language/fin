@@ -26,7 +26,7 @@ Test/interim releases are not documented here.
 Still only simulating in C#. Not generating C99 yet.
 
 ### Added
-- `c_array<T>`
+- `c_array<T>` naked C style array (no length)
 - fin integer types `u8`, `u16`, `u32`, `u64`, `i8`, `i16`, `i32`, `i64` with most operators overloaded
 - math unsafe mode and user error provided mode
 - Err object for handling errors
