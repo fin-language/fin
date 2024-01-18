@@ -10,9 +10,9 @@ public class Simple
     public void Test1()
     {
         math.unsafe_mode();
-        u8 a = 255;
+        u8 a = 250;
         u8 b = 1;
-        //u8 c = a + b; // throws during simulation
+        u8 c = a + b;
     }
 
     [Fact]
