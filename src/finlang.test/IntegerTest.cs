@@ -344,10 +344,25 @@ public class IntegerTest
     }
 
     [Fact]
-    public void wrap_lshift_captured_overshift()
+    public void wrap_lshift_overshift_throws()
+    {
+        math.unsafe_mode();
+        u8 a = u8.MAX;
+
+        Action action = () => {
+            u8 b = (a << 8);
+            b.Should().Be(0); // avoid unused variable warning
+        };
+        a.Should().Be(u8.MAX);
+        action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void wrap_lshift_overshift_captured()
     {
         Err err = mem.stack(new Err());
         math.capture_errors(err);
+
         u8 a = u8.MAX;
         a = a.wrap_lshift(10);
 
@@ -357,13 +372,42 @@ public class IntegerTest
     }
 
     [Fact]
-    public void ShiftLeft_unsafe_overshift_throws()
+    public void wrap_lshift_negative_shift_throws()
     {
+        math.unsafe_mode();
+        u8 a = 200;
+        i8 s = -1;
+        Action action = () => {
+            u8 b = (a << s);
+            b.Should().Be(0); // avoid unused variable warning
+        };
+        a.Should().Be(200);
+        action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void wrap_lshift_negative_shift_captured()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+
+        u8 a = 2;
+        i32 s = -1;
+        a = a.wrap_lshift(s);
+
+        a.Should().Be(0);
+        err.has_error().Should().BeTrue();
+        err.clear();
+    }
+
+    [Fact]
+    public void ShiftLeft_overshift_throws()
+    {
+        math.unsafe_mode();
         u8 a = u8.MAX;
 
-        math.unsafe_mode();
         Action action = () => {
-            u8 b = (a << 10);
+            u8 b = (a << 8);
             b.Should().Be(0); // avoid unused variable warning
         };
         a.Should().Be(u8.MAX);
@@ -371,7 +415,21 @@ public class IntegerTest
     }
 
     [Fact]
-    public void ShiftLeft_captured_overshift()
+    public void ShiftLeft_overshift_throws_2()
+    {
+        math.unsafe_mode();
+        u8 a = u8.MAX;
+
+        Action action = () => {
+            a <<= 8;
+            a.Should().Be(0); // avoid unused variable warning
+        };
+        a.Should().Be(u8.MAX);
+        action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void ShiftLeft_overshift_captured()
     {
         Err err = mem.stack(new Err());
         math.capture_errors(err);
@@ -421,11 +479,78 @@ public class IntegerTest
     }
 
     [Fact]
-    public void ShiftLeft_u8_unsafe_overflow_throws()
+    public void ShiftRight_u16_negative_throws()
     {
+        math.unsafe_mode();
+
+        u16 a = 16000;
+        i64 shift_amount = -1;
+
+        Action action = () => {
+            a = a >> shift_amount;
+            a.Should().Be(4000);
+        };
+
+        action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void PROBLEM__ShiftRight_u16_negative_throws__compound_assignment_negative_literal()
+    {
+        math.unsafe_mode();
+
+        u16 a = 16000;
+        a >>= -1;             // FIXME! Needs analyzer https://github.com/fin-language/fin/issues/18
+        //a = a >> -1;        // Good compiler error. Can't implicitly convert int to u16
+
+        a.Should().Be(0);
+    }
+
+    [Fact]
+    public void PROBLEM__ShiftRight_u16_negative_throws__compound_assignment_negative_int()
+    {
+        math.unsafe_mode();
+
+        u16 a = 16000;
+        int shift_amount = -1;
+        a >>= shift_amount; // FIXME! Needs analyzer https://github.com/fin-language/fin/issues/18
+
+        a.Should().Be(0);
+    }
+
+    [Fact]
+    public void PROBLEM__ShiftRight_i32_negative_throws()
+    {
+        math.unsafe_mode();
+
+        i32 a = 16000;
+        a = a >> -1;  // FIXME! Needs analyzer https://github.com/fin-language/fin/issues/18
+
+        a.Should().Be(0);
+    }
+
+
+    [Fact]
+    public void ShiftRight_compound_assignment_u16_negative_throws()
+    {
+        math.unsafe_mode();
+
+        u16 a = 16000;
+        i64 shift_amount = -1;
+
+        Action action = () => {
+            a >>= shift_amount;
+        };
+
+        action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void ShiftLeft_u8_overflow_throws()
+    {
+        math.unsafe_mode();
         u8 a = u8.MAX;
 
-        math.unsafe_mode();
         Action action = () => {
             u8 b = (a << 1);
             b.Should().Be(0); // avoid unused variable warning
@@ -435,11 +560,26 @@ public class IntegerTest
     }
 
     [Fact]
-    public void ShiftLeft_u64_unsafe_overflow_throws()
+    public void ShiftLeft_compound_assignment_u8_overflow_throws()
     {
+        math.unsafe_mode();
+        u8 a = u8.MAX;
+
+        Action action = () => {
+            a <<= 1;
+            a.Should().Be(0); // avoid unused variable warning
+        };
+        a.Should().Be(u8.MAX);
+        action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void ShiftLeft_u64_overflow_throws()
+    {
+        math.unsafe_mode();
+
         u64 a = u64.MAX;
 
-        math.unsafe_mode();
         Action action = () => {
             u64 b = (a << 1);
             b.Should().Be(0); // avoid unused variable warning
