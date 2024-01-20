@@ -89,6 +89,18 @@ public class c_array_Test
         action = () => counts.unsafe_get(5);
         action.Should().Throw<IndexOutOfRangeException>().WithMessage("Attempted reading invalid index `5` of C style naked array of length 5. https://github.com/fin-language/fin/issues/14");
     }
+
+
+    [Fact]
+    public void ImplicitConversionFromArray()
+    {
+        c_array<u8> counts = new u8[] { 0, 1, 2, 3, 4 };
+        counts.SimGetValues().Should().BeEquivalentTo(new u8[] { 0, 1, 2, 3, 4 });
+
+        var counts2 = new c_array<u8>(new u8[] { 10, 11, 12, 13, 14 });
+        counts = counts2;
+        counts.SimGetValues().Should().BeEquivalentTo(new u8[] { 10, 11, 12, 13, 14 });
+    }
 }
 
 

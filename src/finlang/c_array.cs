@@ -33,6 +33,12 @@ public class c_array<T> : FinObj
     }
 
     [simonly]
+    public static implicit operator c_array<T>(T[] values)
+    {
+        return new(values);
+    }
+
+    [simonly]
     public T[] SimGetValues()
     {
         math.unsafe_mode(); // for subtraction
