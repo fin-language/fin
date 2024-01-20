@@ -332,20 +332,134 @@ public class IntegerTest
 
     //--------------------------------------------------------------------------------
 
-    //test that checks if C# << causes overflow exception
+    // confirms that C# << will not cause an overflow exception even in a checked block
     [Fact]
-    public void CSharpLangTest_ShiftLeft()
+    public void CSharpLangTest_ShiftLeft_byte()
     {
-        Action action = () =>
+        checked
         {
-            checked
-            {
-                byte a = 255;
-                a = ((byte)(a << 1));
-            }
-        };
+            uint a = uint.MaxValue;
+            a = (a << 1);
+        }
+    }
 
+    [Fact]
+    public void wrap_lshift_captured_overshift()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+        u8 a = u8.MAX;
+        a = a.wrap_lshift(10);
+
+        a.Should().Be(0);
+        err.has_error().Should().BeTrue();
+        err.clear();
+    }
+
+    [Fact]
+    public void ShiftLeft_unsafe_overshift_throws()
+    {
+        u8 a = u8.MAX;
+
+        math.unsafe_mode();
+        Action action = () => {
+            u8 b = (a << 10);
+            b.Should().Be(0); // avoid unused variable warning
+        };
+        a.Should().Be(u8.MAX);
         action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void ShiftLeft_captured_overshift()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+        u8 a = u8.MAX;
+        u8 b = (a << 10);
+
+        a.Should().Be(u8.MAX);
+        b.Should().Be(0);
+        err.has_error().Should().BeTrue();
+        err.clear();
+    }
+
+    [Fact]
+    public void ShiftLeft_u8()
+    {
+        math.unsafe_mode();
+
+        u8 a = 40;
+        a <<= 2;
+        a.Should().Be(160);
+    }
+
+    [Fact]
+    public void ShiftLeft_u16()
+    {
+        math.unsafe_mode();
+
+        u16 a = 4000;
+        a <<= 2;
+        a.Should().Be(16000);
+    }
+
+    [Fact]
+    public void ShiftRight_u16()
+    {
+        math.unsafe_mode();
+
+        u16 a = 16000;
+        a >>= 2;
+        a.Should().Be(4000);
+
+        a = 3;
+        a >>= 1;
+        a.Should().Be(1);
+        a >>= 1;
+        a.Should().Be(0);
+    }
+
+    [Fact]
+    public void ShiftLeft_u8_unsafe_overflow_throws()
+    {
+        u8 a = u8.MAX;
+
+        math.unsafe_mode();
+        Action action = () => {
+            u8 b = (a << 1);
+            b.Should().Be(0); // avoid unused variable warning
+        };
+        a.Should().Be(u8.MAX);
+        action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void ShiftLeft_u64_unsafe_overflow_throws()
+    {
+        u64 a = u64.MAX;
+
+        math.unsafe_mode();
+        Action action = () => {
+            u64 b = (a << 1);
+            b.Should().Be(0); // avoid unused variable warning
+        };
+        a.Should().Be(u64.MAX);
+        action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void ShiftLeft_captured_overflow()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+        u8 a = u8.MAX;
+        u8 b = (a << 1);
+
+        a.Should().Be(u8.MAX);
+        b.Should().Be(0);
+        err.has_error().Should().BeTrue();
+        err.clear();
     }
 
     //--------------------------------------------------------------------------------

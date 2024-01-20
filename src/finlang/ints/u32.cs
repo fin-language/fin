@@ -971,16 +971,17 @@ public struct u32: IHasU32
         
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
     /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
     public u32 wrap_lshift(IHasI8 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
@@ -1008,27 +1009,28 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        u32 result = unchecked((uint)(this._csReadValue << (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
-    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Left shifts the bits (error on overflow).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if overflow or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
-    public u32 wrap_rshift(IHasI8 shift_amount)
+    public static u32 operator <<(u32 a, IHasI8 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1042,7 +1044,7 @@ public struct u32: IHasU32
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1051,22 +1053,82 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        var result = a._csValue << (byte)shift_amount_value; // shift_amount_value must fit in byte because of above checks
+    
+        if (result < a || result > u32.MAX)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Left shifting a u32 integer (value `{a._csReadValue}`) by `{shift_amount_value}` caused the value to overflow (promote first if needed).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.OverflowError());
+                    return 0;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        return (u32)result;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits (no overflow possible).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
+    /// </summary>
+    public static u32 operator >>(u32 a, IHasI8 shift_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        var shift_amount_value = shift_amount.value._csReadValue;
+    
+            if (shift_amount_value < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (shift_amount_value >= 32)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        u32 result = unchecked((uint)(a._csReadValue >> (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
     /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
     public u32 wrap_lshift(IHasI16 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
@@ -1094,27 +1156,28 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        u32 result = unchecked((uint)(this._csReadValue << (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
-    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Left shifts the bits (error on overflow).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if overflow or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
-    public u32 wrap_rshift(IHasI16 shift_amount)
+    public static u32 operator <<(u32 a, IHasI16 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1128,7 +1191,7 @@ public struct u32: IHasU32
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1137,22 +1200,82 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        var result = a._csValue << (byte)shift_amount_value; // shift_amount_value must fit in byte because of above checks
+    
+        if (result < a || result > u32.MAX)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Left shifting a u32 integer (value `{a._csReadValue}`) by `{shift_amount_value}` caused the value to overflow (promote first if needed).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.OverflowError());
+                    return 0;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        return (u32)result;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits (no overflow possible).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
+    /// </summary>
+    public static u32 operator >>(u32 a, IHasI16 shift_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        var shift_amount_value = shift_amount.value._csReadValue;
+    
+            if (shift_amount_value < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (shift_amount_value >= 32)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        u32 result = unchecked((uint)(a._csReadValue >> (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
     /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
     public u32 wrap_lshift(IHasI32 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
@@ -1180,27 +1303,28 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        u32 result = unchecked((uint)(this._csReadValue << (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
-    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Left shifts the bits (error on overflow).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if overflow or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
-    public u32 wrap_rshift(IHasI32 shift_amount)
+    public static u32 operator <<(u32 a, IHasI32 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1214,7 +1338,7 @@ public struct u32: IHasU32
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1223,22 +1347,82 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        var result = a._csValue << (byte)shift_amount_value; // shift_amount_value must fit in byte because of above checks
+    
+        if (result < a || result > u32.MAX)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Left shifting a u32 integer (value `{a._csReadValue}`) by `{shift_amount_value}` caused the value to overflow (promote first if needed).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.OverflowError());
+                    return 0;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        return (u32)result;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits (no overflow possible).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
+    /// </summary>
+    public static u32 operator >>(u32 a, IHasI32 shift_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        var shift_amount_value = shift_amount.value._csReadValue;
+    
+            if (shift_amount_value < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (shift_amount_value >= 32)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        u32 result = unchecked((uint)(a._csReadValue >> (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
     /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
     public u32 wrap_lshift(IHasI64 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
@@ -1266,27 +1450,28 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        u32 result = unchecked((uint)(this._csReadValue << (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
-    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Left shifts the bits (error on overflow).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if overflow or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
-    public u32 wrap_rshift(IHasI64 shift_amount)
+    public static u32 operator <<(u32 a, IHasI64 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount.value._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1300,7 +1485,7 @@ public struct u32: IHasU32
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1309,22 +1494,82 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        var result = a._csValue << (byte)shift_amount_value; // shift_amount_value must fit in byte because of above checks
+    
+        if (result < a || result > u32.MAX)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Left shifting a u32 integer (value `{a._csReadValue}`) by `{shift_amount_value}` caused the value to overflow (promote first if needed).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.OverflowError());
+                    return 0;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        return (u32)result;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits (no overflow possible).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
+    /// </summary>
+    public static u32 operator >>(u32 a, IHasI64 shift_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        var shift_amount_value = shift_amount.value._csReadValue;
+    
+            if (shift_amount_value < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (shift_amount_value >= 32)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        u32 result = unchecked((uint)(a._csReadValue >> (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
     /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
     public u32 wrap_lshift(u8 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
@@ -1352,27 +1597,28 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        u32 result = unchecked((uint)(this._csReadValue << (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
-    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Left shifts the bits (error on overflow).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if overflow or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
-    public u32 wrap_rshift(u8 shift_amount)
+    public static u32 operator <<(u32 a, u8 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1386,7 +1632,7 @@ public struct u32: IHasU32
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1395,22 +1641,82 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        var result = a._csValue << (byte)shift_amount_value; // shift_amount_value must fit in byte because of above checks
+    
+        if (result < a || result > u32.MAX)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Left shifting a u32 integer (value `{a._csReadValue}`) by `{shift_amount_value}` caused the value to overflow (promote first if needed).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.OverflowError());
+                    return 0;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        return (u32)result;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits (no overflow possible).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
+    /// </summary>
+    public static u32 operator >>(u32 a, u8 shift_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        var shift_amount_value = shift_amount._csReadValue;
+    
+            if (shift_amount_value < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (shift_amount_value >= 32)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        u32 result = unchecked((uint)(a._csReadValue >> (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
     /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
     public u32 wrap_lshift(u16 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
@@ -1438,27 +1744,28 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        u32 result = unchecked((uint)(this._csReadValue << (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
-    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Left shifts the bits (error on overflow).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if overflow or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
-    public u32 wrap_rshift(u16 shift_amount)
+    public static u32 operator <<(u32 a, u16 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1472,7 +1779,7 @@ public struct u32: IHasU32
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1481,22 +1788,82 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        var result = a._csValue << (byte)shift_amount_value; // shift_amount_value must fit in byte because of above checks
+    
+        if (result < a || result > u32.MAX)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Left shifting a u32 integer (value `{a._csReadValue}`) by `{shift_amount_value}` caused the value to overflow (promote first if needed).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.OverflowError());
+                    return 0;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        return (u32)result;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits (no overflow possible).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
+    /// </summary>
+    public static u32 operator >>(u32 a, u16 shift_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        var shift_amount_value = shift_amount._csReadValue;
+    
+            if (shift_amount_value < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (shift_amount_value >= 32)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        u32 result = unchecked((uint)(a._csReadValue >> (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
     /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
     public u32 wrap_lshift(u32 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
@@ -1524,27 +1891,28 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        u32 result = unchecked((uint)(this._csReadValue << (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
-    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Left shifts the bits (error on overflow).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if overflow or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
-    public u32 wrap_rshift(u32 shift_amount)
+    public static u32 operator <<(u32 a, u32 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1558,7 +1926,7 @@ public struct u32: IHasU32
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1567,22 +1935,82 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        var result = a._csValue << (byte)shift_amount_value; // shift_amount_value must fit in byte because of above checks
+    
+        if (result < a || result > u32.MAX)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Left shifting a u32 integer (value `{a._csReadValue}`) by `{shift_amount_value}` caused the value to overflow (promote first if needed).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.OverflowError());
+                    return 0;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        return (u32)result;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits (no overflow possible).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
+    /// </summary>
+    public static u32 operator >>(u32 a, u32 shift_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        var shift_amount_value = shift_amount._csReadValue;
+    
+            if (shift_amount_value < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (shift_amount_value >= 32)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        u32 result = unchecked((uint)(a._csReadValue >> (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
     /// Left shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
     /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
     /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
     public u32 wrap_lshift(u64 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
@@ -1610,27 +2038,28 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue << (int)shift_amount_value));
+        u32 result = unchecked((uint)(this._csReadValue << (byte)shift_amount_value));
         return result;
     }
     
     /// <summary>
-    /// Right shifts the bits discarding overflow bits without error.<br/>
-    /// Does not change the value of this object.<br/>
-    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
-    /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Left shifts the bits (error on overflow).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &lt;&lt; shift_amount)</code><br/>
+    /// Sim exception or Error if overflow or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
     /// </summary>
-    public u32 wrap_rshift(u64 shift_amount)
+    public static u32 operator <<(u32 a, u64 shift_amount)
     {
         ThrowIfMathModeNotSpecified();
         var shift_amount_value = shift_amount._csReadValue;
     
-        if (shift_amount_value < 0)
+            if (shift_amount_value < 0)
         {
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1644,7 +2073,7 @@ public struct u32: IHasU32
             switch (math.CurrentMode)
             {
                 case math.Mode.Unsafe:
-                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
                 case math.Mode.UserProvidedErr:
                     math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
                     break;
@@ -1653,7 +2082,66 @@ public struct u32: IHasU32
             }
         }
     
-        u32 result = unchecked((byte)(this._csReadValue >> (int)shift_amount_value));
+        var result = a._csValue << (byte)shift_amount_value; // shift_amount_value must fit in byte because of above checks
+    
+        if (result < a || result > u32.MAX)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Left shifting a u32 integer (value `{a._csReadValue}`) by `{shift_amount_value}` caused the value to overflow (promote first if needed).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.OverflowError());
+                    return 0;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        return (u32)result;
+    }
+    
+    /// <summary>
+    /// Right shifts the bits (no overflow possible).<br/>
+    /// Shift does not change the value of this object (without an assignment).<br/>
+    /// Transpiles to C99 code something like <code>(uint32_t)(my_num &gt;&gt; shift_amount)</code><br/>
+    /// Sim exception or if shift by negative amount or amount larger than type (undefined C99 behaviors).
+    /// Math mode is required to be specified to handle bad shift amounts.
+    /// </summary>
+    public static u32 operator >>(u32 a, u64 shift_amount)
+    {
+        ThrowIfMathModeNotSpecified();
+        var shift_amount_value = shift_amount._csReadValue;
+    
+            if (shift_amount_value < 0)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Shift misuse! Shifting a value `{a}` by a negative amount `{shift_amount}` is undefined behavior in C.");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        if (shift_amount_value >= 32)
+        {
+            switch (math.CurrentMode)
+            {
+                case math.Mode.Unsafe:
+                    throw new OverflowException($"Overshift! Shifting a u32 integer (value `{a}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
+                case math.Mode.UserProvidedErr:
+                    math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+            }
+        }
+    
+        u32 result = unchecked((uint)(a._csReadValue >> (byte)shift_amount_value));
         return result;
     }
     

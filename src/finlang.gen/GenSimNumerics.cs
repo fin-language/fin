@@ -274,8 +274,10 @@ public class GenSimNumerics
 
         foreach (var shiftType in types)
         {
-            result += AddShiftCode(classType, shiftType, is_left: true);
-            result += AddShiftCode(classType, shiftType, is_left: false);
+            result += GenSimNumericsShifting.AddWrapShiftCode(classType, shiftType, is_left: true);
+            //result += GenSimNumericsShifting.AddWrapShiftCode(classType, shiftType, is_left: false);  // not needed for right shifts
+            result += GenSimNumericsShifting.AddShiftLeftOperator(classType, shiftType);
+            result += GenSimNumericsShifting.AddShiftRightOperator(classType, shiftType);
         }
         return result.Indent(Indent);
     }
@@ -328,69 +330,7 @@ public class GenSimNumerics
         }
     }
 
-    private static string AddShiftCode(TypeInfo actualType, TypeInfo shiftAmountType, bool is_left)
-    {
-        string op = is_left ? "<<" : ">>";
-        string title = is_left ? "Left" : "Right";
-        string func_suffix = is_left ? "lshift" : "rshift";
-        string shiftAmountTypeStr = shiftAmountType.fin_name;
-        string shiftValueGetter = $"shift_amount._csReadValue";
 
-        if (shiftAmountType.is_signed)
-        {
-            shiftAmountTypeStr = GenIHasTypeName(shiftAmountType);
-            shiftValueGetter = "shift_amount.value._csReadValue";
-        }
-
-        string template = $$"""
-
-            /// <summary>
-            /// {{title}} shifts the bits discarding overflow bits without error.<br/>
-            /// Does not change the value of this object.<br/>
-            /// Transpiles to C99 code something like {{DocHelper.Code($"({actualType.GetC99BackingTypeName()})(my_num {op} shift_amount)")}}<br/>
-            /// Sim exception or Error if shift by negative amount or amount larger than type (undefined C99 behaviors).
-            /// </summary>
-            public {{actualType}} wrap_{{func_suffix}}({{shiftAmountTypeStr}} shift_amount)
-            {
-                ThrowIfMathModeNotSpecified();
-                var shift_amount_value = {{shiftValueGetter}};
-
-                if (shift_amount_value < 0)
-                {
-                    switch (math.CurrentMode)
-                    {
-                        case math.Mode.Unsafe:
-                            throw new OverflowException($"Shift misuse! Shifting a value `{this._csReadValue}` by a negative amount `{shift_amount}` is undefined behavior in C.");
-                        case math.Mode.UserProvidedErr:
-                            math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
-                            break;
-                        default:
-                            throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
-                    }
-                }
-
-                if (shift_amount_value >= {{actualType.width}})
-                {
-                    switch (math.CurrentMode)
-                    {
-                        case math.Mode.Unsafe:
-                            throw new OverflowException($"Overshift! Shifting a {{actualType}} integer (value `{this._csReadValue}`) by `{shift_amount_value}` is undefined behavior in C (can't shift more than a type's bit width).");
-                        case math.Mode.UserProvidedErr:
-                            math.userProvidedErr!.add_without_context(new err.ShiftMisuse());
-                            break;
-                        default:
-                            throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
-                    }
-                }
-
-                {{actualType}} result = unchecked((byte)(this._csReadValue {{op}} (int)shift_amount_value));
-                return result;
-            }
-
-            """;
-
-        return template;
-    }
 
     private static string RenderTemplate(TypeInfo typeInfo, string backing_type, string implicitWidening, string explicitWidening, string narrowingConversions, string wrappingConversions)
     {
