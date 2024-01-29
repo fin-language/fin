@@ -95,7 +95,7 @@ public struct i32: IHasI32
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
-    public u32 unsafe_to_u32()
+    public u32 narrow_to_u32()
     {
         ThrowIfMathModeNotSpecified();
         int value = this._csReadValue;
@@ -122,7 +122,7 @@ public struct i32: IHasI32
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
-    public i16 unsafe_to_i16()
+    public i16 narrow_to_i16()
     {
         ThrowIfMathModeNotSpecified();
         int value = this._csReadValue;
@@ -149,7 +149,7 @@ public struct i32: IHasI32
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
-    public u16 unsafe_to_u16()
+    public u16 narrow_to_u16()
     {
         ThrowIfMathModeNotSpecified();
         int value = this._csReadValue;
@@ -176,7 +176,7 @@ public struct i32: IHasI32
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
-    public i8 unsafe_to_i8()
+    public i8 narrow_to_i8()
     {
         ThrowIfMathModeNotSpecified();
         int value = this._csReadValue;
@@ -203,7 +203,7 @@ public struct i32: IHasI32
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
-    public u8 unsafe_to_u8()
+    public u8 narrow_to_u8()
     {
         ThrowIfMathModeNotSpecified();
         int value = this._csReadValue;

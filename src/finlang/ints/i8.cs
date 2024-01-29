@@ -115,7 +115,7 @@ public struct i8: IHasI8
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
-    public u8 unsafe_to_u8()
+    public u8 narrow_to_u8()
     {
         ThrowIfMathModeNotSpecified();
         sbyte value = this._csReadValue;

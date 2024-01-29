@@ -126,7 +126,7 @@ public class GenSimNumerics
                     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
                     /// or an exception will be thrown during simulation (if math mode is unsafe).
                     /// </summary>
-                    public {{narrowTypeName}} unsafe_to_{{narrowTypeName}}()
+                    public {{narrowTypeName}} narrow_to_{{narrowTypeName}}()
                     {
                         ThrowIfMathModeNotSpecified();
                         {{valueType}} value = this._csReadValue;
