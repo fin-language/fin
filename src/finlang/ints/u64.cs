@@ -1786,7 +1786,7 @@ public struct u64: IHasU64
     public static u64 operator ~(u64 a)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u64)(~a._csReadValue);
+        var result = (u64)(ulong)(~a._csReadValue); // have to cast to C# type first
         return result;
     }
     

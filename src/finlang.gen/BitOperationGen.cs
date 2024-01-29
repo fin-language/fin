@@ -53,7 +53,7 @@ public class BitOperationGen
             public static {{classType.fin_name}} operator {{op}}({{classType.fin_name}} a)
             {
                 // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-                var result = ({{classType.fin_name}})({{op}}a._csReadValue);
+                var result = ({{classType.fin_name}})({{classType.GetBackingTypeName()}})({{op}}a._csReadValue); // have to cast to C# type first
                 return result;
             }
 

@@ -2258,7 +2258,7 @@ public struct u16: IHasU16
     public static u16 operator ~(u16 a)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(~a._csReadValue);
+        var result = (u16)(ushort)(~a._csReadValue); // have to cast to C# type first
         return result;
     }
     

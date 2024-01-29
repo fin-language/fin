@@ -2297,7 +2297,7 @@ public struct u32: IHasU32
     public static u32 operator ~(u32 a)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u32)(~a._csReadValue);
+        var result = (u32)(uint)(~a._csReadValue); // have to cast to C# type first
         return result;
     }
     

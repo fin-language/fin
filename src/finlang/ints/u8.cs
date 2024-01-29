@@ -2221,7 +2221,7 @@ public struct u8: IHasU8
     public static u8 operator ~(u8 a)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u8)(~a._csReadValue);
+        var result = (u8)(byte)(~a._csReadValue); // have to cast to C# type first
         return result;
     }
     
