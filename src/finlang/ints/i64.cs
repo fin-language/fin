@@ -360,26 +360,6 @@ public struct i64: IHasI64
     //################################################################
     
     /// <summary>
-    /// Safe explicit wrapping conversion. Truncates upper bits.
-    /// </summary>
-    public u64 wrap_u64 => unchecked((ulong)this._csReadValue);
-
-    /// <summary>
-    /// Safe explicit wrapping conversion. Truncates upper bits.
-    /// </summary>
-    public u32 wrap_u32 => unchecked((uint)this._csReadValue);
-
-    /// <summary>
-    /// Safe explicit wrapping conversion. Truncates upper bits.
-    /// </summary>
-    public u16 wrap_u16 => unchecked((ushort)this._csReadValue);
-
-    /// <summary>
-    /// Safe explicit wrapping conversion. Truncates upper bits.
-    /// </summary>
-    public u8 wrap_u8 => unchecked((byte)this._csReadValue);
-
-    /// <summary>
     /// Narrowing conversion from u64 to i64 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).

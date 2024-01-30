@@ -65,7 +65,7 @@ public class GenSimNumerics
 
             narrowingConversions += GenNarrowToConversion(typeInfo, narrowTypeInfo);
 
-            if (narrowTypeInfo.is_unsigned)
+            if (typeInfo.is_unsigned && narrowTypeInfo.is_unsigned)
             {
                 wrappingConversions += $"""
 

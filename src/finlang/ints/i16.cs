@@ -346,16 +346,6 @@ public struct i16: IHasI16
     //################################################################
     
     /// <summary>
-    /// Safe explicit wrapping conversion. Truncates upper bits.
-    /// </summary>
-    public u16 wrap_u16 => unchecked((ushort)this._csReadValue);
-
-    /// <summary>
-    /// Safe explicit wrapping conversion. Truncates upper bits.
-    /// </summary>
-    public u8 wrap_u8 => unchecked((byte)this._csReadValue);
-
-    /// <summary>
     /// Narrowing conversion from i32 to i16 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).

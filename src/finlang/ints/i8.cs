@@ -340,11 +340,6 @@ public struct i8: IHasI8
     //################################################################
     
     /// <summary>
-    /// Safe explicit wrapping conversion. Truncates upper bits.
-    /// </summary>
-    public u8 wrap_u8 => unchecked((byte)this._csReadValue);
-
-    /// <summary>
     /// Narrowing conversion from i16 to i8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
