@@ -59,7 +59,12 @@ public class GenSimNumericsTestsSimple
             {
                 decimal value = type2.GetMaxValue() - 1;
                 code += $"{{ var c = {var_name}.wrap_lshift({type2.fin_name}); c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(1 * 2); }}\n";
-                code += $"{{ var c = {var_name}.wrap_lshift(({type2.fin_name})1); c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(1 * 2); }}\n";
+                var suffix = "";
+                if (type2.fin_name == "i64")
+                {
+                    suffix = "L"; // https://github.com/fin-language/fin/issues/19
+                }
+                code += $"{{ var c = {var_name}.wrap_lshift(({type2.fin_name})1{suffix}); c.Should().BeOfType<{type.fin_name}>(); c.Should().Be(1 * 2); }}\n";
             }
         }
 
@@ -161,7 +166,13 @@ public class GenSimNumericsTestsSimple
                 else
                 {
                     literalPlusFin += $"{{ var c = {literalType.fin_name}.from({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
-                    literalPlusFin += $"{{ var c = ({literalType.fin_name})({value}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
+
+                    string suffix = "";
+                    if (literalType.fin_name == "i64")
+                    {
+                        suffix = "L"; // https://github.com/fin-language/fin/issues/19
+                    }
+                    literalPlusFin += $"{{ var c = ({literalType.fin_name})({value}{suffix}) + {type.fin_name}; c.Should().BeOfType<{resultType.fin_name}>(); c.Should().Be({value + 1}); }}\n";
                     literalPlusFin += $"//        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12\n";
                 }
             }

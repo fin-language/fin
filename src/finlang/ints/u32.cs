@@ -101,7 +101,15 @@ public struct u32: IHasU32
     //################################################################
     
     /// <summary>
-    /// Potentially unsafe conversion from u32 to i32.
+    /// Same as `narrow_to_i32`.
+    /// Narrowing conversion from u32 to i32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator i32(u32 num) => num.narrow_to_i32();
+
+    /// <summary>
+    /// Narrowing conversion from u32 to i32 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -128,7 +136,15 @@ public struct u32: IHasU32
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u32 to i16.
+    /// Same as `narrow_to_i16`.
+    /// Narrowing conversion from u32 to i16 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator i16(u32 num) => num.narrow_to_i16();
+
+    /// <summary>
+    /// Narrowing conversion from u32 to i16 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -155,7 +171,15 @@ public struct u32: IHasU32
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u32 to u16.
+    /// Same as `narrow_to_u16`.
+    /// Narrowing conversion from u32 to u16 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u16(u32 num) => num.narrow_to_u16();
+
+    /// <summary>
+    /// Narrowing conversion from u32 to u16 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -182,7 +206,15 @@ public struct u32: IHasU32
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u32 to i8.
+    /// Same as `narrow_to_i8`.
+    /// Narrowing conversion from u32 to i8 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator i8(u32 num) => num.narrow_to_i8();
+
+    /// <summary>
+    /// Narrowing conversion from u32 to i8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -209,7 +241,15 @@ public struct u32: IHasU32
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u32 to u8.
+    /// Same as `narrow_to_u8`.
+    /// Narrowing conversion from u32 to u8 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u8(u32 num) => num.narrow_to_u8();
+
+    /// <summary>
+    /// Narrowing conversion from u32 to u8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -235,6 +275,141 @@ public struct u32: IHasU32
         return unchecked((byte)value);
     }
 
+    /// <summary>
+    /// Narrowing conversion from i8 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u32 narrow_from(i8 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        sbyte value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u32.MIN) { throw new OverflowException($"Underflow! u32 value `{value}` cannot be converted to type u32."); }
+                if (value > u32.MAX) { throw new OverflowException($"Overflow! u32 value `{value}` cannot be converted to type u32."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u32.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((uint)value);
+    }
+
+    /// <summary>
+    /// Narrowing conversion from i16 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u32 narrow_from(i16 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        short value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u32.MIN) { throw new OverflowException($"Underflow! u32 value `{value}` cannot be converted to type u32."); }
+                if (value > u32.MAX) { throw new OverflowException($"Overflow! u32 value `{value}` cannot be converted to type u32."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u32.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((uint)value);
+    }
+
+    /// <summary>
+    /// Narrowing conversion from i32 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u32 narrow_from(i32 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        int value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u32.MIN) { throw new OverflowException($"Underflow! u32 value `{value}` cannot be converted to type u32."); }
+                if (value > u32.MAX) { throw new OverflowException($"Overflow! u32 value `{value}` cannot be converted to type u32."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u32.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((uint)value);
+    }
+
+    /// <summary>
+    /// Narrowing conversion from i64 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u32 narrow_from(i64 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        decimal value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u32.MIN) { throw new OverflowException($"Underflow! u32 value `{value}` cannot be converted to type u32."); }
+                if (value > u32.MAX) { throw new OverflowException($"Overflow! u32 value `{value}` cannot be converted to type u32."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u32.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((uint)value);
+    }
+
+    /// <summary>
+    /// Narrowing conversion from u64 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u32 narrow_from(u64 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        decimal value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u32.MIN) { throw new OverflowException($"Underflow! u32 value `{value}` cannot be converted to type u32."); }
+                if (value > u32.MAX) { throw new OverflowException($"Overflow! u32 value `{value}` cannot be converted to type u32."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u32.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u32.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((uint)value);
+    }
+
 
     //################################################################
     // wrapping conversions (only for unsigned)
@@ -249,6 +424,76 @@ public struct u32: IHasU32
     /// Safe explicit wrapping conversion. Truncates upper bits.
     /// </summary>
     public u8 wrap_u8 => unchecked((byte)this._csReadValue);
+
+    /// <summary>
+    /// Narrowing conversion from i8 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u32(i8 num) => u32.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from sbyte to u32 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u32(sbyte num) => u32.narrow_from(num);
+
+    /// <summary>
+    /// Narrowing conversion from i16 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u32(i16 num) => u32.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from short to u32 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u32(short num) => u32.narrow_from(num);
+
+    /// <summary>
+    /// Narrowing conversion from i32 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u32(i32 num) => u32.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from int to u32 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u32(int num) => u32.narrow_from(num);
+
+    /// <summary>
+    /// Narrowing conversion from i64 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u32(i64 num) => u32.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from long to u32 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u32(long num) => u32.narrow_from(num);
+
+    /// <summary>
+    /// Narrowing conversion from u64 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u32(u64 num) => u32.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from ulong to u32 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u32(ulong num) => u32.narrow_from(num);
 
     //################################################################
     // comparisons

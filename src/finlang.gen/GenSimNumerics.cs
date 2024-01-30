@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Xunit;
+using System.Linq;
 
 namespace finlang.gen;
 
@@ -62,7 +63,7 @@ public class GenSimNumerics
         {
             var narrowTypeName = narrowTypeInfo.fin_name;
 
-            narrowingConversions += GenUnsafeToConversion(typeInfo, narrowTypeInfo);
+            narrowingConversions += GenNarrowToConversion(typeInfo, narrowTypeInfo);
 
             if (narrowTypeInfo.is_unsigned)
             {
@@ -75,6 +76,103 @@ public class GenSimNumerics
 
                 """;
             }
+        }
+
+        // generate narrow_from() methods
+        foreach (var fromType in types)
+        {
+            var destType = typeInfo;
+
+            // if the destination type is already compatible, skip it
+            if (fromType.CanPromoteTo(destType) || fromType == destType)
+            {
+                continue;
+            }
+
+            string valueType;
+
+            if (destType.width == 64 || fromType.width == 64)
+            {
+                valueType = "decimal";
+            }
+            else
+            {
+                valueType = $"{fromType.GetBackingTypeName()}";
+            }
+
+            var code = $$"""
+
+                    /// <summary>
+                    /// Narrowing conversion from {{fromType}} to {{destType}} when you don't expect data loss.
+                    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+                    /// or an exception will be thrown during simulation (if math mode is unsafe).
+                    /// </summary>
+                    public static {{destType}} narrow_from({{fromType}} v)
+                    {
+                        ThrowIfMathModeNotSpecified();
+                        {{valueType}} value = v._csReadValue;
+
+                        switch (math.CurrentMode)
+                        {
+                            case math.Mode.Unsafe:
+                                if (value < {{destType}}.MIN) { throw new OverflowException($"Underflow! {{typeInfo}} value `{value}` cannot be converted to type {{destType}}."); }
+                                if (value > {{destType}}.MAX) { throw new OverflowException($"Overflow! {{typeInfo}} value `{value}` cannot be converted to type {{destType}}."); }
+                                break;
+                            case math.Mode.UserProvidedErr:
+                                if (value < {{destType}}.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                                if (value > {{destType}}.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                                break;
+                            default:
+                                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+                        }
+                        
+                        return unchecked(({{destType.GetBackingTypeName()}})value);
+                    }
+
+                """;
+
+            narrowingConversions += code;
+        }
+
+        // generate casts for larger/incompatible types
+        foreach (var fromType in types)
+        {
+            var destType = typeInfo;
+
+            // if the type is already compatible, skip it
+            if (fromType.CanPromoteTo(destType) || fromType == destType)
+            {
+                continue;
+            }
+
+            // from type is either larger or incompatible (signed/unsigned)
+
+            //var narrowingCode = $"return num.narrow_to_{destType}();";
+
+            if (destType.width > fromType.width)
+            {
+                // this only happens when destType is unsigned and fromType is signed
+                // In this case, we only need to check that the value is not negative
+                //narrowingCode = $"return ({destType.fin_name})num._csReadValue;";
+            }
+
+            wrappingConversions += $$"""
+
+                    /// <summary>
+                    /// Narrowing conversion from {{fromType}} to {{destType}} when you don't expect data loss.
+                    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+                    /// or an exception will be thrown during simulation (if math mode is unsafe).
+                    /// </summary>
+                    public static explicit operator {{destType}}({{fromType}} num) => {{destType}}.narrow_from(num);
+
+                    ///// <summary>
+                    ///// Narrowing conversion from {{fromType.GetBackingTypeName()}} to {{destType}} when you don't expect data loss.
+                    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+                    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+                    ///// </summary>
+                    public static explicit operator {{destType}}({{fromType.GetBackingTypeName()}} num) => {{destType}}.narrow_from(num);
+
+                """;
         }
     }
 
@@ -105,7 +203,7 @@ public class GenSimNumerics
         }
     }
 
-    private static string GenUnsafeToConversion(TypeInfo typeInfo, TypeInfo narrowTypeInfo)
+    private static string GenNarrowToConversion(TypeInfo typeInfo, TypeInfo narrowTypeInfo)
     {
         string narrowTypeName = narrowTypeInfo.fin_name;
         string valueType;
@@ -122,7 +220,15 @@ public class GenSimNumerics
         var code = $$"""
 
                     /// <summary>
-                    /// Potentially unsafe conversion from {{typeInfo.fin_name}} to {{narrowTypeName}}.
+                    /// Same as `narrow_to_{{narrowTypeName}}`.
+                    /// Narrowing conversion from {{typeInfo.fin_name}} to {{narrowTypeName}} when you don't expect data loss.
+                    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+                    /// or an exception will be thrown during simulation (if math mode is unsafe).
+                    /// </summary>
+                    public static explicit operator {{narrowTypeName}}({{typeInfo.fin_name}} num) => num.narrow_to_{{narrowTypeName}}();
+
+                    /// <summary>
+                    /// Narrowing conversion from {{typeInfo.fin_name}} to {{narrowTypeName}} when you don't expect data loss.
                     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
                     /// or an exception will be thrown during simulation (if math mode is unsafe).
                     /// </summary>

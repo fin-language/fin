@@ -170,7 +170,7 @@ public class IntegerCombinationTest
         { var c = (i32)(2147483646) + i8; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i64.from(9223372036854775806) + i8; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
-        { var c = (i64)(9223372036854775806) + i8; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        { var c = (i64)(9223372036854775806L) + i8; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i16.from(254) + i8; c.Should().BeOfType<i16>(); c.Should().Be(255); }
         { var c = (i16)(254) + i8; c.Should().BeOfType<i16>(); c.Should().Be(255); }
@@ -179,7 +179,7 @@ public class IntegerCombinationTest
         { var c = (i32)(65534) + i8; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i64.from(4294967294) + i8; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
-        { var c = (i64)(4294967294) + i8; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        { var c = (i64)(4294967294L) + i8; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i16; c.Should().BeOfType<i16>(); c.Should().Be(127); }
         { var c = 32766 + i16; c.Should().BeOfType<i16>(); c.Should().Be(32767); }
@@ -187,25 +187,25 @@ public class IntegerCombinationTest
         { var c = (i32)(2147483646) + i16; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i64.from(9223372036854775806) + i16; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
-        { var c = (i64)(9223372036854775806) + i16; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        { var c = (i64)(9223372036854775806L) + i16; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + i16; c.Should().BeOfType<i16>(); c.Should().Be(255); }
         { var c = i32.from(65534) + i16; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
         { var c = (i32)(65534) + i16; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = i64.from(4294967294) + i16; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
-        { var c = (i64)(4294967294) + i16; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        { var c = (i64)(4294967294L) + i16; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i32; c.Should().BeOfType<i32>(); c.Should().Be(127); }
         { var c = 32766 + i32; c.Should().BeOfType<i32>(); c.Should().Be(32767); }
         { var c = 2147483646 + i32; c.Should().BeOfType<i32>(); c.Should().Be(2147483647); }
         { var c = i64.from(9223372036854775806) + i32; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
-        { var c = (i64)(9223372036854775806) + i32; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
+        { var c = (i64)(9223372036854775806L) + i32; c.Should().BeOfType<i64>(); c.Should().Be(9223372036854775807); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 254 + i32; c.Should().BeOfType<i32>(); c.Should().Be(255); }
         { var c = 65534 + i32; c.Should().BeOfType<i32>(); c.Should().Be(65535); }
         { var c = i64.from(4294967294) + i32; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
-        { var c = (i64)(4294967294) + i32; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
+        { var c = (i64)(4294967294L) + i32; c.Should().BeOfType<i64>(); c.Should().Be(4294967295); }
         //        ↑↑ conversion above required for https://github.com/fin-language/fin/issues/12
         { var c = 126 + i64; c.Should().BeOfType<i64>(); c.Should().Be(127); }
         { var c = 32766 + i64; c.Should().BeOfType<i64>(); c.Should().Be(32767); }
@@ -534,7 +534,7 @@ public class IntegerCombinationTest
         { var c = u8.wrap_lshift(i32); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
         { var c = u8.wrap_lshift((i32)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
         { var c = u8.wrap_lshift(i64); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
-        { var c = u8.wrap_lshift((i64)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
+        { var c = u8.wrap_lshift((i64)1L); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
         { var c = u8.wrap_lshift(u8); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
         { var c = u8.wrap_lshift((u8)1); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
         { var c = u8.wrap_lshift(u16); c.Should().BeOfType<u8>(); c.Should().Be(1 * 2); }
@@ -555,7 +555,7 @@ public class IntegerCombinationTest
         { var c = u16.wrap_lshift(i32); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
         { var c = u16.wrap_lshift((i32)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
         { var c = u16.wrap_lshift(i64); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
-        { var c = u16.wrap_lshift((i64)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
+        { var c = u16.wrap_lshift((i64)1L); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
         { var c = u16.wrap_lshift(u8); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
         { var c = u16.wrap_lshift((u8)1); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
         { var c = u16.wrap_lshift(u16); c.Should().BeOfType<u16>(); c.Should().Be(1 * 2); }
@@ -576,7 +576,7 @@ public class IntegerCombinationTest
         { var c = u32.wrap_lshift(i32); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
         { var c = u32.wrap_lshift((i32)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
         { var c = u32.wrap_lshift(i64); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
-        { var c = u32.wrap_lshift((i64)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
+        { var c = u32.wrap_lshift((i64)1L); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
         { var c = u32.wrap_lshift(u8); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
         { var c = u32.wrap_lshift((u8)1); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
         { var c = u32.wrap_lshift(u16); c.Should().BeOfType<u32>(); c.Should().Be(1 * 2); }
@@ -597,7 +597,7 @@ public class IntegerCombinationTest
         { var c = u64.wrap_lshift(i32); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
         { var c = u64.wrap_lshift((i32)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
         { var c = u64.wrap_lshift(i64); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
-        { var c = u64.wrap_lshift((i64)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
+        { var c = u64.wrap_lshift((i64)1L); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
         { var c = u64.wrap_lshift(u8); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
         { var c = u64.wrap_lshift((u8)1); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }
         { var c = u64.wrap_lshift(u16); c.Should().BeOfType<u64>(); c.Should().Be(1 * 2); }

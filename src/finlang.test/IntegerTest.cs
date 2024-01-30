@@ -225,41 +225,41 @@ public class IntegerTest
     //--------------------------------------------------------------------------------
 
     [Fact]
-    public void UnsafeTo_ModeUnsafe_OK()
+    public void NarrowTo_ModeUnsafe_OK()
     {
         math.unsafe_mode();
         i8 a = 127;
-        u8 b = a.unsafe_to_u8(); // should not throw
+        u8 b = a.narrow_to_u8(); // should not throw
         b.Should().Be(127);
     }
 
     [Fact]
-    public void UnsafeTo_ModeUserProvidedErr_OK()
+    public void NarrowTo_ModeUserProvidedErr_OK()
     {
         Err err = mem.stack(new Err());
         math.capture_errors(err);
         i8 a = 127;
-        u8 b = a.unsafe_to_u8(); // should not throw
+        u8 b = a.narrow_to_u8(); // should not throw
         b.Should().Be(127);
     }
 
     [Fact]
-    public void UnsafeTo_ModeUnsafe_Exception()
+    public void NarrowTo_ModeUnsafe_Exception()
     {
         math.unsafe_mode();
         i8 a = -1;
 
-        Action action = () => { u8 b = a.unsafe_to_u8(); };
+        Action action = () => { u8 b = a.narrow_to_u8(); };
         action.Should().Throw<OverflowException>().WithMessage("Underflow! i8 value `-1` cannot be converted to type u8.");
     }
 
     [Fact]
-    public void UnsafeTo_ModeUserProvidedErr()
+    public void NarrowTo_ModeUserProvidedErr()
     {
         Err err = mem.stack(new Err());
         math.capture_errors(err);
         i8 a = -1;
-        u8 b = a.unsafe_to_u8();
+        u8 b = a.narrow_to_u8();
         err.get_error().Should().BeOfType<UnderflowError>();
         b.Should().Be(255);
 
@@ -321,7 +321,7 @@ public class IntegerTest
     {
         math.capture_errors(err);
         i8 a = -1;
-        a.unsafe_to_u8(); //sets err
+        a.narrow_to_u8(); //sets err
     }
 
     private static void ErrorShouldBe<T>(Err err)
@@ -649,12 +649,48 @@ public class IntegerTest
         u8 result = ~a;
         result.Should().Be(0b_0000_1111);
     }
+
+    //--------------------------------------------------------------------------------
+
+    [Fact]
+    public void u8_from()
+    {
+        u8 a = u8.from(10);
+        a.Should().Be(10);
+    }
+
+    [Fact]
+    public void u8_narrowing_from()
+    {
+        math.unsafe_mode();
+
+        i32 my_i32 = 1000;
+        Action action = () => {
+            u8.narrow_from(my_i32);
+        };
+        action.Should().Throw<OverflowException>();
+
+        my_i32 = 255;
+        u8.narrow_from(my_i32).Should().Be(255);
+    }
+
+    [Fact]
+    public void u8_cast()
+    {
+        math.unsafe_mode();
+
+        u8 a = (u8)10;
+        a.Should().Be(10);
+        int i = 1000;
+
+        Action action = () => { 
+            a = (u8)i;
+        };
+        action.Should().Throw<OverflowException>();
+
+        //action = () => { a = u8.unsafe_from(1000); };
+        //action.Should().Throw<OverflowException>();
+
+        a.Should().Be(10);
+    }
 }
-
-
-
-
-
-
-
-

@@ -83,7 +83,15 @@ public struct u64: IHasU64
     //################################################################
     
     /// <summary>
-    /// Potentially unsafe conversion from u64 to i64.
+    /// Same as `narrow_to_i64`.
+    /// Narrowing conversion from u64 to i64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator i64(u64 num) => num.narrow_to_i64();
+
+    /// <summary>
+    /// Narrowing conversion from u64 to i64 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -110,7 +118,15 @@ public struct u64: IHasU64
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u64 to i32.
+    /// Same as `narrow_to_i32`.
+    /// Narrowing conversion from u64 to i32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator i32(u64 num) => num.narrow_to_i32();
+
+    /// <summary>
+    /// Narrowing conversion from u64 to i32 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -137,7 +153,15 @@ public struct u64: IHasU64
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u64 to u32.
+    /// Same as `narrow_to_u32`.
+    /// Narrowing conversion from u64 to u32 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u32(u64 num) => num.narrow_to_u32();
+
+    /// <summary>
+    /// Narrowing conversion from u64 to u32 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -164,7 +188,15 @@ public struct u64: IHasU64
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u64 to i16.
+    /// Same as `narrow_to_i16`.
+    /// Narrowing conversion from u64 to i16 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator i16(u64 num) => num.narrow_to_i16();
+
+    /// <summary>
+    /// Narrowing conversion from u64 to i16 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -191,7 +223,15 @@ public struct u64: IHasU64
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u64 to u16.
+    /// Same as `narrow_to_u16`.
+    /// Narrowing conversion from u64 to u16 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u16(u64 num) => num.narrow_to_u16();
+
+    /// <summary>
+    /// Narrowing conversion from u64 to u16 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -218,7 +258,15 @@ public struct u64: IHasU64
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u64 to i8.
+    /// Same as `narrow_to_i8`.
+    /// Narrowing conversion from u64 to i8 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator i8(u64 num) => num.narrow_to_i8();
+
+    /// <summary>
+    /// Narrowing conversion from u64 to i8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -245,7 +293,15 @@ public struct u64: IHasU64
     }
 
     /// <summary>
-    /// Potentially unsafe conversion from u64 to u8.
+    /// Same as `narrow_to_u8`.
+    /// Narrowing conversion from u64 to u8 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u8(u64 num) => num.narrow_to_u8();
+
+    /// <summary>
+    /// Narrowing conversion from u64 to u8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
     /// </summary>
@@ -271,6 +327,114 @@ public struct u64: IHasU64
         return unchecked((byte)value);
     }
 
+    /// <summary>
+    /// Narrowing conversion from i8 to u64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u64 narrow_from(i8 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        decimal value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u64.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type u64."); }
+                if (value > u64.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type u64."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u64.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((ulong)value);
+    }
+
+    /// <summary>
+    /// Narrowing conversion from i16 to u64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u64 narrow_from(i16 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        decimal value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u64.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type u64."); }
+                if (value > u64.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type u64."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u64.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((ulong)value);
+    }
+
+    /// <summary>
+    /// Narrowing conversion from i32 to u64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u64 narrow_from(i32 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        decimal value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u64.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type u64."); }
+                if (value > u64.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type u64."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u64.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((ulong)value);
+    }
+
+    /// <summary>
+    /// Narrowing conversion from i64 to u64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static u64 narrow_from(i64 v)
+    {
+        ThrowIfMathModeNotSpecified();
+        decimal value = v._csReadValue;
+
+        switch (math.CurrentMode)
+        {
+            case math.Mode.Unsafe:
+                if (value < u64.MIN) { throw new OverflowException($"Underflow! u64 value `{value}` cannot be converted to type u64."); }
+                if (value > u64.MAX) { throw new OverflowException($"Overflow! u64 value `{value}` cannot be converted to type u64."); }
+                break;
+            case math.Mode.UserProvidedErr:
+                if (value < u64.MIN) { math.userProvidedErr!.add_without_context(new err.UnderflowError()); }
+                if (value > u64.MAX) { math.userProvidedErr!.add_without_context(new err.OverflowError()); }
+                break;
+            default:
+                throw new NotSupportedException($"Unsupported math mode `{math.CurrentMode}`.");
+        }
+        
+        return unchecked((ulong)value);
+    }
+
 
     //################################################################
     // wrapping conversions (only for unsigned)
@@ -290,6 +454,62 @@ public struct u64: IHasU64
     /// Safe explicit wrapping conversion. Truncates upper bits.
     /// </summary>
     public u8 wrap_u8 => unchecked((byte)this._csReadValue);
+
+    /// <summary>
+    /// Narrowing conversion from i8 to u64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u64(i8 num) => u64.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from sbyte to u64 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u64(sbyte num) => u64.narrow_from(num);
+
+    /// <summary>
+    /// Narrowing conversion from i16 to u64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u64(i16 num) => u64.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from short to u64 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u64(short num) => u64.narrow_from(num);
+
+    /// <summary>
+    /// Narrowing conversion from i32 to u64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u64(i32 num) => u64.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from int to u64 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u64(int num) => u64.narrow_from(num);
+
+    /// <summary>
+    /// Narrowing conversion from i64 to u64 when you don't expect data loss.
+    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    /// or an exception will be thrown during simulation (if math mode is unsafe).
+    /// </summary>
+    public static explicit operator u64(i64 num) => u64.narrow_from(num);
+
+    ///// <summary>
+    ///// Narrowing conversion from long to u64 when you don't expect data loss.
+    ///// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
+    ///// or an exception will be thrown during simulation (if math mode is unsafe).
+    ///// </summary>
+    public static explicit operator u64(long num) => u64.narrow_from(num);
 
     //################################################################
     // comparisons
