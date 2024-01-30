@@ -2,6 +2,7 @@
 using finlang;
 using FluentAssertions;
 using System;
+using static System.Collections.Specialized.BitVector32;
 
 namespace finlang.test;
 
@@ -681,16 +682,55 @@ public class IntegerTest
 
         u8 a = (u8)10;
         a.Should().Be(10);
-        int i = 1000;
 
-        Action action = () => { 
-            a = (u8)i;
-        };
-        action.Should().Throw<OverflowException>();
+        Action action;
+        int my_int = 10;
 
-        //action = () => { a = u8.unsafe_from(1000); };
-        //action.Should().Throw<OverflowException>();
+        // u8 ok tests
+        { my_int = 22; var x = (u8)my_int; x.Should().Be(22); }
+        { my_int = 255; var x = (u8)my_int; x.Should().Be(255); }
+        { my_int = 0; var x = (u8)my_int; x.Should().Be(0); }
 
-        a.Should().Be(10);
+        // same for i8
+        { my_int = 22; var x = (i8)my_int; x.Should().Be(22); }
+        { my_int = -128; var x = (i8)my_int; x.Should().Be(-128); }
+        { my_int = 127; var x = (i8)my_int; x.Should().Be(127); }
+        { my_int = 0; var x = (i8)my_int; x.Should().Be(0); }
+
+        action = () => { my_int = 256; var x = (u8)my_int; }; action.Should().Throw<OverflowException>();
+        action = () => { my_int = -1; var x = (u8)my_int; }; action.Should().Throw<OverflowException>();
+
+        action = () => { my_int = 128; var x = (i8)my_int; }; action.Should().Throw<OverflowException>();
+        action = () => { my_int = -1000; var x = (i8)my_int; }; action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void narrow_from()
+    {
+        math.unsafe_mode();
+
+        int my_int = 10;
+        u8.narrow_from(my_int);
+        //u8.narrow_from(255); // this is ambiguous, but why would you ever do this with a literal?
+        i8.narrow_from(my_int);
+
+        // ok tests of u8
+        { my_int = 22; u8.narrow_from(my_int).Should().Be(22); }
+        { my_int = 255; u8.narrow_from(my_int).Should().Be(255); }
+        { my_int = 0; u8.narrow_from(my_int).Should().Be(0); }
+
+        // ok tests of i8
+        { my_int = 22; i8.narrow_from(my_int).Should().Be(22); }
+        { my_int = -128; i8.narrow_from(my_int).Should().Be(-128); }
+        { my_int = 127; i8.narrow_from(my_int).Should().Be(127); }
+        { my_int = 0; i8.narrow_from(my_int).Should().Be(0); }
+
+        Action action;
+        action = () => { my_int = 256; u8.narrow_from(my_int); }; action.Should().Throw<OverflowException>();
+        action = () => { my_int = -1; u8.narrow_from(my_int); }; action.Should().Throw<OverflowException>();
+
+        action = () => { my_int = 128; i8.narrow_from(my_int); }; action.Should().Throw<OverflowException>();
+        action = () => { my_int = -129; i8.narrow_from(my_int); }; action.Should().Throw<OverflowException>();
+
     }
 }
