@@ -22,6 +22,19 @@ You can easily find changes by searching for `"### Changed"` in the in this mark
 # Releases
 Test/interim releases are not documented here.
 
+---
+
+## [0.1.4-alpha]
+### Added
+- `narrow_to_x()` methods like `u32.narrow_to_u8()`
+- `narrow_from()` methods like `u8.narrow_from_u32()`
+
+### Fixed
+- casting a C# int type to a fin type now uses a narrowing (checked) conversion.
+- removed wrapping methods from signed types for now (C implementation defined behavior).
+
+---
+
 ## [0.1.0-alpha]
 Still only simulating in C#. Not generating C99 yet.
 
