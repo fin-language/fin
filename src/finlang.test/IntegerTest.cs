@@ -9,6 +9,80 @@ namespace finlang.test;
 public class IntegerTest
 {
     [Fact]
+    public void Simple1()
+    {
+        math.unsafe_mode();
+        u8 a = 200;
+        //a += 200;
+        // System.OverflowException : Overflow! `200 (u8) + 200 (u8)` result `400` is beyond u8 type MAX limit of `255`. Explicitly widen before `+` operation.
+    }
+
+    [Fact]
+    public void Simple2()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+
+        u8 a = 255;
+        a += 2;
+        a.Should().Be(1); // wrapped around
+
+        if (err.has_error())
+        {
+            // do stuff
+            err.clear();
+        }
+    }
+
+    [Fact]
+    public void Simple3()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+
+        u8 a = 255;
+        a += 2;
+        u8 b = a + 6;
+        u8 c = a * 2;
+        a.Should().Be(1);
+        b.Should().Be(7);
+        c.Should().Be(2);
+
+        if (err.has_error())
+        {
+            // do stuff
+            err.clear();
+        }
+    }
+
+    private static u8 calc(Err err, u8 a, u8 b)
+    {
+        math.capture_errors(err);
+        u8 c = a + b;
+        return c;
+        // no need to check or clear err here, because the err object was provided to it.
+    }
+
+    [Fact]
+    public void Simple4()
+    {
+        Err err = mem.stack(new Err());
+        math.capture_errors(err);
+
+        u8 a = 100;
+        u8 b = 200;
+        u8 c = calc(err, a, b);
+
+        c.Should().Be(44); // wrapped around
+
+        if (err.has_error())
+        {
+            // do stuff
+            err.clear();
+        }
+    }
+
+    [Fact]
     public void Test2()
     {
         math.unsafe_mode();
