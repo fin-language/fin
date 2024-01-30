@@ -122,7 +122,7 @@ public class GenSimNumericsShifting
                     }
                 }
 
-                return ({{actualType}})result;
+                return ({{actualType.GetBackingTypeName()}})result;
             }
 
             """;

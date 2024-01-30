@@ -1300,7 +1300,7 @@ public struct u16: IHasU16
             }
         }
     
-        return (u16)result;
+        return (ushort)result;
     }
     
     /// <summary>
@@ -1447,7 +1447,7 @@ public struct u16: IHasU16
             }
         }
     
-        return (u16)result;
+        return (ushort)result;
     }
     
     /// <summary>
@@ -1594,7 +1594,7 @@ public struct u16: IHasU16
             }
         }
     
-        return (u16)result;
+        return (ushort)result;
     }
     
     /// <summary>
@@ -1741,7 +1741,7 @@ public struct u16: IHasU16
             }
         }
     
-        return (u16)result;
+        return (ushort)result;
     }
     
     /// <summary>
@@ -1888,7 +1888,7 @@ public struct u16: IHasU16
             }
         }
     
-        return (u16)result;
+        return (ushort)result;
     }
     
     /// <summary>
@@ -2035,7 +2035,7 @@ public struct u16: IHasU16
             }
         }
     
-        return (u16)result;
+        return (ushort)result;
     }
     
     /// <summary>
@@ -2182,7 +2182,7 @@ public struct u16: IHasU16
             }
         }
     
-        return (u16)result;
+        return (ushort)result;
     }
     
     /// <summary>
@@ -2329,7 +2329,7 @@ public struct u16: IHasU16
             }
         }
     
-        return (u16)result;
+        return (ushort)result;
     }
     
     /// <summary>
@@ -2390,7 +2390,7 @@ public struct u16: IHasU16
     public static u16 operator &(u16 a, u8 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue & b._csReadValue);
+        var result = (ushort)(a._csReadValue & b._csReadValue);
         return result;
     }
     
@@ -2401,7 +2401,7 @@ public struct u16: IHasU16
     public static u16 operator &(u16 a, u16 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue & b._csReadValue);
+        var result = (ushort)(a._csReadValue & b._csReadValue);
         return result;
     }
     
@@ -2412,7 +2412,7 @@ public struct u16: IHasU16
     public static u32 operator &(u16 a, u32 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u32)(a._csReadValue & b._csReadValue);
+        var result = (uint)(a._csReadValue & b._csReadValue);
         return result;
     }
     
@@ -2423,7 +2423,7 @@ public struct u16: IHasU16
     public static u64 operator &(u16 a, u64 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u64)(a._csReadValue & b._csReadValue);
+        var result = (ulong)(a._csReadValue & b._csReadValue);
         return result;
     }
     
@@ -2436,7 +2436,7 @@ public struct u16: IHasU16
     public static u16 operator ^(u16 a, u8 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue ^ b._csReadValue);
+        var result = (ushort)(a._csReadValue ^ b._csReadValue);
         return result;
     }
     
@@ -2447,7 +2447,7 @@ public struct u16: IHasU16
     public static u16 operator ^(u16 a, u16 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue ^ b._csReadValue);
+        var result = (ushort)(a._csReadValue ^ b._csReadValue);
         return result;
     }
     
@@ -2458,7 +2458,7 @@ public struct u16: IHasU16
     public static u32 operator ^(u16 a, u32 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u32)(a._csReadValue ^ b._csReadValue);
+        var result = (uint)(a._csReadValue ^ b._csReadValue);
         return result;
     }
     
@@ -2469,7 +2469,7 @@ public struct u16: IHasU16
     public static u64 operator ^(u16 a, u64 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u64)(a._csReadValue ^ b._csReadValue);
+        var result = (ulong)(a._csReadValue ^ b._csReadValue);
         return result;
     }
     
@@ -2482,7 +2482,7 @@ public struct u16: IHasU16
     public static u16 operator |(u16 a, u8 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue | b._csReadValue);
+        var result = (ushort)(a._csReadValue | b._csReadValue);
         return result;
     }
     
@@ -2493,7 +2493,7 @@ public struct u16: IHasU16
     public static u16 operator |(u16 a, u16 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue | b._csReadValue);
+        var result = (ushort)(a._csReadValue | b._csReadValue);
         return result;
     }
     
@@ -2504,7 +2504,7 @@ public struct u16: IHasU16
     public static u32 operator |(u16 a, u32 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u32)(a._csReadValue | b._csReadValue);
+        var result = (uint)(a._csReadValue | b._csReadValue);
         return result;
     }
     
@@ -2515,7 +2515,7 @@ public struct u16: IHasU16
     public static u64 operator |(u16 a, u64 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u64)(a._csReadValue | b._csReadValue);
+        var result = (ulong)(a._csReadValue | b._csReadValue);
         return result;
     }
     

@@ -1286,7 +1286,7 @@ public struct u8: IHasU8
             }
         }
     
-        return (u8)result;
+        return (byte)result;
     }
     
     /// <summary>
@@ -1433,7 +1433,7 @@ public struct u8: IHasU8
             }
         }
     
-        return (u8)result;
+        return (byte)result;
     }
     
     /// <summary>
@@ -1580,7 +1580,7 @@ public struct u8: IHasU8
             }
         }
     
-        return (u8)result;
+        return (byte)result;
     }
     
     /// <summary>
@@ -1727,7 +1727,7 @@ public struct u8: IHasU8
             }
         }
     
-        return (u8)result;
+        return (byte)result;
     }
     
     /// <summary>
@@ -1874,7 +1874,7 @@ public struct u8: IHasU8
             }
         }
     
-        return (u8)result;
+        return (byte)result;
     }
     
     /// <summary>
@@ -2021,7 +2021,7 @@ public struct u8: IHasU8
             }
         }
     
-        return (u8)result;
+        return (byte)result;
     }
     
     /// <summary>
@@ -2168,7 +2168,7 @@ public struct u8: IHasU8
             }
         }
     
-        return (u8)result;
+        return (byte)result;
     }
     
     /// <summary>
@@ -2315,7 +2315,7 @@ public struct u8: IHasU8
             }
         }
     
-        return (u8)result;
+        return (byte)result;
     }
     
     /// <summary>
@@ -2376,7 +2376,7 @@ public struct u8: IHasU8
     public static u8 operator &(u8 a, u8 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u8)(a._csReadValue & b._csReadValue);
+        var result = (byte)(a._csReadValue & b._csReadValue);
         return result;
     }
     
@@ -2387,7 +2387,7 @@ public struct u8: IHasU8
     public static u16 operator &(u8 a, u16 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue & b._csReadValue);
+        var result = (ushort)(a._csReadValue & b._csReadValue);
         return result;
     }
     
@@ -2398,7 +2398,7 @@ public struct u8: IHasU8
     public static u32 operator &(u8 a, u32 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u32)(a._csReadValue & b._csReadValue);
+        var result = (uint)(a._csReadValue & b._csReadValue);
         return result;
     }
     
@@ -2409,7 +2409,7 @@ public struct u8: IHasU8
     public static u64 operator &(u8 a, u64 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u64)(a._csReadValue & b._csReadValue);
+        var result = (ulong)(a._csReadValue & b._csReadValue);
         return result;
     }
     
@@ -2422,7 +2422,7 @@ public struct u8: IHasU8
     public static u8 operator ^(u8 a, u8 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u8)(a._csReadValue ^ b._csReadValue);
+        var result = (byte)(a._csReadValue ^ b._csReadValue);
         return result;
     }
     
@@ -2433,7 +2433,7 @@ public struct u8: IHasU8
     public static u16 operator ^(u8 a, u16 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue ^ b._csReadValue);
+        var result = (ushort)(a._csReadValue ^ b._csReadValue);
         return result;
     }
     
@@ -2444,7 +2444,7 @@ public struct u8: IHasU8
     public static u32 operator ^(u8 a, u32 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u32)(a._csReadValue ^ b._csReadValue);
+        var result = (uint)(a._csReadValue ^ b._csReadValue);
         return result;
     }
     
@@ -2455,7 +2455,7 @@ public struct u8: IHasU8
     public static u64 operator ^(u8 a, u64 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u64)(a._csReadValue ^ b._csReadValue);
+        var result = (ulong)(a._csReadValue ^ b._csReadValue);
         return result;
     }
     
@@ -2468,7 +2468,7 @@ public struct u8: IHasU8
     public static u8 operator |(u8 a, u8 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u8)(a._csReadValue | b._csReadValue);
+        var result = (byte)(a._csReadValue | b._csReadValue);
         return result;
     }
     
@@ -2479,7 +2479,7 @@ public struct u8: IHasU8
     public static u16 operator |(u8 a, u16 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u16)(a._csReadValue | b._csReadValue);
+        var result = (ushort)(a._csReadValue | b._csReadValue);
         return result;
     }
     
@@ -2490,7 +2490,7 @@ public struct u8: IHasU8
     public static u32 operator |(u8 a, u32 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u32)(a._csReadValue | b._csReadValue);
+        var result = (uint)(a._csReadValue | b._csReadValue);
         return result;
     }
     
@@ -2501,7 +2501,7 @@ public struct u8: IHasU8
     public static u64 operator |(u8 a, u64 b)
     {
         // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-        var result = (u64)(a._csReadValue | b._csReadValue);
+        var result = (ulong)(a._csReadValue | b._csReadValue);
         return result;
     }
     

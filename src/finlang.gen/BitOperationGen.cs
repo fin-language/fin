@@ -27,7 +27,7 @@ public class BitOperationGen
                 public static {{resultType.fin_name}} operator {{op}}({{classType.fin_name}} a, {{otherType.fin_name}} b)
                 {
                     // ThrowIfMathModeNotSpecified(); // we don't care for error free operations
-                    var result = ({{resultType.fin_name}})(a._csReadValue {{op}} b._csReadValue);
+                    var result = ({{resultType.GetBackingTypeName()}})(a._csReadValue {{op}} b._csReadValue);
                     return result;
                 }
 
