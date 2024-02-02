@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace finlang.TranspilerTest;
 
-[Collection(nameof(ExSln2TestLock))]
+[Collection(nameof(ExSln2Fixture))]
 public class SolutionLoaderTest
 {
     [Fact]
