@@ -74,6 +74,11 @@ public struct i64: IHasI64
     //################################################################
     
     
+    /// <summary>
+    /// Safe type self declaration. See https://github.com/fin-language/fin/issues/21
+    /// </summary>
+    public i64 i64_ => value;
+
 
     
 

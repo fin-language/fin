@@ -181,6 +181,15 @@ public class GenSimNumerics
         implicitWidening = "";
         explicitWidening = "";
 
+        explicitWidening += $"""
+
+                    /// <summary>
+                    /// Safe type self declaration. See https://github.com/fin-language/fin/issues/21
+                    /// </summary>
+                    public {typeInfo.fin_name} {typeInfo.fin_name}_ => value;
+
+                """;
+
         foreach (var widerType in widenToTypes)
         {
             implicitWidening += $$"""

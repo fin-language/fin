@@ -22,6 +22,13 @@ You can easily find changes by searching for `"### Changed"` in the in this mark
 # Releases
 Test/interim releases are not documented here.
 
+--- 
+
+## wip
+### Added
+- integer self type declaration like `my_u16.u16_`
+    - https://github.com/fin-language/fin/issues/21
+
 ---
 
 ## [0.1.4-alpha]

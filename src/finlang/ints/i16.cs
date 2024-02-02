@@ -75,6 +75,11 @@ public struct i16: IHasI16
     
     
     /// <summary>
+    /// Safe type self declaration. See https://github.com/fin-language/fin/issues/21
+    /// </summary>
+    public i16 i16_ => value;
+
+    /// <summary>
     /// Safe explicit widening conversion.
     /// </summary>
     public i32 i32 => value;

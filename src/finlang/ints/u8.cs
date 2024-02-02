@@ -75,6 +75,11 @@ public struct u8: IHasU8
     
     
     /// <summary>
+    /// Safe type self declaration. See https://github.com/fin-language/fin/issues/21
+    /// </summary>
+    public u8 u8_ => value;
+
+    /// <summary>
     /// Safe explicit widening conversion.
     /// </summary>
     public u16 u16 => value;

@@ -807,4 +807,16 @@ public class IntegerTest
         action = () => { my_int = -129; i8.narrow_from(my_int); }; action.Should().Throw<OverflowException>();
 
     }
+
+    // https://github.com/fin-language/fin/issues/21
+    [Fact]
+    public void safe_widen_self()
+    {
+        u8 a = 10;
+        u16 b = a.u16;
+        b.Should().Be(10);
+
+        b = a.u8_;
+        b.Should().Be(10);
+    }
 }
