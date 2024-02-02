@@ -15,8 +15,11 @@ public class C99TranspilerTest
         C99Transpiler transpiler = new(solutionPath: slnPath, destinationDirPath: destDirPath);
         transpiler.projectsToIgnore.Add("Tests");
         transpiler.GatherSolutionDeclarations();
+        transpiler.c99ClassNodes.Count().Should().Be(2);
 
-        transpiler.c99DeclarationList.Count().Should().Be(2);
+        transpiler.Generate();
+        var ledCls = transpiler.c99ClassNodes.Single(c => c.GetFqn() == "Hal.Led");
+        ledCls._hFile.sb.ToString().Should().Contain("typedef struct Hal_Led Hal_Led;");
     }
 }
 

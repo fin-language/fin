@@ -13,7 +13,7 @@ public class C99Transpiler
     public readonly StringBuilder hFileSb = new();
     public readonly StringBuilder cFileSb = new();
 
-    public List<C99Declaration> c99DeclarationList = new();
+    public List<C99Class> c99ClassNodes = new();
 
     public List<string> projectsToIgnore = new();
 
@@ -33,7 +33,7 @@ public class C99Transpiler
             var model = compilation.GetSemanticModel(syntaxTree);
             var root = syntaxTree.GetRoot();
 
-            // Find all declarations in the syntax tree
+            // Find all class declarations in the syntax tree
             var allClasses = model.SyntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
 
             foreach (var classDeclNode in allClasses)
@@ -42,8 +42,8 @@ public class C99Transpiler
 
                 if (SymbolHelper.IsDerivedFrom(symbol, "FinObj"))
                 {
-                    var c99Decl = new C99Declaration(classDeclNode);
-                    c99DeclarationList.Add(c99Decl);
+                    var c99Decl = new C99Class(model, classDeclNode, symbol);
+                    c99ClassNodes.Add(c99Decl);
                 }
             }
         }
@@ -59,5 +59,16 @@ public class C99Transpiler
         {
             GatherDeclarationsForProject(project);
         }
-    }   
+    }
+
+    public void Generate()
+    {
+        foreach (var cls in c99ClassNodes)
+        {
+            C99Namer namer = new(cls.model);
+            C99StructGenerator gen = new(cls.model, namer);
+
+            gen.GenerateStruct(cls);
+        }
+    }
 }
