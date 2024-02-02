@@ -2,7 +2,7 @@
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 # Breaking Changes 🌱
-Fin is very experimental right now! I wouldn't recommend using it for anything other than for exploration and toy examples right now.
+Fin is very experimental right now! I wouldn't recommend using it for anything other than for exploration and toy examples right now.Fin is very experimental XXX right now! I wouldn't recommend using it for anything other than for exploration and toy examples right now.
 
 We will occasionally make changes to `fin` that may affect your projects.
 
@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 --- 
 
-## wip
+## [0.1.5-alpha]
 ### Added
 - integer self type declaration like `my_u16.u16_`
     - https://github.com/fin-language/fin/issues/21
