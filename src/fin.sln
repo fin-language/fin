@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "finlang.InternalGen", "finl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExProj1", "ExProj1\ExProj1.csproj", "{5C8AD0CF-35B9-42CF-8EA7-356DF00F7B2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "finlang.Transpiler", "finlang.Transpiler\finlang.Transpiler.csproj", "{C7A04FC5-E196-4FE7-8E8C-1675FD92540A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "finlang.TranspilerTest", "finlang.TranspilerTest\finlang.TranspilerTest.csproj", "{FDA47B1C-FC8E-4261-A997-4C4611B9DCC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{5C8AD0CF-35B9-42CF-8EA7-356DF00F7B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C8AD0CF-35B9-42CF-8EA7-356DF00F7B2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C8AD0CF-35B9-42CF-8EA7-356DF00F7B2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7A04FC5-E196-4FE7-8E8C-1675FD92540A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7A04FC5-E196-4FE7-8E8C-1675FD92540A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7A04FC5-E196-4FE7-8E8C-1675FD92540A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7A04FC5-E196-4FE7-8E8C-1675FD92540A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDA47B1C-FC8E-4261-A997-4C4611B9DCC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDA47B1C-FC8E-4261-A997-4C4611B9DCC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDA47B1C-FC8E-4261-A997-4C4611B9DCC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDA47B1C-FC8E-4261-A997-4C4611B9DCC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
