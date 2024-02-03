@@ -16,8 +16,5 @@
       <PackageReference Include="MethodDecorator.Fody" Version="1.1.1" />
       <PackageReference Include="Virtuosity.Fody" Version="3.1.1" />
     </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\hal\Hal.csproj" />
-  </ItemGroup>
 
 </Project>

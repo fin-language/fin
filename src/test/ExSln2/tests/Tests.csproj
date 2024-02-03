@@ -24,7 +24,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\hal\Hal.csproj" />
       <ProjectReference Include="..\app\App.csproj" />
     </ItemGroup>
 
