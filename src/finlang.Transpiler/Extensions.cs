@@ -15,20 +15,6 @@ public static class Extensions
         }
     }
 
-    public static bool FixedIsValueType(this ITypeSymbol type)
-    {
-        // work around until we get roslyn compilation loading all metadatareferences properly
-        if (type.BaseType?.Name == "ValueType")
-            return true;
-
-        return type.IsValueType;
-    }
-
-    public static bool FixedIsReferenceType(this ITypeSymbol type)
-    {
-        return !type.FixedIsValueType();
-    }
-
     public static void VisitLeadingTriviaWith(this SyntaxNode node, CSharpSyntaxWalker walker)
     {
         node.GetLeadingTrivia().VisitWith(walker);
