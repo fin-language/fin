@@ -31,11 +31,13 @@ public class C99StructGenerator
         {
             var fieldName = field.Name;
             var fieldType = namer.GetCName(field.Type);
-            var starOrSpace = field.Type.IsReferenceType ? " * " : " ";
+            var starOrSpace = field.Type.FixedIsReferenceType() ? " * " : " ";
             sb.AppendLine($"    {fieldType}{starOrSpace}{fieldName};");
         }
 
         sb.AppendLine("};");
         sb.AppendLine();
     }
+
+
 }

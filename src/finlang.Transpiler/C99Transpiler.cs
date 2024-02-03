@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 
@@ -23,9 +24,38 @@ public class C99Transpiler
         this.solutionPath = solutionPath;
     }
 
+    static List<MetadataReference> GetAssemblies()
+    {
+        //// Add necessary NuGet package references
+        var assemblies2 = new List<MetadataReference>
+        {
+            //MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            //MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
+            //MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
+            //MetadataReference.CreateFromFile(typeof(FinObj).Assembly.Location), // finlang
+            //MetadataReference.CreateFromFile(typeof(System.Runtime.AssemblyTargetedPatchBandAttribute).Assembly.Location),
+            // FIXME we still get this error: ExSln2\hal\Led.cs(5,20): error CS0012: The type 'Object' is defined in an assembly that is not referenced. You must add a reference to assembly 'System.Runtime, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.
+        };
+
+        Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        foreach (var assembly in assemblies)
+        {
+            if (!assembly.IsDynamic && !string.IsNullOrWhiteSpace(assembly.Location))
+            {
+                assemblies2.Add(MetadataReference.CreateFromFile(assembly.Location));
+            }
+        }
+
+        return assemblies2;
+    }
+
+
     public void GatherDeclarationsForProject(Project project)
     {
+        project = project.AddMetadataReferences(GetAssemblies());
         Compilation compilation = project.GetCompilationAsync().Result.ThrowIfNull();
+
+        // FIXME! Put back in
         ThrowAnyDiagnosticError(compilation.GetDiagnostics(), "");
 
         foreach (var syntaxTree in compilation.SyntaxTrees)
@@ -33,6 +63,7 @@ public class C99Transpiler
             var fileName = Path.GetFileName(syntaxTree.FilePath);
             var model = compilation.GetSemanticModel(syntaxTree);
             var root = syntaxTree.GetRoot();
+            //ThrowAnyDiagnosticError(model.GetDiagnostics(), "");
 
             // Find all class declarations in the syntax tree
             var allClasses = model.SyntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
@@ -58,7 +89,7 @@ public class C99Transpiler
 
         foreach (var error in errors)
         {
-            message += error.ToString() + "\n";
+            message += "\n" + error.ToString();
         }
 
         if (message.Length > 0)
