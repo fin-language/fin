@@ -18,16 +18,16 @@ public class C99TranspilerTest
         transpiler.c99ClassNodes.Count().Should().Be(3);
 
         transpiler.Generate();
-        var ledCls = transpiler.c99ClassNodes.Single(c => c.GetFqn() == "Hal.Led");
+        var ledCls = transpiler.c99ClassNodes.Single(c => c.GetFqn() == "hal.Led");
         string ledStructCode = ledCls._hFile.sb.ToString();
-        ledStructCode.Should().Contain("typedef struct Hal_Led Hal_Led;");
-        ledStructCode.Should().Contain("  Hal_Gpio * _gpio;");
+        ledStructCode.Should().Contain("typedef struct hal_Led hal_Led;");
+        ledStructCode.Should().Contain("  hal_Gpio * _gpio;");
 
-        var mainAppCls = transpiler.c99ClassNodes.Single(c => c.GetFqn() == "App.MainApp");
+        var mainAppCls = transpiler.c99ClassNodes.Single(c => c.GetFqn() == "app.MainApp");
         string mainAppStructCode = mainAppCls._hFile.sb.ToString();
-        mainAppStructCode.Should().Contain("typedef struct App_MainApp App_MainApp;");
+        mainAppStructCode.Should().Contain("typedef struct app_MainApp app_MainApp;");
         mainAppStructCode.Should().Contain("  uint32_t _toggle_at_ms;");
-        mainAppStructCode.Should().Contain("  Hal_Led * _redLed;");
+        mainAppStructCode.Should().Contain("  hal_Led * _redLed;");
     }
 }
 

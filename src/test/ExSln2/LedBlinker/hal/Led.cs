@@ -1,6 +1,6 @@
 ﻿using finlang;
 
-namespace Hal;
+namespace hal;
 
 public class Led : FinObj
 {

@@ -1,7 +1,7 @@
-﻿using finlang;
-using Hal;
+﻿using hal;
+using finlang;
 
-namespace App;
+namespace app;
 
 public class MainApp : FinObj
 {

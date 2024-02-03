@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "app\App.csproj", "{D07AB9B3-57EC-42A6-B65D-2FCA353DDC65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LedBlinker", "LedBlinker\LedBlinker.csproj", "{D07AB9B3-57EC-42A6-B65D-2FCA353DDC65}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "tests\Tests.csproj", "{3AD6CA16-6B1F-4D4E-8B83-D8784FDAEC40}"
 EndProject

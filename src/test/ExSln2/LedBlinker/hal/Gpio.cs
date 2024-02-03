@@ -1,6 +1,7 @@
 ﻿using finlang;
+using Hal;
 
-namespace Hal;
+namespace hal;
 
 /// <summary>
 /// This class will not be generated. The user will have to provide the struct definition

@@ -1,6 +1,6 @@
 ﻿using finlang;
 
-namespace App;
+namespace app;
 
 public class Counter : FinObj
 {
