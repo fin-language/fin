@@ -48,7 +48,6 @@ public class C99Transpiler
         project = project.AddMetadataReferences(GetAssemblies());
         Compilation compilation = project.GetCompilationAsync().Result.ThrowIfNull();
 
-        // FIXME! Put back in
         ThrowAnyDiagnosticError(compilation.GetDiagnostics(), "");
 
         foreach (var syntaxTree in compilation.SyntaxTrees)

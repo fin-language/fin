@@ -12,7 +12,6 @@ public class SolutionLoader
             MSBuildLocator.RegisterDefaults();
 
         var workspace = MSBuildWorkspace.Create();
-        //workspace.LoadMetadataForReferencedProjects = true;
         return workspace.OpenSolutionAsync(slnPath).Result;
     }
 }
