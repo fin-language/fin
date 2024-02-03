@@ -26,6 +26,7 @@ public class C99Transpiler
     public void GatherDeclarationsForProject(Project project)
     {
         Compilation compilation = project.GetCompilationAsync().Result.ThrowIfNull();
+        ThrowAnyDiagnosticError(compilation.GetDiagnostics(), "");
 
         foreach (var syntaxTree in compilation.SyntaxTrees)
         {
@@ -46,6 +47,23 @@ public class C99Transpiler
                     c99ClassNodes.Add(c99Decl);
                 }
             }
+        }
+    }
+
+    internal static void ThrowAnyDiagnosticError(IEnumerable<Diagnostic> enumerable, string programText)
+    {
+        var errors = enumerable.Where(d => d.Severity == DiagnosticSeverity.Error);
+
+        var message = "";
+
+        foreach (var error in errors)
+        {
+            message += error.ToString() + "\n";
+        }
+
+        if (message.Length > 0)
+        {
+            throw new TranspilerException(message, programText);
         }
     }
 

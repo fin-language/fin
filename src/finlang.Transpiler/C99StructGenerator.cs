@@ -15,15 +15,27 @@ public class C99StructGenerator
 
     public void GenerateStruct(C99Class c99Class)
     {
+        var symbol = c99Class.symbol;
         var structName = namer.GetCName(c99Class.syntaxNode);
+
+        var structFields = symbol.GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
+        if (structFields.Count() == 0)
+            return;
 
         var sb = c99Class._hFile.sb;
         sb.AppendLine($"typedef struct {structName} {structName};  // forward declaration");
+        sb.AppendLine($"struct {structName}");
+        sb.AppendLine("{");
 
-        // iterate over all fields
-        //foreach (var field in c99Class.symbol.GetMembers().Where(m => m.Kind == SymbolKind.Field))
-        //{
-        //    sb.AppendLine($"typedef {SymbolHelper.GetC99Type(field)} {field.Name};");
-        //}
+        foreach (var field in structFields)
+        {
+            var fieldName = field.Name;
+            var fieldType = namer.GetCName(field.Type);
+            var starOrSpace = field.Type.IsReferenceType ? " * " : " ";
+            sb.AppendLine($"    {fieldType}{starOrSpace}{fieldName};");
+        }
+
+        sb.AppendLine("};");
+        sb.AppendLine();
     }
 }
