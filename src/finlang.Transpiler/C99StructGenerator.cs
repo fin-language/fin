@@ -19,11 +19,15 @@ public class C99StructGenerator
             return;
         }
 
-        var structFields = symbol.GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
-        if (structFields.Count() == 0)
-            return;
-
         var sb = c99Class.hFile.mainCode;
+
+        var structFields = symbol.GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
+        if (!structFields.Any())
+        {
+            sb.AppendLine($"// Class has no fields. No struct generated.");
+            return;
+        }
+
         sb.AppendLine($"typedef struct {structName} {structName};  // forward declaration");
         sb.AppendLine($"struct {structName}");
         sb.AppendLine("{");
