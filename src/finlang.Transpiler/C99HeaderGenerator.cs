@@ -2,9 +2,9 @@
 
 namespace finlang.Transpiler;
 
-public class C99StructGenerator
+public class C99HeaderGenerator
 {
-    public C99StructGenerator(SemanticModel model, C99Namer namer)
+    public C99HeaderGenerator(SemanticModel model, C99Namer namer)
     {
     }
 
@@ -12,14 +12,14 @@ public class C99StructGenerator
     {
         var symbol = cls.symbol;
         var structName = cls.GetCName();
+        var sb = cls.hFile.mainCode;
 
         // don't generate a struct for FFI classes
         if (cls.IsFFI)
         {
+            sb.AppendLine($"// Class is a Foreign Function Interface. No struct generated.");
             return;
         }
-
-        var sb = cls.hFile.mainCode;
 
         if (cls.IsStaticClass)
         {

@@ -14,16 +14,22 @@ public class DependencyResolver
         string? result = null;
         switch (fqnDependency)
         {
-            case "System.Void": result = null; break;
-            case "System.Bool": result = "<stdbool.h>"; break;
-            case "finlang.u8":  
-            case "finlang.u16": 
-            case "finlang.u32": 
-            case "finlang.u64": 
-            case "finlang.i8":  
-            case "finlang.i16": 
-            case "finlang.i32": 
-            case "finlang.i64": result = "<stdint.h>"; break;
+            // c# types
+            case "System.Void": 
+                result = null; break;
+            case nameof(System) + "." + nameof(System.Boolean):
+                result = "<stdbool.h>"; break;
+
+            // fin types
+            case nameof(finlang) + "." + nameof(finlang.u8):
+            case nameof(finlang) + "." + nameof(finlang.u16):
+            case nameof(finlang) + "." + nameof(finlang.u32):
+            case nameof(finlang) + "." + nameof(finlang.u64):
+            case nameof(finlang) + "." + nameof(finlang.i8):
+            case nameof(finlang) + "." + nameof(finlang.i16):
+            case nameof(finlang) + "." + nameof(finlang.i32):
+            case nameof(finlang) + "." + nameof(finlang.i64):
+                result = "<stdint.h>"; break;
         }
 
         if (result == null)

@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
         "finlang"
-    ]
+    ],
+    "files.associations": {
+        "hal_gpio.h": "c"
+    }
 }

@@ -110,7 +110,7 @@ public class C99Transpiler
         foreach (var cls in c99ClassEnum)
         {
             C99Namer namer = new(cls.model);
-            C99StructGenerator gen = new(cls.model, namer);
+            C99HeaderGenerator gen = new(cls.model, namer);
 
             gen.GenerateStruct(cls);
             gen.GenerateFunctionPrototypes(cls);
