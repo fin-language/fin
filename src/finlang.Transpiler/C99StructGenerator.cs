@@ -8,21 +8,20 @@ public class C99StructGenerator
     {
     }
 
-    public void GenerateStruct(C99ClsEnum c99Class)
+    public void GenerateStruct(C99ClsEnum cls)
     {
-        var symbol = c99Class.symbol;
-        var structName = c99Class.GetCName();
+        var symbol = cls.symbol;
+        var structName = cls.GetCName();
 
         // don't generate a struct for FFI classes
-        if (c99Class.IsFFI)
+        if (cls.IsFFI)
         {
             return;
         }
 
-        var sb = c99Class.hFile.mainCode;
+        var sb = cls.hFile.mainCode;
 
-        var structFields = symbol.GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
-        if (!structFields.Any())
+        if (cls.IsStaticClass)
         {
             sb.AppendLine($"// Class has no fields. No struct generated.");
             return;
@@ -32,9 +31,9 @@ public class C99StructGenerator
         sb.AppendLine($"struct {structName}");
         sb.AppendLine("{");
 
-        foreach (var field in structFields)
+        foreach (var field in cls.GetInstanceFields())
         {
-            c99Class.AddFqnDependency(field.Type);
+            cls.AddHeaderFqnDependency(field.Type);
             var fieldName = field.Name;
             var fieldType = C99Namer.GetCName(field.Type);
             var starOrSpace = field.Type.IsReferenceType ? " * " : " ";
@@ -45,19 +44,34 @@ public class C99StructGenerator
         sb.AppendLine();
     }
 
-    public void GenerateFunctionPrototypes(C99ClsEnum c99Class)
+    public void GenerateFunctionPrototypes(C99ClsEnum cls)
     {
-        var symbol = c99Class.symbol;
-        var structName = c99Class.GetCName();
+        var symbol = cls.symbol;
+        var structName = cls.GetCName();
 
-        var sb = c99Class.hFile.mainCode;
+        var sb = cls.hFile.mainCode;
 
         var methods = symbol.GetMembers().OfType<IMethodSymbol>();
         foreach (var method in methods)
         {
-            var args = method.IsStatic ? "" : $"{structName} * self";
+            var args = (method.IsStatic || cls.IsStaticClass) ? "" : $"{structName} * self";
+            cls.AddHeaderFqnDependency(method.ReturnType);
             var returnType = C99Namer.GetCName(method.ReturnType);
             var methodName = C99Namer.GetCName(method);
+
+            foreach (var param in method.Parameters)
+            {
+                cls.AddHeaderFqnDependency(param.Type);
+                var paramName = param.Name;
+                var paramType = C99Namer.GetCName(param.Type);
+                var starOrSpace = param.Type.IsReferenceType ? " * " : " ";
+                if (args.Length > 0)
+                {
+                    args += ", ";
+                }
+                args += $"{paramType}{starOrSpace}{paramName}";
+            }
+
             sb.AppendLine($"{returnType} {methodName}({args});");
         }
     }

@@ -140,13 +140,19 @@ public class C99Transpiler
 
             cls.cFile.includes.AppendLine("#include \"" + cls.hFile.relativeFilePath + "\"");
 
-            foreach (var fqnDependency in cls._fqnDependencies)
+            ResolveFileDependencies(resolver, cls.hFile);
+            ResolveFileDependencies(resolver, cls.cFile);
+        }
+    }
+
+    private static void ResolveFileDependencies(DependencyResolver resolver, OutputFile cOrHFile)
+    {
+        foreach (var fqnDependency in cOrHFile.fqnDependencies)
+        {
+            string? includePath = resolver.ResolveDependency(fqnDependency);
+            if (includePath != null)
             {
-                string? includePath = resolver.ResolveDependency(fqnDependency);
-                if (includePath != null)
-                {
-                    cls.hFile.includes.AppendLine("#include " + includePath + "");
-                }
+                cOrHFile.includes.AppendLine("#include " + includePath + "");
             }
         }
     }

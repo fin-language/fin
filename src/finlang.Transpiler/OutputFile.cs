@@ -5,6 +5,7 @@ namespace finlang.Transpiler;
 public class OutputFile
 {
     public string? relativeFilePath;
+    readonly public HashSet<string> fqnDependencies = new();
     public StringBuilder preIncludes = new();
     public StringBuilder includes = new();
     public StringBuilder mainCode = new();

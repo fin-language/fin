@@ -9,11 +9,11 @@ public class C99ClsEnum
     readonly public ClassDeclarationSyntax syntaxNode;
     readonly public SemanticModel model;
 
-    readonly public HashSet<string> _fqnDependencies = new();
     readonly public OutputFile hFile = new();
     readonly public OutputFile cFile = new();
 
     public bool IsFFI { get; init; }
+    public bool IsStaticClass { get; init; }
 
     public C99ClsEnum(SemanticModel model, ClassDeclarationSyntax syntaxNode, INamedTypeSymbol symbol)
     {
@@ -21,6 +21,13 @@ public class C99ClsEnum
         this.syntaxNode = syntaxNode;
         this.symbol = symbol;
         this.model = model;
+
+        this.IsStaticClass = GetInstanceFields().Any() == false;
+    }
+
+    public IEnumerable<IFieldSymbol> GetInstanceFields()
+    {
+        return symbol.GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
     }
 
     public string GetCName()
@@ -33,9 +40,10 @@ public class C99ClsEnum
         return C99Namer.GetFqn(symbol);
     }
 
-    internal void AddFqnDependency(ITypeSymbol type)
+    internal void AddHeaderFqnDependency(ITypeSymbol type)
     {
         var fqn = C99Namer.GetFqn(type);
-        _fqnDependencies.Add(fqn);
+        if (fqn != "System.Void")
+            hFile.fqnDependencies.Add(fqn);
     }
 }
