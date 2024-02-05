@@ -13,7 +13,7 @@ public class C99StructGenerator
         this.namer = namer;
     }
 
-    public void GenerateStruct(C99Class c99Class)
+    public void GenerateStruct(C99ClsEnum c99Class)
     {
         var symbol = c99Class.symbol;
         var structName = namer.GetCName(c99Class.syntaxNode);
@@ -30,7 +30,7 @@ public class C99StructGenerator
         foreach (var field in structFields)
         {
             var fieldName = field.Name;
-            var fieldType = namer.GetCName(field.Type);
+            var fieldType = C99Namer.GetCName(field.Type);
             var starOrSpace = field.Type.IsReferenceType ? " * " : " ";
             sb.AppendLine($"    {fieldType}{starOrSpace}{fieldName};");
         }

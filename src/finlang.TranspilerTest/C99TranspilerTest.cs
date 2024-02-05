@@ -20,15 +20,15 @@ public class C99TranspilerTest
     {
         transpiler.projectsToIgnore.Add("Tests");
         transpiler.GatherSolutionDeclarations();
-        transpiler.c99ClassNodes.Count().Should().Be(3);
+        transpiler.c99ClassEnum.Count().Should().Be(3);
 
         transpiler.Generate();
-        var ledCls = transpiler.c99ClassNodes.Single(c => c.GetFqn() == "hal.Led");
+        var ledCls = transpiler.c99ClassEnum.Single(c => c.GetFqn() == "hal.Led");
         string ledStructCode = ledCls._hFile.mainCode.ToString();
         ledStructCode.Should().Contain("typedef struct hal_Led hal_Led;");
         ledStructCode.Should().Contain("  hal_Gpio * _gpio;");
 
-        var mainAppCls = transpiler.c99ClassNodes.Single(c => c.GetFqn() == "app.MainApp");
+        var mainAppCls = transpiler.c99ClassEnum.Single(c => c.GetFqn() == "app.MainApp");
         string mainAppStructCode = mainAppCls._hFile.mainCode.ToString();
         mainAppStructCode.Should().Contain("typedef struct app_MainApp app_MainApp;");
         mainAppStructCode.Should().Contain("  uint32_t _toggle_at_ms;");

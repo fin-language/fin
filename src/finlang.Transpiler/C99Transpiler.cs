@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Reflection;
 using System.Text;
-using System.Xml.Linq;
 
 namespace finlang.Transpiler;
 
@@ -14,7 +13,8 @@ public class C99Transpiler
     public readonly StringBuilder hFileSb = new();
     public readonly StringBuilder cFileSb = new();
 
-    public List<C99Class> c99ClassNodes = new();
+    public List<C99ClsEnum> c99ClassEnum = new();
+    public Dictionary<string, C99ClsEnum> fqnToC99Class = new();
 
     public List<string> projectsToIgnore = new();
 
@@ -68,8 +68,9 @@ public class C99Transpiler
 
                 if (SymbolHelper.IsDerivedFrom(symbol, "FinObj"))
                 {
-                    var c99Decl = new C99Class(model, classDeclNode, symbol);
-                    c99ClassNodes.Add(c99Decl);
+                    var c99Decl = new C99ClsEnum(model, classDeclNode, symbol);
+                    c99ClassEnum.Add(c99Decl);
+                    fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
                 }
             }
         }
@@ -106,7 +107,7 @@ public class C99Transpiler
 
     public void Generate()
     {
-        foreach (var cls in c99ClassNodes)
+        foreach (var cls in c99ClassEnum)
         {
             C99Namer namer = new(cls.model);
             C99StructGenerator gen = new(cls.model, namer);
@@ -117,10 +118,9 @@ public class C99Transpiler
 
     public void SetFilePaths()
     {         
-        foreach (var cls in c99ClassNodes)
+        foreach (var cls in c99ClassEnum)
         {
-            C99Namer namer = new(cls.model);
-            var fileNameBase = namer.GetCName(cls.syntaxNode);
+            var fileNameBase = cls.GetCName();
             cls._hFile.relativeFilePath = fileNameBase + ".h";
             cls._cFile.relativeFilePath = fileNameBase + ".c";
         }
@@ -128,7 +128,7 @@ public class C99Transpiler
 
     public void ResolveDependencies()
     {
-        foreach (var cls in c99ClassNodes)
+        foreach (var cls in c99ClassEnum)
         {
             cls._hFile.includes.AppendLine("#include <stdint.h>");
             cls._hFile.includes.AppendLine("#include <stdbool.h>");
@@ -138,7 +138,7 @@ public class C99Transpiler
 
     public void WriteFiles()
     {
-        foreach (var cls in c99ClassNodes)
+        foreach (var cls in c99ClassEnum)
         {
             cls._hFile.WriteToFile(destinationDirPath);
             cls._cFile.WriteToFile(destinationDirPath);

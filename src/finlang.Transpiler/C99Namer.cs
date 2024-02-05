@@ -61,6 +61,12 @@ public class C99Namer
         return GetCName(symbol);
     }
 
+    public static string GetCName(SemanticModel model, ClassDeclarationSyntax node)
+    {
+        INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
+        return GetCName(symbol);
+    }
+
     public string GetCName(StructDeclarationSyntax node)
     {
         INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
@@ -73,7 +79,7 @@ public class C99Namer
         return GetCName(symbol);
     }
 
-    public string GetCName(ISymbol symbol)
+    public static string GetCName(ISymbol symbol)
     {
         switch (symbol.Name)
         {
