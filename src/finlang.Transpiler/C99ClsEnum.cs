@@ -10,8 +10,8 @@ public class C99ClsEnum
     readonly public SemanticModel model;
 
     readonly public HashSet<string> _fqnDependencies = new();
-    readonly public OutputFile _hFile = new();
-    readonly public OutputFile _cFile = new();
+    readonly public OutputFile hFile = new();
+    readonly public OutputFile cFile = new();
 
     public bool IsFFI { get; init; }
 
@@ -33,5 +33,9 @@ public class C99ClsEnum
         return C99Namer.GetFqn(symbol);
     }
 
-
+    internal void AddFqnDependency(ITypeSymbol type)
+    {
+        var fqn = C99Namer.GetFqn(type);
+        _fqnDependencies.Add(fqn);
+    }
 }

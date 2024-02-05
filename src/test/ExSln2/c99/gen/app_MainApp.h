@@ -1,5 +1,8 @@
+// finlang generated file for c# app.MainApp class
+#pragma once
+
 #include <stdint.h>
-#include <stdbool.h>
+#include "hal_Led.h"
 
 
 typedef struct app_MainApp app_MainApp;  // forward declaration

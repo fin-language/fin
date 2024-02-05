@@ -23,15 +23,19 @@ public class C99TranspilerTest
 
         transpiler.Generate();
         var ledCls = transpiler.c99ClassEnum.Single(c => c.GetFqn() == "hal.Led");
-        string ledStructCode = ledCls._hFile.mainCode.ToString();
+        string ledStructCode = ledCls.hFile.mainCode.ToString();
         ledStructCode.Should().Contain("typedef struct hal_Led hal_Led;");
         ledStructCode.Should().Contain("  hal_Gpio * _gpio;");
+        ledCls._fqnDependencies.Should().BeEquivalentTo("hal.Gpio");
 
         var mainAppCls = transpiler.c99ClassEnum.Single(c => c.GetFqn() == "app.MainApp");
-        string mainAppStructCode = mainAppCls._hFile.mainCode.ToString();
+        string mainAppStructCode = mainAppCls.hFile.mainCode.ToString();
         mainAppStructCode.Should().Contain("typedef struct app_MainApp app_MainApp;");
         mainAppStructCode.Should().Contain("  uint32_t _toggle_at_ms;");
         mainAppStructCode.Should().Contain("  hal_Led * _redLed;");
+        mainAppCls._fqnDependencies.Should().BeEquivalentTo("hal.Led", "finlang.u32");
+
+
     }
 
     [Fact]

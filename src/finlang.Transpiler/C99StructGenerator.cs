@@ -4,13 +4,8 @@ namespace finlang.Transpiler;
 
 public class C99StructGenerator
 {
-    SemanticModel model;
-    C99Namer namer;
-
     public C99StructGenerator(SemanticModel model, C99Namer namer)
     {
-        this.model = model;
-        this.namer = namer;
     }
 
     public void GenerateStruct(C99ClsEnum c99Class)
@@ -28,13 +23,14 @@ public class C99StructGenerator
         if (structFields.Count() == 0)
             return;
 
-        var sb = c99Class._hFile.mainCode;
+        var sb = c99Class.hFile.mainCode;
         sb.AppendLine($"typedef struct {structName} {structName};  // forward declaration");
         sb.AppendLine($"struct {structName}");
         sb.AppendLine("{");
 
         foreach (var field in structFields)
         {
+            c99Class.AddFqnDependency(field.Type);
             var fieldName = field.Name;
             var fieldType = C99Namer.GetCName(field.Type);
             var starOrSpace = field.Type.IsReferenceType ? " * " : " ";

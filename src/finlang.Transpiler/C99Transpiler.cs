@@ -121,18 +121,43 @@ public class C99Transpiler
         foreach (var cls in c99ClassEnum)
         {
             var fileNameBase = cls.GetCName();
-            cls._hFile.relativeFilePath = fileNameBase + ".h";
-            cls._cFile.relativeFilePath = fileNameBase + ".c";
+            cls.hFile.relativeFilePath = fileNameBase + ".h";
+            cls.cFile.relativeFilePath = fileNameBase + ".c";
         }
     }
 
     public void ResolveDependencies()
     {
+        DependencyResolver resolver = new(fqnToC99Class);
+
         foreach (var cls in c99ClassEnum)
         {
-            cls._hFile.includes.AppendLine("#include <stdint.h>");
-            cls._hFile.includes.AppendLine("#include <stdbool.h>");
-            cls._cFile.includes.AppendLine("#include \"" + cls._hFile.relativeFilePath + "\"");
+            if (cls.IsFFI)
+            {
+                cls.hFile.includes.AppendLine($"#include \"{cls.GetCName()}_port_implementation.h\" // You need to provide this");
+            }
+
+            cls.cFile.includes.AppendLine("#include \"" + cls.hFile.relativeFilePath + "\"");
+
+            foreach (var fqnDependency in cls._fqnDependencies)
+            {
+                string? includePath = resolver.ResolveDependency(fqnDependency);
+                if (includePath != null)
+                {
+                    cls.hFile.includes.AppendLine("#include " + includePath + "");
+                }
+            }
+        }
+    }
+
+    public void SetupFileHeaders()
+    {
+        foreach (var cls in c99ClassEnum)
+        {
+            string msg = $"// finlang generated file for c# {cls.GetFqn()} class";
+            cls.hFile.preIncludes.AppendLine(msg);
+            cls.hFile.preIncludes.AppendLine("#pragma once");
+            cls.cFile.preIncludes.AppendLine(msg);
         }
     }
 
@@ -145,7 +170,7 @@ public class C99Transpiler
 
         foreach (var cls in c99ClassEnum)
         {
-            cls._hFile.WriteToFile(destinationDirPath);
+            cls.hFile.WriteToFile(destinationDirPath);
 
             if (cls.IsFFI)
             {
@@ -153,7 +178,7 @@ public class C99Transpiler
             }
             else
             {
-                cls._cFile.WriteToFile(destinationDirPath);
+                cls.cFile.WriteToFile(destinationDirPath);
             }
         }
     }
@@ -162,6 +187,7 @@ public class C99Transpiler
     {
         GatherSolutionDeclarations();
         Generate();
+        SetupFileHeaders();
         SetFilePaths();
         ResolveDependencies();
         WriteFiles();

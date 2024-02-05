@@ -1,5 +1,7 @@
-#include <stdint.h>
-#include <stdbool.h>
+// finlang generated file for c# hal.Led class
+#pragma once
+
+#include "hal_Gpio.h"
 
 
 typedef struct hal_Led hal_Led;  // forward declaration
