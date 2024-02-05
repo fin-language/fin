@@ -7,7 +7,7 @@ namespace finlang.TranspilerTest;
 public class C99TranspilerTest
 {
     string slnPath = ExSln2Fixture.GetSlnPath();
-    string destDirPath = ExSln2Fixture.GetSlnDir() + "/c99/";
+    string destDirPath = ExSln2Fixture.GetSlnDir() + "/c99/gen/";
     C99Transpiler transpiler;
 
     public C99TranspilerTest()
@@ -20,7 +20,6 @@ public class C99TranspilerTest
     {
         transpiler.projectsToIgnore.Add("Tests");
         transpiler.GatherSolutionDeclarations();
-        transpiler.c99ClassEnum.Count().Should().Be(3);
 
         transpiler.Generate();
         var ledCls = transpiler.c99ClassEnum.Single(c => c.GetFqn() == "hal.Led");

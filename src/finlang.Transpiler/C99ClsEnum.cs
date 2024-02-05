@@ -13,8 +13,11 @@ public class C99ClsEnum
     readonly public OutputFile _hFile = new();
     readonly public OutputFile _cFile = new();
 
+    public bool IsFFI { get; init; }
+
     public C99ClsEnum(SemanticModel model, ClassDeclarationSyntax syntaxNode, INamedTypeSymbol symbol)
     {
+        this.IsFFI = symbol.GetAttributes().Any(a => a.AttributeClass?.Name == "ffiAttribute");
         this.syntaxNode = syntaxNode;
         this.symbol = symbol;
         this.model = model;
@@ -29,4 +32,6 @@ public class C99ClsEnum
     {
         return C99Namer.GetFqn(symbol);
     }
+
+
 }

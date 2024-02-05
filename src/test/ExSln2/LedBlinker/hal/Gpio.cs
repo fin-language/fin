@@ -9,7 +9,7 @@ namespace hal;
 /// </summary>
 [ffi]
 [simonly]
-public class Gpio
+public class Gpio : FinObj
 {
     public bool _state;
 

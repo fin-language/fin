@@ -16,7 +16,13 @@ public class C99StructGenerator
     public void GenerateStruct(C99ClsEnum c99Class)
     {
         var symbol = c99Class.symbol;
-        var structName = namer.GetCName(c99Class.syntaxNode);
+        var structName = c99Class.GetCName();
+
+        // don't generate a struct for FFI classes
+        if (c99Class.IsFFI)
+        {
+            return;
+        }
 
         var structFields = symbol.GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
         if (structFields.Count() == 0)

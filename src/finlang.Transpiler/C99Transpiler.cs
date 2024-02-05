@@ -138,10 +138,23 @@ public class C99Transpiler
 
     public void WriteFiles()
     {
+        // delete all files in the destination directory
+        if (Directory.Exists(destinationDirPath))
+            Directory.Delete(destinationDirPath, recursive: true);
+        Directory.CreateDirectory(destinationDirPath);
+
         foreach (var cls in c99ClassEnum)
         {
             cls._hFile.WriteToFile(destinationDirPath);
-            cls._cFile.WriteToFile(destinationDirPath);
+
+            if (cls.IsFFI)
+            {
+                //don't write the c file for FFI classes
+            }
+            else
+            {
+                cls._cFile.WriteToFile(destinationDirPath);
+            }
         }
     }
 
