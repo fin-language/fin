@@ -2,7 +2,7 @@
 
 public class DependencyResolver
 {
-    private Dictionary<string, C99ClsEnum> fqnToC99Class;
+    private readonly Dictionary<string, C99ClsEnum> fqnToC99Class;
 
     public DependencyResolver(Dictionary<string, C99ClsEnum> fqnToC99Class)
     {

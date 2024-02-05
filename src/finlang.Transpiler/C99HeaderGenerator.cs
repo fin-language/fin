@@ -51,7 +51,7 @@ public class C99HeaderGenerator
 
         var sb = cls.hFile.mainCode;
 
-        var methods = symbol.GetMembers().OfType<IMethodSymbol>();
+        var methods = cls.GetMethods();
         foreach (var method in methods)
         {
             var args = (method.IsStatic || cls.IsStaticClass) ? "" : $"{structName} * self";

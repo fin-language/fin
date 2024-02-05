@@ -114,6 +114,9 @@ public class C99Transpiler
 
             gen.GenerateStruct(cls);
             gen.GenerateFunctionPrototypes(cls);
+
+            CFileGenerator cFileGenerator = new(cls);
+            cFileGenerator.Generate();
         }
     }
 

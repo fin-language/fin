@@ -3,3 +3,8 @@
 #include "app_Counter.h"
 
 
+
+    void app_Counter_increment()
+    {
+        _count += 1;
+    }

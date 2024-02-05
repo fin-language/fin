@@ -25,6 +25,16 @@ public class C99ClsEnum
         this.IsStaticClass = GetInstanceFields().Any() == false;
     }
 
+    public IEnumerable<IMethodSymbol> GetMethods()
+    {
+        return symbol.GetMembers().OfType<IMethodSymbol>();
+    }
+
+    public IEnumerable<IMethodSymbol> GetNonConstructorMethods()
+    {
+        return GetMethods().Where(m => m.MethodKind != MethodKind.Constructor);
+    }
+
     public IEnumerable<IFieldSymbol> GetInstanceFields()
     {
         return symbol.GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
