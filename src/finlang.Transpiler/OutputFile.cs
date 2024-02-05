@@ -4,10 +4,21 @@ namespace finlang.Transpiler;
 
 public class OutputFile
 {
-    public string? filePath;
-    public StringBuilder sb = new();
+    public string? relativeFilePath;
+    public StringBuilder includes = new();
+    public StringBuilder mainCode = new();
 
     public OutputFile()
     {
+    }
+
+    public void WriteToFile(string destinationDirPath)
+    {
+        relativeFilePath.ThrowIfNull();
+        
+        using StreamWriter sw = new(Path.Combine(destinationDirPath, relativeFilePath));
+        sw.Write(includes.ToString());
+        sw.Write("\n\n");
+        sw.Write(mainCode.ToString());
     }
 }

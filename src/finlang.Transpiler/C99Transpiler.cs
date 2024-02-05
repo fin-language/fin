@@ -42,7 +42,10 @@ public class C99Transpiler
         return targetAssemblies;
     }
 
-
+    /// <summary>
+    /// Classes or enums (not done yet)
+    /// </summary>
+    /// <param name="project"></param>
     public void GatherDeclarationsForProject(Project project)
     {
         project = project.AddMetadataReferences(GetAssemblies());
@@ -55,7 +58,6 @@ public class C99Transpiler
             var fileName = Path.GetFileName(syntaxTree.FilePath);
             var model = compilation.GetSemanticModel(syntaxTree);
             var root = syntaxTree.GetRoot();
-            //ThrowAnyDiagnosticError(model.GetDiagnostics(), "");
 
             // Find all class declarations in the syntax tree
             var allClasses = model.SyntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
@@ -111,5 +113,44 @@ public class C99Transpiler
 
             gen.GenerateStruct(cls);
         }
+    }
+
+    public void SetFilePaths()
+    {         
+        foreach (var cls in c99ClassNodes)
+        {
+            C99Namer namer = new(cls.model);
+            var fileNameBase = namer.GetCName(cls.syntaxNode);
+            cls._hFile.relativeFilePath = fileNameBase + ".h";
+            cls._cFile.relativeFilePath = fileNameBase + ".c";
+        }
+    }
+
+    public void ResolveDependencies()
+    {
+        foreach (var cls in c99ClassNodes)
+        {
+            cls._hFile.includes.AppendLine("#include <stdint.h>");
+            cls._hFile.includes.AppendLine("#include <stdbool.h>");
+            cls._cFile.includes.AppendLine("#include \"" + cls._hFile.relativeFilePath + "\"");
+        }
+    }
+
+    public void WriteFiles()
+    {
+        foreach (var cls in c99ClassNodes)
+        {
+            cls._hFile.WriteToFile(destinationDirPath);
+            cls._cFile.WriteToFile(destinationDirPath);
+        }
+    }
+
+    public void GenerateAndWrite()
+    {
+        GatherSolutionDeclarations();
+        Generate();
+        SetFilePaths();
+        ResolveDependencies();
+        WriteFiles();
     }
 }

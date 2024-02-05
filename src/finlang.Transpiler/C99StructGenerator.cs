@@ -22,7 +22,7 @@ public class C99StructGenerator
         if (structFields.Count() == 0)
             return;
 
-        var sb = c99Class._hFile.sb;
+        var sb = c99Class._hFile.mainCode;
         sb.AppendLine($"typedef struct {structName} {structName};  // forward declaration");
         sb.AppendLine($"struct {structName}");
         sb.AppendLine("{");
