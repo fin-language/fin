@@ -11,15 +11,16 @@ public class Led : FinObj
         _gpio = gpio;
     }
 
+    // Will toggle the state of the LED
     public void toggle()
     {
         if (_gpio.read())
         {
-            _gpio.write(false);
+            _gpio.write(false); // Turn off
         }
         else
         {
-            _gpio.write(true);
+            _gpio.write(true); // Turn on
         }
     }
 }

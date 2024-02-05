@@ -1,15 +1,17 @@
 // finlang generated file for c# app.MainApp class
 
 #include "app_MainApp.h"
+#include <string.h>
 
 
 
-    MainApp(hal_Led redLed)
+    void app_MainApp_ctor(app_MainApp* self, hal_Led redLed)
     {
+        memset(self, 0, sizeof(*self));
         _redLed = redLed;
     }
 
-    void app_MainApp_step(uint32_t ms_time)
+    void app_MainApp_step(app_MainApp* self, uint32_t ms_time)
     {
         finlang_math.finlang_math_unsafe_mode();
 

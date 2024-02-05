@@ -4,7 +4,7 @@ namespace finlang.Transpiler;
 
 public class C99HeaderGenerator
 {
-    public C99HeaderGenerator(SemanticModel model, C99Namer namer)
+    public C99HeaderGenerator(SemanticModel model, Namer namer)
     {
     }
 
@@ -35,7 +35,7 @@ public class C99HeaderGenerator
         {
             cls.AddHeaderFqnDependency(field.Type);
             var fieldName = field.Name;
-            var fieldType = C99Namer.GetCName(field.Type);
+            var fieldType = Namer.GetCName(field.Type);
             var starOrSpace = field.Type.IsReferenceType ? " * " : " ";
             sb.AppendLine($"    {fieldType}{starOrSpace}{fieldName};");
         }
@@ -56,14 +56,14 @@ public class C99HeaderGenerator
         {
             var args = (method.IsStatic || cls.IsStaticClass) ? "" : $"{structName} * self";
             cls.AddHeaderFqnDependency(method.ReturnType);
-            var returnType = C99Namer.GetCName(method.ReturnType);
-            var methodName = C99Namer.GetCName(method);
+            var returnType = Namer.GetCName(method.ReturnType);
+            var methodName = Namer.GetCName(method);
 
             foreach (var param in method.Parameters)
             {
                 cls.AddHeaderFqnDependency(param.Type);
                 var paramName = param.Name;
-                var paramType = C99Namer.GetCName(param.Type);
+                var paramType = Namer.GetCName(param.Type);
                 var starOrSpace = param.Type.IsReferenceType ? " * " : " ";
                 if (args.Length > 0)
                 {

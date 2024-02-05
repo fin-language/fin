@@ -109,7 +109,7 @@ public class C99Transpiler
     {
         foreach (var cls in c99ClassEnum)
         {
-            C99Namer namer = new(cls.model);
+            Namer namer = new(cls.model);
             C99HeaderGenerator gen = new(cls.model, namer);
 
             gen.GenerateStruct(cls);
@@ -138,10 +138,10 @@ public class C99Transpiler
         {
             if (cls.IsFFI)
             {
-                cls.hFile.includes.AppendLine($"#include \"{cls.GetCName()}_port_implementation.h\" // You need to provide this");
+                cls.hFile.includesSb.AppendLine($"#include \"{cls.GetCName()}_port_implementation.h\" // You need to provide this");
             }
 
-            cls.cFile.includes.AppendLine("#include \"" + cls.hFile.relativeFilePath + "\"");
+            cls.cFile.includesSb.AppendLine("#include \"" + cls.hFile.relativeFilePath + "\"");
 
             ResolveFileDependencies(resolver, cls.hFile);
             ResolveFileDependencies(resolver, cls.cFile);
@@ -155,7 +155,7 @@ public class C99Transpiler
             string? includePath = resolver.ResolveDependency(fqnDependency);
             if (includePath != null)
             {
-                cOrHFile.includes.AppendLine("#include " + includePath + "");
+                cOrHFile.includesSb.AppendLine("#include " + includePath + "");
             }
         }
     }

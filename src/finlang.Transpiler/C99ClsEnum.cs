@@ -42,17 +42,17 @@ public class C99ClsEnum
 
     public string GetCName()
     {
-        return C99Namer.GetCName(symbol);
+        return Namer.GetCName(symbol);
     }
 
     public string GetFqn()
     {
-        return C99Namer.GetFqn(symbol);
+        return Namer.GetFqn(symbol);
     }
 
     internal void AddHeaderFqnDependency(ITypeSymbol type)
     {
-        var fqn = C99Namer.GetFqn(type);
+        var fqn = Namer.GetFqn(type);
         if (fqn != "System.Void")
             hFile.fqnDependencies.Add(fqn);
     }

@@ -3,11 +3,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace finlang.Transpiler;
 
-public class C99Namer
+public class Namer
 {
     SemanticModel model;
 
-    public C99Namer(SemanticModel model)
+    public Namer(SemanticModel model)
     {
         this.model = model;
     }

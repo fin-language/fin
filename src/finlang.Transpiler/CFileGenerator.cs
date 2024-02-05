@@ -10,12 +10,14 @@ public class CFileGenerator : CSharpSyntaxWalker
     C99ClsEnum cls;
     private SemanticModel model;
     StringBuilder sb;
+    Namer namer;
 
     public CFileGenerator(C99ClsEnum cls) : base(SyntaxWalkerDepth.StructuredTrivia)
     {
         this.cls = cls;
         this.model = cls.model;
         sb = cls.cFile.mainCode;
+        namer = new Namer(model);
     }
 
     public void Generate()
@@ -29,21 +31,52 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
     }
 
-    public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+    public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
     {
-        VisitLeadingTrivia(node); // this will output any unattached comment sections
+        var symbol = model.GetDeclaredSymbol(node).ThrowIfNull();
 
-        //if (!node.IsPublic())
-        //    sb.Append("static ");
+        VisitLeadingTrivia(node);
+        sb.Append($"void {Namer.GetCName(symbol)}");
 
-        Visit(node.ReturnType);
-        VisitToken(node.Identifier);
         VisitParameterList(node.ParameterList);
 
-        VisitBlock(node.Body.ThrowIfNull());
+        var body = node.Body.ThrowIfNull();
+        VisitToken(body.OpenBraceToken);
+        sb.Append("        memset(self, 0, sizeof(*self));\n");
+        cls.cFile.includes.Add("<string.h>"); // for memset
+        body.VisitChildrenNodesWithWalker(this);
+        VisitToken(body.CloseBraceToken);
     }
 
+    // parameters are declared for methods and constructors
+    public override void VisitParameterList(ParameterListSyntax node)
+    {
+        ISymbol? symbol = null;
 
+        if (node.Parent is MethodDeclarationSyntax mds)
+        {
+            symbol = model.GetDeclaredSymbol(mds).ThrowIfNull();
+        }
+        else if (node.Parent is ConstructorDeclarationSyntax cds)
+        {
+            symbol = model.GetDeclaredSymbol(cds).ThrowIfNull();
+        }
+
+        var list = new WalkableChildSyntaxList(this, node.ChildNodesAndTokens());
+
+        if (symbol?.IsStatic == false)
+        {
+            list.VisitUpTo(node.OpenParenToken, including: true);
+
+            sb.Append(Namer.GetCName(symbol.ContainingType) + "* self");
+            if (node.Parameters.Count > 0)
+            {
+                sb.Append(", ");
+            }
+        }
+
+        list.VisitRest();
+    }
 
     ///////////////////////////////////////////////////////////////////////////////
 
@@ -93,7 +126,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             default:
                 {
                     SymbolInfo symbol = model.GetSymbolInfo(node);
-                    result = C99Namer.GetCName(symbol.Symbol.ThrowIfNull());
+                    result = Namer.GetCName(symbol.Symbol.ThrowIfNull());
                     break;
                 }
         }
@@ -173,11 +206,11 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
         else if (token.IsKind(SyntaxKind.IdentifierToken) && token.Parent is MethodDeclarationSyntax mds)
         {
-            sb.Append(C99Namer.GetCName(model.GetDeclaredSymbol(mds).ThrowIfNull()));
+            sb.Append(Namer.GetCName(model.GetDeclaredSymbol(mds).ThrowIfNull()));
         }
         else if (token.IsKind(SyntaxKind.IdentifierToken) && token.Parent is EnumMemberDeclarationSyntax emds)
         {
-            sb.Append(C99Namer.GetCName(model.GetDeclaredSymbol(emds).ThrowIfNull()));
+            sb.Append(Namer.GetCName(model.GetDeclaredSymbol(emds).ThrowIfNull()));
         }
         else if (token.IsKind(SyntaxKind.ThisKeyword))
         {
