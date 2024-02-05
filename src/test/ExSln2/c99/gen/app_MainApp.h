@@ -12,3 +12,5 @@ struct app_MainApp
     hal_Led * _redLed;
 };
 
+void app_MainApp_ctor(app_MainApp * self);
+void app_MainApp_step(app_MainApp * self);

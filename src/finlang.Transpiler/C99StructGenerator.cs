@@ -45,5 +45,21 @@ public class C99StructGenerator
         sb.AppendLine();
     }
 
+    public void GenerateFunctionPrototypes(C99ClsEnum c99Class)
+    {
+        var symbol = c99Class.symbol;
+        var structName = c99Class.GetCName();
+
+        var sb = c99Class.hFile.mainCode;
+
+        var methods = symbol.GetMembers().OfType<IMethodSymbol>();
+        foreach (var method in methods)
+        {
+            var args = method.IsStatic ? "" : $"{structName} * self";
+            var returnType = C99Namer.GetCName(method.ReturnType);
+            var methodName = C99Namer.GetCName(method);
+            sb.AppendLine($"{returnType} {methodName}({args});");
+        }
+    }
 
 }

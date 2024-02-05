@@ -113,6 +113,7 @@ public class C99Transpiler
             C99StructGenerator gen = new(cls.model, namer);
 
             gen.GenerateStruct(cls);
+            gen.GenerateFunctionPrototypes(cls);
         }
     }
 

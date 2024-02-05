@@ -10,3 +10,5 @@ struct app_Counter
     uint32_t _count;
 };
 
+void app_Counter_increment(app_Counter * self);
+void app_Counter_ctor(app_Counter * self);

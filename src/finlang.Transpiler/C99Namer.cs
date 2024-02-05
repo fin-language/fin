@@ -81,32 +81,23 @@ public class C99Namer
 
     public static string GetCName(ISymbol symbol)
     {
-        switch (symbol.Name)
+        var fqn = GetFqn(symbol);
+
+        switch (fqn)
         {
-            case "u8":
-                return "uint8_t";
-            case "u16":
-                return "uint16_t";
-            case "u32":
-                return "uint32_t";
-            case "u64":
-                return "uint64_t";
-            case "i8":
-                return "int8_t";
-            case "i16":
-                return "int16_t";
-            case "i32":
-                return "int32_t";
-            case "i64":
-                return "int64_t";
-            case "f32":
-                return "float";
-            case "f64":
-                return "double";
-            case "bool":
-                return "bool";
-            case "string":
-                return "char*";
+            case "finlang.u8": return "uint8_t";
+            case "finlang.u16": return "uint16_t";
+            case "finlang.u32": return "uint32_t";
+            case "finlang.u64": return "uint64_t";
+            case "finlang.i8": return "int8_t";
+            case "finlang.i16": return "int16_t";
+            case "finlang.i32": return "int32_t";
+            case "finlang.i64": return "int64_t";
+            case "finlang.f32": return "float";
+            case "finlang.f64": return "double";
+            case "finlang.bool": return "bool";
+            case "System.Boolean": return "bool";
+            case "System.Void": return "void";
         }
 
         if (symbol is IFieldSymbol fieldSymbol)
@@ -124,10 +115,9 @@ public class C99Namer
 
         if (symbol is IMethodSymbol methodSymbol && methodSymbol.DeclaredAccessibility != Accessibility.Public)
         {
-            return methodSymbol.Name;
+            return methodSymbol.Name.Replace(".", ""); // for .ctor
         }
 
-        var fqn = GetFqn(symbol);
         var name = MangleTypeSymbolName(fqn);
         return name;
     }
