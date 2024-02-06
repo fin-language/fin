@@ -12,13 +12,12 @@ public class C99TranspilerTest
 
     public C99TranspilerTest()
     {
-        transpiler = new(solutionPath: slnPath, destinationDirPath: destDirPath);
+        transpiler = new(solutionPath: slnPath, destinationDirPath: destDirPath, projectName: "LedBlinker");
     }
 
     [Fact]
     public void GenStruct()
     {
-        transpiler.projectsToIgnore.Add("Tests");
         transpiler.GatherSolutionDeclarations();
 
         transpiler.Generate();

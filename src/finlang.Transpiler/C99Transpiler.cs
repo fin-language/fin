@@ -10,18 +10,16 @@ public class C99Transpiler
 {
     private string destinationDirPath;
     private string solutionPath;
-    public readonly StringBuilder hFileSb = new();
-    public readonly StringBuilder cFileSb = new();
+    private string projectName;
 
     public List<C99ClsEnum> c99ClassEnum = new();
     public Dictionary<string, C99ClsEnum> fqnToC99Class = new();
 
-    public List<string> projectsToIgnore = new();
-
-    public C99Transpiler(string destinationDirPath, string solutionPath)
+    public C99Transpiler(string destinationDirPath, string solutionPath, string projectName)
     {
         this.destinationDirPath = destinationDirPath;
         this.solutionPath = solutionPath;
+        this.projectName = projectName;
     }
 
     static List<MetadataReference> GetAssemblies()
@@ -95,14 +93,9 @@ public class C99Transpiler
 
     public void GatherSolutionDeclarations()
     {
-        Solution sln = SolutionLoader.Load(solutionPath);
-
-        var targetProjects = sln.Projects.Where(p => !projectsToIgnore.Contains(p.Name));
-
-        foreach (var project in targetProjects)
-        {
-            GatherDeclarationsForProject(project);
-        }
+        Solution sln = WorkspaceLoader.LoadSolution(solutionPath);
+        var project = sln.Projects.Where(p => p.Name == projectName).Single();
+        GatherDeclarationsForProject(project);
     }
 
     public void Generate()
