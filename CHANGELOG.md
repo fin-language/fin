@@ -25,9 +25,11 @@ Test/interim releases are not documented here.
 --- 
 
 ## [0.1.6-alpha]
-### Added
+### Fixed
 - fix ambiguous cast between fin types
 
+### Added
+- [ffi] attribute for c# classes (foreign function interface)
 
 --- 
 
