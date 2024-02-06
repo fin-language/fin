@@ -194,47 +194,15 @@ public class CFileGenerator : CSharpSyntaxWalker
         ISymbol nameSymbol = model.GetSymbolInfo(node.Name).Symbol.ThrowIfNull();
         //string nameFqn = nameSymbol.GetFqn();
 
-        return TryHandleFinSpecials(node, nameSymbol);
-
-        bool isPtr = false;
-
         if (node.Expression is ThisExpressionSyntax tes)
         {
-            // `this.stuff` to `sm->stuff`
             VisitLeadingTrivia(tes.Token);
-            sb.Append("sm");
-            VisitTrailingTrivia(tes.Token);
-            isPtr = true;
-        }
-        // `sm.stuff` to `sm->stuff`
-        else if (node.Expression is IdentifierNameSyntax identifierNameSyntax)
-        {
-            ISymbol? symbol = model.GetSymbolInfo(identifierNameSyntax).Symbol;
-
-            if (symbol is IParameterSymbol parameterSymbol && parameterSymbol.Type.IsReferenceType)
-            {
-                Visit(identifierNameSyntax);
-                isPtr = true;
-            }
-        }
-        else
-        {
-            Visit(node.Expression);
+            Visit(node.Name);
+            //VisitTrailingTrivia(tes.Token);
+            return true;
         }
 
-        if (isPtr)
-        {
-            sb.Append("->");
-            VisitTrailingTrivia(node.OperatorToken);
-        }
-        else
-        {
-            VisitToken(node.OperatorToken);
-        }
-
-        Visit(node.Name);
-        bool done = true;
-        return done;
+        return TryHandleFinSpecials(node, nameSymbol);
     }
 
     public override void VisitExpressionStatement(ExpressionStatementSyntax node)
@@ -492,10 +460,10 @@ public class CFileGenerator : CSharpSyntaxWalker
         {
             sb.Append(Namer.GetCName(model.GetDeclaredSymbol(emds).ThrowIfNull()));
         }
-        else if (token.IsKind(SyntaxKind.ThisKeyword))
-        {
-            sb.Append("self");
-        }
+        //else if (token.IsKind(SyntaxKind.ThisKeyword))
+        //{
+        //    sb.Append("self");
+        //}
         else
         {
             sb.Append(token);
