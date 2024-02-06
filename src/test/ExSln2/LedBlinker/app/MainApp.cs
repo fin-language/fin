@@ -22,7 +22,7 @@ public class MainApp : FinObj
         if (ms_time >= _toggle_at_ms)
         {
             // comment out the following line and it all works fine.
-            _redLed.toggle();   // this causes really weird Roslyn errors https://github.com/fin-language/fin/issues/22
+            _redLed.toggle();
             _toggle_at_ms = (ms_time.u64 + period_ms).wrap_u32; // won't need when have a wrapping add
         }
     }

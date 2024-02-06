@@ -19,7 +19,7 @@
         if (ms_time >= self->_toggle_at_ms)
         {
             // comment out the following line and it all works fine.
-            hal_Led_toggle(self->_redLed);   // this causes really weird Roslyn errors https://github.com/fin-language/fin/issues/22
+            hal_Led_toggle(self->_redLed);
             self->_toggle_at_ms = (uint32_t)(((uint64_t)(ms_time) + self->period_ms)); // won't need when have a wrapping add
         }
     }
