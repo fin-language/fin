@@ -14,3 +14,4 @@ struct app_MainApp
 
 void app_MainApp_ctor(app_MainApp * self, hal_Led * redLed);
 void app_MainApp_step(app_MainApp * self, uint32_t ms_time);
+uint32_t app_MainApp_self_declaration_example(app_MainApp * self);

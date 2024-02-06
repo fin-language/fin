@@ -179,6 +179,11 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     private bool HandleSimpleMemberAccess(MemberAccessExpressionSyntax node)
     {
+        ISymbol nameSymbol = model.GetSymbolInfo(node.Name).Symbol.ThrowIfNull();
+        //string nameFqn = nameSymbol.GetFqn();
+
+        return TryHandleFinSpecials(node, nameSymbol);
+
         bool isPtr = false;
 
         if (node.Expression is ThisExpressionSyntax tes)
@@ -218,6 +223,87 @@ public class CFileGenerator : CSharpSyntaxWalker
         Visit(node.Name);
         bool done = true;
         return done;
+    }
+
+    private bool TryHandleFinSpecials(MemberAccessExpressionSyntax node, ISymbol nameSymbol)
+    {
+        if (nameSymbol.ContainingNamespace.Name != "finlang")
+            return false;
+
+        if (TryFinWideningOrWrapping(node, nameSymbol))
+            return true;
+
+        if (TryFinSelfDeclaration(node, nameSymbol))
+            return true;
+
+        return false;
+    }
+
+    private bool TryFinSelfDeclaration(MemberAccessExpressionSyntax node, ISymbol nameSymbol)
+    {
+        bool found = false;
+        switch (nameSymbol.Name)
+        {
+            case "u8_":
+            case "u16_":
+            case "u32_":
+            case "u64_":
+            case "i8_":
+            case "i16_":
+            case "i32_":
+            case "i64_":
+            case "f32_":
+            case "f64_":
+                found = true;
+                break;
+        }
+
+        // in this case, we just visit the expression
+        Visit(node.Expression);
+        VisitTrailingTrivia(node.Name);
+
+        return found;
+    }
+
+    private bool TryFinWideningOrWrapping(MemberAccessExpressionSyntax node, ISymbol nameSymbol)
+    {
+        string? castType = null;
+        bool handled = false;
+
+        switch (nameSymbol.Name)
+        {
+            case "u8": castType = "uint8_t"; break;
+            case "u16": castType = "uint16_t"; break;
+            case "u32": castType = "uint32_t"; break;
+            case "u64": castType = "uint64_t"; break;
+            case "i8": castType = "int8_t"; break;
+            case "i16": castType = "int16_t"; break;
+            case "i32": castType = "int32_t"; break;
+            case "i64": castType = "int64_t"; break;
+            case "f32": castType = "float"; break;
+            case "f64": castType = "double"; break;
+
+            case "wrap_u8": castType = "uint8_t"; break;
+            case "wrap_u16": castType = "uint16_t"; break;
+            case "wrap_u32": castType = "uint32_t"; break;
+            case "wrap_u64": castType = "uint64_t"; break;
+            case "wrap_i8": castType = "int8_t"; break;
+            case "wrap_i16": castType = "int16_t"; break;
+            case "wrap_i32": castType = "int32_t"; break;
+            case "wrap_i64": castType = "int64_t"; break;
+        }
+
+        if (castType != null)
+        {
+            sb.Append($"({castType})");
+            sb.Append("(");
+            Visit(node.Expression);
+            sb.Append(")");
+            VisitTrailingTrivia(node.Name);
+            handled = true;
+        }
+
+        return handled;
     }
 
     ///////////////////////////////////////////////////////////////////////////////

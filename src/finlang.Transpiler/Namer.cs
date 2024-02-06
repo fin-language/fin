@@ -29,6 +29,13 @@ public class Namer
 
     public static string GetFqn(ISymbol symbol)
     {
+        List<string> parts = GetFqnParts(symbol);
+        var fqn = string.Join(".", parts);
+        return fqn;
+    }
+
+    public static List<string> GetFqnParts(ISymbol symbol)
+    {
         var parts = new List<string>();
 
         parts.Insert(index: 0, GetName(symbol));
@@ -51,8 +58,7 @@ public class Namer
             symbol = symbol.ContainingSymbol;
         }
 
-        var fqn = string.Join(".", parts);
-        return fqn;
+        return parts;
     }
 
     public string GetCName(ClassDeclarationSyntax node)

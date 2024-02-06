@@ -120,6 +120,16 @@ public static class Extensions
         return node.Modifiers.HasModifier(SyntaxKind.ReadOnlyKeyword);
     }
 
+    public static string GetFqn(this ISymbol symbol)
+    {
+        return Namer.GetFqn(symbol);
+    }
+
+    public static List<string> GetFqnParts(this ISymbol symbol)
+    {
+        return Namer.GetFqnParts(symbol);
+    }
+
     public static bool IsEnumMember(this ISymbol? symbol)
     {
         if (symbol == null)

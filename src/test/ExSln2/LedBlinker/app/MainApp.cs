@@ -24,4 +24,10 @@ public class MainApp : FinObj
             _toggle_at_ms = (ms_time.u64 + 1000).wrap_u32; // won't need when have a wrapping add
         }
     }
+
+    public u32 self_declaration_example()
+    {
+        math.unsafe_mode();
+        return _toggle_at_ms.u32_ + 20; //u32_ is self-declaration
+    }
 }
