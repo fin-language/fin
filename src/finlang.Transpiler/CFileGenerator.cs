@@ -68,7 +68,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         {
             list.VisitUpTo(node.OpenParenToken, including: true);
 
-            sb.Append(Namer.GetCName(symbol.ContainingType) + "* self");
+            sb.Append(Namer.GetCName(symbol.ContainingType) + " * self");
             if (node.Parameters.Count > 0)
             {
                 sb.Append(", ");
@@ -76,6 +76,22 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         list.VisitRest();
+    }
+
+    public override void VisitParameter(ParameterSyntax node)
+    {
+        var parameterSymbol = model.GetDeclaredSymbol(node);
+
+        if (parameterSymbol != null && parameterSymbol.Type.IsReferenceType)
+        {
+            Visit(node.Type);
+            sb.Append("* ");
+            VisitToken(node.Identifier);
+        }
+        else
+        {
+            base.VisitParameter(node);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////

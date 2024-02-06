@@ -5,14 +5,14 @@
 
 
 
-    void hal_Led_ctor(hal_Led* self, hal_Gpio gpio)
+    void hal_Led_ctor(hal_Led * self, hal_Gpio * gpio)
     {
         memset(self, 0, sizeof(*self));
         _gpio = gpio;
     }
 
     // Will toggle the state of the LED
-    void hal_Led_toggle(hal_Led* self)
+    void hal_Led_toggle(hal_Led * self)
     {
         if (_gpio.hal_Gpio_read())
         {

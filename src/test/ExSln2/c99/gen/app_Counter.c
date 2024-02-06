@@ -4,7 +4,7 @@
 
 
 
-    void app_Counter_increment(app_Counter* self)
+    void app_Counter_increment(app_Counter * self)
     {
         _count += 1;
     }
