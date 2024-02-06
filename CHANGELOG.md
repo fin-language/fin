@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 --- 
 
-## [0.1.6-alpha]
+## [0.2.0-alpha]
 ### Fixed
 - fix ambiguous cast between fin types
 
