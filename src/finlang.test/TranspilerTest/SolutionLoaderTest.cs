@@ -11,7 +11,7 @@ public class SolutionLoaderTest
     public void LoadSolution()
     {
         Solution solution = WorkspaceLoader.LoadSolution(PathHelpers.GetThisDir() + "../../test/ExSln2/ExSln2.sln");
-        solution.Projects.Count().Should().Be(3);
+        solution.Projects.Count().Should().Be(4);
     }
 
     [Fact]
