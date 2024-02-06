@@ -36,6 +36,7 @@
         b = (uint8_t)my_i32;
         b = (uint8_t)(a + my_i32);
         b = (uint8_t)my_i32;
+        b = (uint8_t)my_i32;
 
         return self->_toggle_at_ms + 20; //u32_ is self-declaration
     }

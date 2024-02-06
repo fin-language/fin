@@ -27,8 +27,10 @@ Test/interim releases are not documented here.
 ## wip
 ### Added
 - Transpiler - support narrowing casts.
-    - `b = (u8)my_i32;` --> `b = (uint8_t)my_i32;`
-
+    - ex: `b = (u8)my_i32;` --> `b = (uint8_t)my_i32;`
+- Transpiler - support `u8.narrow_from(some_arg)`
+    - ex: `u8.narrow_from(my_i32)` --> `(uint8_t)my_i32`
+    
 --- 
 
 ## [0.2.1-alpha]

@@ -271,6 +271,19 @@ public class CFileGenerator : CSharpSyntaxWalker
                     done = true;
                 }
             }
+            // handle `u8.narrow_from(my_i32)` --> `(uint8_t)my_i32`
+            else if (methodNameSymbol.Name == "narrow_from")
+            {
+                var finType = methodNameSymbol.ContainingType.Name;
+                string? ctype = FinNumberTypeToCType(finType);
+                if (ctype != null)
+                {
+                    VisitLeadingTrivia(ies);
+                    sb.Append($"({ctype})");
+                    Visit(ies.ArgumentList.Arguments.Single());
+                    done = true;
+                }
+            }
         }
 
         return done;

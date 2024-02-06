@@ -40,6 +40,7 @@ public class MainApp : FinObj
         b = my_i32.narrow_to_u8();
         b = (a + my_i32).narrow_to_u8();
         b = (u8)my_i32;
+        b = u8.narrow_from(my_i32);
 
         return _toggle_at_ms.u32_ + 20; //u32_ is self-declaration
     }
