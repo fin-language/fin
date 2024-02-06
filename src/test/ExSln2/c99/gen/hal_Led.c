@@ -14,12 +14,12 @@
     // Will toggle the state of the LED
     void hal_Led_toggle(hal_Led * self)
     {
-        if (_gpio.hal_Gpio_read())
+        if (hal_Gpio_read(_gpio))
         {
-            _gpio.hal_Gpio_write(false); // Turn off
+            hal_Gpio_write(_gpio, false); // Turn off
         }
         else
         {
-            _gpio.hal_Gpio_write(true); // Turn on
+            hal_Gpio_write(_gpio, true); // Turn on
         }
     }

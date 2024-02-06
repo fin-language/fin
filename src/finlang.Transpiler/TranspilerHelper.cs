@@ -6,23 +6,23 @@ using System.Text;
 
 namespace finlang.Transpiler;
 
-public class GilTranspilerHelper
+public class TranspilerHelper
 {
     private readonly CSharpSyntaxWalker transpilerWalker;
     public readonly SemanticModel model;
     public readonly CompilationUnitSyntax root;
 
-    public GilTranspilerHelper(CSharpSyntaxWalker transpilerWalker, SemanticModel model, CompilationUnitSyntax? root = null)
+    public TranspilerHelper(CSharpSyntaxWalker transpilerWalker, SemanticModel model, CompilationUnitSyntax? root = null)
     {
         this.transpilerWalker = transpilerWalker;
         this.model = model;
         this.root = root ?? model.SyntaxTree.GetCompilationUnitRoot();
     }
 
-    public static GilTranspilerHelper Create(CSharpSyntaxWalker transpilerWalker, string gilCode)
+    public static TranspilerHelper Create(CSharpSyntaxWalker transpilerWalker, string gilCode)
     {
         Compile(gilCode, out var root, out var model);
-        return new GilTranspilerHelper(transpilerWalker, model, root);
+        return new TranspilerHelper(transpilerWalker, model, root);
     }
 
     //public void PreProcess()

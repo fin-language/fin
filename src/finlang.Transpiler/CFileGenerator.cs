@@ -10,7 +10,16 @@ public class CFileGenerator : CSharpSyntaxWalker
     C99ClsEnum cls;
     private SemanticModel model;
     StringBuilder sb;
+
+    /// <summary>
+    /// Used to add arguments to a function call. Used for passing an object to its own method call.
+    /// This eventually needs to be made into a stack of string builders, so that nested calls can be handled.
+    /// </summary>
+    StringBuilder firstArgsSb = new();
+    bool skipNextLeadingTrivia = false; // probably needs to be a stack as well
+
     Namer namer;
+    TranspilerHelper transpilerHelper;
 
     public CFileGenerator(C99ClsEnum cls) : base(SyntaxWalkerDepth.StructuredTrivia)
     {
@@ -18,6 +27,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         this.model = cls.model;
         sb = cls.cFile.mainCode;
         namer = new Namer(model);
+        transpilerHelper = new(this, model);
     }
 
     public void Generate()
@@ -94,6 +104,122 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
     }
 
+
+    // <Expression> <OperatorToken> <Name>
+    // `this.stuff` this == Expression. stuff == Name.
+    public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
+    {
+        bool done = false;
+
+        if (transpilerHelper.ExpressionIsEnumMember(node.Expression))
+        {
+            // used for enum access: `MyEnumClass.EnumName`
+            Visit(node.Name);
+            done = true;
+        }
+        else if (transpilerHelper.HandleThisMethodAccess(node))
+        {
+            done = true;
+        }
+        else
+        {
+            if (node.IsSimpleMemberAccess())
+            {
+                if (node.Parent is InvocationExpressionSyntax ies)
+                {
+                    done = HandleSimpleMemberInvocation(node);
+                }
+                else
+                {
+                    done = HandleSimpleMemberAccess(node);
+                }
+            }
+        }
+
+        if (!done)
+            base.VisitMemberAccessExpression(node);
+    }
+
+    private bool HandleSimpleMemberInvocation(MemberAccessExpressionSyntax node)
+    {
+        // led.toggle() to led_toggle(led)
+
+        StringBuilder renderedExpression = new();
+        var oldSb = sb;
+        sb = renderedExpression;
+        skipNextLeadingTrivia = true;
+        Visit(node.Expression);
+        firstArgsSb = renderedExpression;
+        sb = oldSb;
+
+        VisitLeadingTrivia(node);
+        Visit(node.Name);
+        VisitTrailingTrivia(node);
+        return true;
+    }
+
+    public override void VisitArgumentList(ArgumentListSyntax node)
+    {
+        var list = new WalkableChildSyntaxList(this, node.ChildNodesAndTokens());
+        list.VisitUpTo(node.OpenParenToken, including: true);
+
+        if (firstArgsSb.Length > 0)
+        {
+            sb.Append(firstArgsSb);
+            firstArgsSb.Clear();
+        }
+
+        if (node.Arguments.Count > 0)
+        {
+            sb.Append(", ");
+        }
+
+        list.VisitRest();
+    }
+
+    private bool HandleSimpleMemberAccess(MemberAccessExpressionSyntax node)
+    {
+        bool isPtr = false;
+
+        if (node.Expression is ThisExpressionSyntax tes)
+        {
+            // `this.stuff` to `sm->stuff`
+            VisitLeadingTrivia(tes.Token);
+            sb.Append("sm");
+            VisitTrailingTrivia(tes.Token);
+            isPtr = true;
+        }
+        // `sm.stuff` to `sm->stuff`
+        else if (node.Expression is IdentifierNameSyntax identifierNameSyntax)
+        {
+            ISymbol? symbol = model.GetSymbolInfo(identifierNameSyntax).Symbol;
+
+            if (symbol is IParameterSymbol parameterSymbol && parameterSymbol.Type.IsReferenceType)
+            {
+                Visit(identifierNameSyntax);
+                isPtr = true;
+            }
+        }
+        else
+        {
+            Visit(node.Expression);
+        }
+
+        if (isPtr)
+        {
+            sb.Append("->");
+            VisitTrailingTrivia(node.OperatorToken);
+        }
+        else
+        {
+            VisitToken(node.OperatorToken);
+        }
+
+        Visit(node.Name);
+        bool done = true;
+        return done;
+    }
+
     ///////////////////////////////////////////////////////////////////////////////
 
     public override void VisitPredefinedType(PredefinedTypeSyntax node)
@@ -159,6 +285,12 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitLeadingTrivia(SyntaxToken token)
     {
+        if (skipNextLeadingTrivia)
+        {
+            skipNextLeadingTrivia = false;
+            return;
+        }
+
         if (!token.HasLeadingTrivia)
             return;
 
@@ -198,7 +330,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     private void OutputAttachedCommentTrivia(SyntaxNode node)
     {
-        List<SyntaxTrivia> toOutput = GilTranspilerHelper.GetAttachedCommentTrivia(node);
+        List<SyntaxTrivia> toOutput = TranspilerHelper.GetAttachedCommentTrivia(node);
         VisitTriviaList(toOutput);
     }
 
