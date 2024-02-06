@@ -92,11 +92,19 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         var parameterSymbol = model.GetDeclaredSymbol(node);
 
+        // if the parameter is a reference type, add a star to the type
         if (parameterSymbol != null && parameterSymbol.Type.IsReferenceType)
         {
-            Visit(node.Type);
-            sb.Append("* ");
-            VisitToken(node.Identifier);
+            if (parameterSymbol.Type.Name == "c_array")
+            {
+                // type already has a star
+            }
+            else
+            {
+                Visit(node.Type);
+                sb.Append("* ");
+                VisitToken(node.Identifier);
+            }
         }
         else
         {
@@ -443,6 +451,18 @@ public class CFileGenerator : CSharpSyntaxWalker
     public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
         base.VisitAssignmentExpression(node);
+    }
+
+    public override void VisitGenericName(GenericNameSyntax node)
+    {
+        if (node.Identifier.Text == "c_array")
+        {
+            VisitLeadingTrivia(node);
+            Visit(node.TypeArgumentList.Arguments[0]);
+            sb.Append(" * ");
+            return;
+        }
+        base.VisitGenericName(node);
     }
 
     public override void VisitIdentifierName(IdentifierNameSyntax node)
