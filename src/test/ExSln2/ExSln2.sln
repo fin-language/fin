@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LedBlinker", "LedBlinker\Le
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "tests\Tests.csproj", "{3AD6CA16-6B1F-4D4E-8B83-D8784FDAEC40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranspileRunner", "TranspileRunner\TranspileRunner.csproj", "{9C127CA0-3C9D-4F51-97CB-0897281BC12B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3AD6CA16-6B1F-4D4E-8B83-D8784FDAEC40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AD6CA16-6B1F-4D4E-8B83-D8784FDAEC40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AD6CA16-6B1F-4D4E-8B83-D8784FDAEC40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C127CA0-3C9D-4F51-97CB-0897281BC12B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C127CA0-3C9D-4F51-97CB-0897281BC12B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C127CA0-3C9D-4F51-97CB-0897281BC12B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C127CA0-3C9D-4F51-97CB-0897281BC12B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

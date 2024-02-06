@@ -1,5 +1,4 @@
 ﻿using finlang;
-using Hal;
 
 namespace hal;
 
@@ -8,11 +7,9 @@ namespace hal;
 /// and the function definitions
 /// </summary>
 [ffi]
-[simonly]
 public class Gpio : FinObj
 {
     public bool _state;
-
 
     public bool read()
     {
