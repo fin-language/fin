@@ -28,6 +28,7 @@ public class MainApp : FinObj
     public u32 self_declaration_example()
     {
         math.unsafe_mode();
+        Helper.calc_stuff(3, 77); // FIXME: add dependency to c file
         return _toggle_at_ms.u32_ + 20; //u32_ is self-declaration
     }
 }

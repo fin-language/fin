@@ -127,7 +127,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             {
                 if (node.Parent is InvocationExpressionSyntax ies)
                 {
-                    done = HandleSimpleMemberInvocation(node);
+                    done = HandleSimpleMemberInvocation(node, ies);
                 }
                 else
                 {
@@ -140,17 +140,26 @@ public class CFileGenerator : CSharpSyntaxWalker
             base.VisitMemberAccessExpression(node);
     }
 
-    private bool HandleSimpleMemberInvocation(MemberAccessExpressionSyntax node)
+    private bool HandleSimpleMemberInvocation(MemberAccessExpressionSyntax node, InvocationExpressionSyntax ies)
     {
-        // led.toggle() to led_toggle(led)
+        // for non-virtual instance methods: led.toggle() to led_toggle(led)
+        // for static methods: Led.toggle() to Led_toggle()
 
-        StringBuilder renderedExpression = new();
-        var oldSb = sb;
-        sb = renderedExpression;
-        skipNextLeadingTrivia = true;
-        Visit(node.Expression);
-        firstArgsSb = renderedExpression;
-        sb = oldSb;
+        IMethodSymbol ims = (IMethodSymbol)model.GetSymbolInfo(node.Name).Symbol.ThrowIfNull();
+        if (ims.IsStatic)
+        {
+            // no need to provide the object as an argument
+        }
+        else
+        {
+            StringBuilder renderedExpression = new();
+            var oldSb = sb;
+            sb = renderedExpression;
+            skipNextLeadingTrivia = true;
+            Visit(node.Expression);
+            firstArgsSb = renderedExpression;
+            sb = oldSb;
+        }
 
         VisitLeadingTrivia(node);
         Visit(node.Name);
@@ -167,11 +176,11 @@ public class CFileGenerator : CSharpSyntaxWalker
         {
             sb.Append(firstArgsSb);
             firstArgsSb.Clear();
-        }
 
-        if (node.Arguments.Count > 0)
-        {
-            sb.Append(", ");
+            if (node.Arguments.Count > 0)
+            {
+                sb.Append(", ");
+            }
         }
 
         list.VisitRest();
