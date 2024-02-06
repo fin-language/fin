@@ -5,7 +5,7 @@ namespace app;
 
 public class MainApp : FinObj
 {
-    u16 period_ms;
+    u16 period_ms; // keep without underscore so that `this.` is required in constructor
     u32 _toggle_at_ms;
     readonly Led _redLed;
 
