@@ -354,6 +354,11 @@ public class CFileGenerator : CSharpSyntaxWalker
         VisitTrailingTrivia(node);
     }
 
+    public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
+    {
+        base.VisitAssignmentExpression(node);
+    }
+
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
         var result = node.Identifier.Text;
@@ -375,6 +380,14 @@ public class CFileGenerator : CSharpSyntaxWalker
             default:
                 {
                     SymbolInfo symbol = model.GetSymbolInfo(node);
+                    
+                    // support field accesses
+                    if (symbol.Symbol is IFieldSymbol fs)
+                    {
+                        result = "self->" + Namer.GetCName(fs);
+                        break;
+                    }
+
                     result = Namer.GetCName(symbol.Symbol.ThrowIfNull());
                     break;
                 }

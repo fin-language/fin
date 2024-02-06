@@ -6,5 +6,5 @@
 
     void app_Counter_increment(app_Counter * self)
     {
-        _count += 1;
+        self->_count += 1;
     }
