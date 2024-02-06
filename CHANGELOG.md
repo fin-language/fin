@@ -24,6 +24,13 @@ Test/interim releases are not documented here.
 
 --- 
 
+## [wip]
+### Added
+- Moved Transpiler into main finlang nuget package
+- `transpiler.GetListOfAllGeneratedFiles()`
+
+--- 
+
 ## [0.2.0-alpha]
 ### Fixed
 - fix ambiguous cast between fin types

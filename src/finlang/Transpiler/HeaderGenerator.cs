@@ -2,9 +2,9 @@
 
 namespace finlang.Transpiler;
 
-public class C99HeaderGenerator
+public class HeaderGenerator
 {
-    public C99HeaderGenerator(SemanticModel model, Namer namer)
+    public HeaderGenerator(SemanticModel model, Namer namer)
     {
     }
 

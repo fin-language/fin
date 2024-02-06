@@ -6,7 +6,7 @@ using System.Text;
 
 namespace finlang.Transpiler;
 
-public class C99Transpiler
+public class Transpiler
 {
     private string destinationDirPath;
     private string solutionPath;
@@ -15,7 +15,7 @@ public class C99Transpiler
     public List<C99ClsEnum> c99ClassEnum = new();
     public Dictionary<string, C99ClsEnum> fqnToC99Class = new();
 
-    public C99Transpiler(string destinationDirPath, string solutionPath, string projectName)
+    public Transpiler(string destinationDirPath, string solutionPath, string projectName)
     {
         this.destinationDirPath = destinationDirPath;
         this.solutionPath = solutionPath;
@@ -103,7 +103,7 @@ public class C99Transpiler
         foreach (var cls in c99ClassEnum)
         {
             Namer namer = new(cls.model);
-            C99HeaderGenerator gen = new(cls.model, namer);
+            HeaderGenerator gen = new(cls.model, namer);
 
             gen.GenerateStruct(cls);
             gen.GenerateFunctionPrototypes(cls);
@@ -199,6 +199,20 @@ public class C99Transpiler
                 cls.cFile.WriteToFile(destinationDirPath);
             }
         }
+    }
+
+    public List<string> GetListOfAllGeneratedFiles()
+    {
+        List<string> result = new();
+        foreach (var cls in c99ClassEnum)
+        {
+            result.Add(cls.hFile.relativeFilePath.ThrowIfNull());
+            if (!cls.IsFFI)
+            {
+                result.Add(cls.cFile.relativeFilePath.ThrowIfNull());
+            }
+        }
+        return result;
     }
 
     public void GenerateAndWrite()

@@ -8,7 +8,7 @@ public class C99TranspilerTest
 {
     string slnPath = ExSln2Fixture.GetSlnPath();
     string destDirPath = ExSln2Fixture.GetSlnDir() + "/c99/gen/";
-    C99Transpiler transpiler;
+    Transpiler.Transpiler transpiler;
 
     public C99TranspilerTest()
     {
@@ -40,6 +40,18 @@ public class C99TranspilerTest
     public void GenerateFiles()
     {
         transpiler.GenerateAndWrite();
+
+        transpiler.GetListOfAllGeneratedFiles().Should().BeEquivalentTo(
+            "app_MainApp.h",
+            "app_MainApp.c",
+            "hal_Led.h",
+            "hal_Led.c",
+            "hal_Gpio.h",
+            "app_Counter.h",
+            "app_Counter.c",
+            "hal_Helper.h",
+            "hal_Helper.c"
+        );
     }
 }
 

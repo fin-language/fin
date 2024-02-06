@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace finlang.TranspilerTest;
+namespace finlang.Transpiler;
 
 public class PathHelpers
 {
