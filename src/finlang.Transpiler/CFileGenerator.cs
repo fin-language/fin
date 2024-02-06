@@ -191,7 +191,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     private bool HandleSimpleMemberAccess(MemberAccessExpressionSyntax node)
     {
-        ISymbol nameSymbol = model.GetSymbolInfo(node.Name).Symbol.ThrowIfNull();
+        ISymbol memberNameSymbol = model.GetSymbolInfo(node.Name).Symbol.ThrowIfNull();
         //string nameFqn = nameSymbol.GetFqn();
 
         if (node.Expression is ThisExpressionSyntax tes)
@@ -202,12 +202,12 @@ public class CFileGenerator : CSharpSyntaxWalker
             return true;
         }
 
-        return TryHandleFinSpecials(node, nameSymbol);
+        return TryHandleFinSpecials(node, memberNameSymbol);
     }
 
     public override void VisitExpressionStatement(ExpressionStatementSyntax node)
     {
-        // detect `finlang.unsafe_mode()`
+        // handle `finlang.unsafe_mode()`
         if (node.Expression is InvocationExpressionSyntax ies)
         {
             if (ies.Expression is MemberAccessExpressionSyntax maes)
@@ -226,24 +226,64 @@ public class CFileGenerator : CSharpSyntaxWalker
         base.VisitExpressionStatement(node);
     }
 
-    private bool TryHandleFinSpecials(MemberAccessExpressionSyntax node, ISymbol nameSymbol)
+    public override void VisitInvocationExpression(InvocationExpressionSyntax ies)
     {
-        if (nameSymbol.ContainingNamespace.Name != "finlang")
-            return false;
+        bool done = false;
 
-        if (TryFinWideningOrWrapping(node, nameSymbol))
-            return true;
+        if (ies.Expression is MemberAccessExpressionSyntax maes)
+        {
+            ISymbol methodNameSymbol = model.GetSymbolInfo(maes.Name).Symbol.ThrowIfNull();
+            if (methodNameSymbol.ContainingNamespace.Name == "finlang")
+            {
+                done = TryFinInvocations(ies, maes, methodNameSymbol);
+            }
+        }
 
-        if (TryFinSelfDeclaration(node, nameSymbol))
-            return true;
+        if (!done)
+            base.VisitInvocationExpression(ies);
+    }
+
+    private bool TryFinInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, ISymbol methodNameSymbol)
+    {
+        bool done = false;
+
+        if (methodNameSymbol.BelongsToFinlangInteger())
+        {
+            // handle `u8.from(42)` --> `42`
+            if (methodNameSymbol.Name == "from")
+            {
+                VisitLeadingTrivia(ies);
+                // get the argument
+                var arg = ies.ArgumentList.Arguments[0].Expression;
+                Visit(arg);
+                done = true;
+            }
+        }
+
+        return done;
+    }
+
+    private bool TryHandleFinSpecials(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
+    {
+        //if (memberNameSymbol.ContainingNamespace.Name != "finlang")
+        //    return false;
+
+        if (memberNameSymbol.BelongsToFinlangInteger())
+        {
+            if (TryFinWideningOrWrapping(node, memberNameSymbol))
+                return true;
+
+            if (TryFinSelfDeclaration(node, memberNameSymbol))
+                return true;
+        }
 
         return false;
     }
 
-    private bool TryFinSelfDeclaration(MemberAccessExpressionSyntax node, ISymbol nameSymbol)
+    private bool TryFinSelfDeclaration(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
     {
         bool found = false;
-        switch (nameSymbol.Name)
+        switch (memberNameSymbol.Name)
         {
             case "u8_":
             case "u16_":
@@ -259,19 +299,22 @@ public class CFileGenerator : CSharpSyntaxWalker
                 break;
         }
 
-        // in this case, we just visit the expression
-        Visit(node.Expression);
-        VisitTrailingTrivia(node.Name);
+        if (found)
+        {
+            // in this case, we just visit the expression
+            Visit(node.Expression);
+            VisitTrailingTrivia(node.Name);
+        }
 
         return found;
     }
 
-    private bool TryFinWideningOrWrapping(MemberAccessExpressionSyntax node, ISymbol nameSymbol)
+    private bool TryFinWideningOrWrapping(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
     {
         string? castType = null;
         bool handled = false;
 
-        switch (nameSymbol.Name)
+        switch (memberNameSymbol.Name)
         {
             case "u8": castType = "uint8_t"; break;
             case "u16": castType = "uint16_t"; break;

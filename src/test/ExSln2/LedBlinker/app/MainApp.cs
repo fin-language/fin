@@ -31,6 +31,7 @@ public class MainApp : FinObj
     {
         math.unsafe_mode();
         Helper.calc_stuff(3, 77);
+        u8 a = u8.from(55);
         return _toggle_at_ms.u32_ + 20; //u32_ is self-declaration
     }
 }

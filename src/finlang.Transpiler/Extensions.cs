@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Security.Policy;
 using System.Text;
 
 namespace finlang.Transpiler;
@@ -118,6 +119,27 @@ public static class Extensions
     {
         if (node == null) return false;
         return node.Modifiers.HasModifier(SyntaxKind.ReadOnlyKeyword);
+    }
+
+    public static bool BelongsToFinlangInteger(this ISymbol symbol)
+    {
+        if (symbol.ContainingNamespace.Name != "finlang")
+            return false;
+
+        switch (symbol.ContainingType.Name)
+        {
+            case "u8":
+            case "u16":
+            case "u32":
+            case "u64":
+            case "i8":
+            case "i16":
+            case "i32":
+            case "i64":
+                return true;
+        }
+
+        return false;
     }
 
     public static string GetFqn(this ISymbol symbol)
