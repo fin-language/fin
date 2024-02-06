@@ -262,7 +262,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             else if (methodNameSymbol.Name.StartsWith("narrow_to_"))
             {
                 var finType = methodNameSymbol.Name.Substring("narrow_to_".Length);
-                string? ctype = FinTypeToCType(finType);
+                string? ctype = FinNumberTypeToCType(finType);
                 if (ctype != null)
                 {
                     VisitLeadingTrivia(ies);
@@ -274,6 +274,25 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         return done;
+    }
+
+    public override void VisitCastExpression(CastExpressionSyntax node)
+    {
+        var symbol = model.GetSymbolInfo(node.Type).Symbol.ThrowIfNull();
+
+        if (symbol.ContainingNamespace.Name == "finlang")
+        {
+            string? ctype = FinNumberTypeToCType(symbol.Name);
+
+            if (ctype != null)
+            {
+                sb.Append($"({ctype})");
+                Visit(node.Expression);
+                return;
+            }
+        }
+        
+        base.VisitCastExpression(node);
     }
 
     private bool TryHandleFinSpecials(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
@@ -322,7 +341,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         return found;
     }
 
-    private string? FinTypeToCType(string finType)
+    private string? FinNumberTypeToCType(string finType)
     {
         return finType switch
         {

@@ -32,9 +32,10 @@
         hal_Helper_calc_stuff(3, 77);
         uint8_t a = 55;
         uint8_t b;
-        int32_t i32 = 55;
-        b = (uint8_t)i32;
-        b = (uint8_t)(a + i32);
+        int32_t my_i32 = 55;
+        b = (uint8_t)my_i32;
+        b = (uint8_t)(a + my_i32);
+        b = (uint8_t)my_i32;
 
         return self->_toggle_at_ms + 20; //u32_ is self-declaration
     }

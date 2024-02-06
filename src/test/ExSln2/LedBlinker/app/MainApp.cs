@@ -36,9 +36,10 @@ public class MainApp : FinObj
         Helper.calc_stuff(3, 77);
         u8 a = u8.from(55);
         u8 b;
-        i32 i32 = 55;
-        b = i32.narrow_to_u8();
-        b = (a + i32).narrow_to_u8();
+        i32 my_i32 = 55;
+        b = my_i32.narrow_to_u8();
+        b = (a + my_i32).narrow_to_u8();
+        b = (u8)my_i32;
 
         return _toggle_at_ms.u32_ + 20; //u32_ is self-declaration
     }
