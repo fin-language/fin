@@ -21,7 +21,7 @@ public class ExSln2Fixture : ICollectionFixture<XunitSolutionLock>
 
     public static string GetSlnPath()
     {
-        return PathHelpers.GetThisDir() + "/../test/ExSln2/ExSln2.sln";
+        return PathHelpers.GetThisDir() + "/../../test/ExSln2/ExSln2.sln";
     }
 
     public static string GetSlnDir()
