@@ -24,6 +24,13 @@ Test/interim releases are not documented here.
 
 --- 
 
+## [0.1.6-alpha]
+### Added
+- fix ambiguous cast between fin types
+
+
+--- 
+
 ## [0.1.5-alpha]
 ### Added
 - integer self type declaration like `my_u16.u16_`

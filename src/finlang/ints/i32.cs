@@ -96,14 +96,6 @@ public struct i32: IHasI32
     //################################################################
     
     /// <summary>
-    /// Same as `narrow_to_u32`.
-    /// Narrowing conversion from i32 to u32 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator u32(i32 num) => num.narrow_to_u32();
-
-    /// <summary>
     /// Narrowing conversion from i32 to u32 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
@@ -129,14 +121,6 @@ public struct i32: IHasI32
         
         return unchecked((uint)value);
     }
-
-    /// <summary>
-    /// Same as `narrow_to_i16`.
-    /// Narrowing conversion from i32 to i16 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator i16(i32 num) => num.narrow_to_i16();
 
     /// <summary>
     /// Narrowing conversion from i32 to i16 when you don't expect data loss.
@@ -166,14 +150,6 @@ public struct i32: IHasI32
     }
 
     /// <summary>
-    /// Same as `narrow_to_u16`.
-    /// Narrowing conversion from i32 to u16 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator u16(i32 num) => num.narrow_to_u16();
-
-    /// <summary>
     /// Narrowing conversion from i32 to u16 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
@@ -201,14 +177,6 @@ public struct i32: IHasI32
     }
 
     /// <summary>
-    /// Same as `narrow_to_i8`.
-    /// Narrowing conversion from i32 to i8 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator i8(i32 num) => num.narrow_to_i8();
-
-    /// <summary>
     /// Narrowing conversion from i32 to i8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
@@ -234,14 +202,6 @@ public struct i32: IHasI32
         
         return unchecked((sbyte)value);
     }
-
-    /// <summary>
-    /// Same as `narrow_to_u8`.
-    /// Narrowing conversion from i32 to u8 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator u8(i32 num) => num.narrow_to_u8();
 
     /// <summary>
     /// Narrowing conversion from i32 to u8 when you don't expect data loss.
@@ -351,11 +311,6 @@ public struct i32: IHasI32
         return unchecked((int)value);
     }
 
-
-    //################################################################
-    // wrapping conversions (only for unsigned)
-    //################################################################
-    
     /// <summary>
     /// Narrowing conversion from i64 to i32 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
@@ -397,6 +352,13 @@ public struct i32: IHasI32
     ///// or an exception will be thrown during simulation (if math mode is unsafe).
     ///// </summary>
     public static explicit operator i32(ulong num) => i32.narrow_from(num);
+
+
+    //################################################################
+    // wrapping conversions (only for unsigned)
+    //################################################################
+    
+    
 
     //################################################################
     // comparisons

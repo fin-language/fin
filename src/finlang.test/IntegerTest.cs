@@ -750,7 +750,7 @@ public class IntegerTest
     }
 
     [Fact]
-    public void u8_cast()
+    public void u8_cast_literal()
     {
         math.unsafe_mode();
 
@@ -776,6 +776,150 @@ public class IntegerTest
 
         action = () => { my_int = 128; var x = (i8)my_int; }; action.Should().Throw<OverflowException>();
         action = () => { my_int = -1000; var x = (i8)my_int; }; action.Should().Throw<OverflowException>();
+    }
+
+    [Fact]
+    public void cast_between_types()
+    {
+        math.unsafe_mode();
+        u8 my_u8 = 0;
+        i8 my_i8 = 0;
+        u16 my_u16 = 0;
+        i16 my_i16 = 0;
+        u32 my_u32 = 0;
+        i32 my_i32 = 0;
+        u64 my_u64 = 0;
+        i64 my_i64 = 0;
+
+        // just make sure they compile
+        my_u8 = (u8)my_i8;
+        my_u8 = (u8)my_u16;
+        my_u8 = (u8)my_i16;
+        my_u8 = (u8)my_u32;
+        my_u8 = (u8)my_i32;
+        my_u8 = (u8)my_u64;
+        my_u8 = (u8)my_i64;
+        my_i8 = (i8)my_u8;
+        my_i8 = (i8)my_u16;
+        my_i8 = (i8)my_i16;
+        my_i8 = (i8)my_u32;
+        my_i8 = (i8)my_i32;
+        my_i8 = (i8)my_u64;
+        my_i8 = (i8)my_i64;
+        my_u16 = (u16)my_u8;
+        my_u16 = (u16)my_i8;
+        my_u16 = (u16)my_i16;
+        my_u16 = (u16)my_u32;
+        my_u16 = (u16)my_i32;
+        my_u16 = (u16)my_u64;
+        my_u16 = (u16)my_i64;
+        my_i16 = (i16)my_u8;
+        my_i16 = (i16)my_i8;
+        my_i16 = (i16)my_u16;
+        my_i16 = (i16)my_u32;
+        my_i16 = (i16)my_i32;
+        my_i16 = (i16)my_u64;
+        my_i16 = (i16)my_i64;
+        my_u32 = (u32)my_u8;
+        my_u32 = (u32)my_i8;
+        my_u32 = (u32)my_u16;
+        my_u32 = (u32)my_i16;
+        my_u32 = (u32)my_i32;
+        my_u32 = (u32)my_u64;
+        my_u32 = (u32)my_i64;
+        my_i32 = (i32)my_u8;
+        my_i32 = (i32)my_i8;
+        my_i32 = (i32)my_u16;
+        my_i32 = (i32)my_i16;
+        my_i32 = (i32)my_u32;
+    }
+
+    [Fact]
+    public void cast_overflow_from_another_type()
+    {
+        math.unsafe_mode();
+        u8 my_u8 = u8.MAX;
+        u16 my_u16 = u16.MAX;
+        u32 my_u32 = u32.MAX;
+        u64 my_u64 = u64.MAX;
+        i8 my_i8 = i8.MIN;
+        i16 my_i16 = i16.MIN;
+        i32 my_i32 = i32.MIN;
+        i64 my_i64 = i64.MIN;
+
+        Action action;
+        
+        action = () => { my_u8 = (u8)my_i8; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u8 = (u8)my_u16; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u8 = (u8)my_i16; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u8 = (u8)my_u32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u8 = (u8)my_i32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u8 = (u8)my_u64; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u8 = (u8)my_i64; }; action.Should().Throw<OverflowException>();
+        my_u8 = u8.MAX;
+
+        action = () => { my_i8 = (i8)my_u8; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i8 = (i8)my_u16; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i8 = (i8)my_i16; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i8 = (i8)my_u32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i8 = (i8)my_i32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i8 = (i8)my_u64; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i8 = (i8)my_i64; }; action.Should().Throw<OverflowException>();
+        my_i8 = i8.MIN;
+
+        action = () => { my_u16 = (u16)my_u8; }; action.Should().NotThrow();
+        action = () => { my_u16 = (u16)my_i8; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u16 = (u16)my_i16; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u16 = (u16)my_u32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u16 = (u16)my_i32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u16 = (u16)my_u64; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u16 = (u16)my_i64; }; action.Should().Throw<OverflowException>();
+        my_u16 = u16.MAX;
+
+        action = () => { my_i16 = (i16)my_u8; }; action.Should().NotThrow();
+        action = () => { my_i16 = (i16)my_i8; }; action.Should().NotThrow();
+        action = () => { my_i16 = (i16)my_u16; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i16 = (i16)my_u32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i16 = (i16)my_i32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i16 = (i16)my_u64; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i16 = (i16)my_i64; }; action.Should().Throw<OverflowException>();
+        my_i16 = i16.MIN;
+
+        action = () => { my_u32 = (u32)my_u8; }; action.Should().NotThrow();
+        action = () => { my_u32 = (u32)my_i8; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u32 = (u32)my_u16; }; action.Should().NotThrow();
+        action = () => { my_u32 = (u32)my_i16; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u32 = (u32)my_i32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u32 = (u32)my_u64; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u32 = (u32)my_i64; }; action.Should().Throw<OverflowException>();
+        my_u32 = u32.MAX;
+
+        action = () => { my_i32 = (i32)my_u8; }; action.Should().NotThrow();
+        action = () => { my_i32 = (i32)my_i8; }; action.Should().NotThrow();
+        action = () => { my_i32 = (i32)my_u16; }; action.Should().NotThrow();
+        action = () => { my_i32 = (i32)my_i16; }; action.Should().NotThrow();
+        action = () => { my_i32 = (i32)my_u32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i32 = (i32)my_u64; }; action.Should().Throw<OverflowException>();
+        action = () => { my_i32 = (i32)my_i64; }; action.Should().Throw<OverflowException>();
+        my_i32 = i32.MIN;
+
+        action = () => { my_u64 = (u64)my_u8; }; action.Should().NotThrow();
+        action = () => { my_u64 = (u64)my_i8; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u64 = (u64)my_u16; }; action.Should().NotThrow();
+        action = () => { my_u64 = (u64)my_i16; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u64 = (u64)my_u32; }; action.Should().NotThrow();
+        action = () => { my_u64 = (u64)my_i32; }; action.Should().Throw<OverflowException>();
+        action = () => { my_u64 = (u64)my_i64; }; action.Should().Throw<OverflowException>();
+        my_u64 = u64.MAX;
+
+        action = () => { my_i64 = (i64)my_u8; }; action.Should().NotThrow();
+        action = () => { my_i64 = (i64)my_i8; }; action.Should().NotThrow();
+        action = () => { my_i64 = (i64)my_u16; }; action.Should().NotThrow();
+        action = () => { my_i64 = (i64)my_i16; }; action.Should().NotThrow();
+        action = () => { my_i64 = (i64)my_u32; }; action.Should().NotThrow();
+        action = () => { my_i64 = (i64)my_i32; }; action.Should().NotThrow();
+        action = () => { my_i64 = (i64)my_u64; }; action.Should().Throw<OverflowException>();
+        my_i64 = i64.MIN;
     }
 
     [Fact]

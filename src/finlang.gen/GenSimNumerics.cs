@@ -156,7 +156,7 @@ public class GenSimNumerics
                 //narrowingCode = $"return ({destType.fin_name})num._csReadValue;";
             }
 
-            wrappingConversions += $$"""
+            narrowingConversions += $$"""
 
                     /// <summary>
                     /// Narrowing conversion from {{fromType}} to {{destType}} when you don't expect data loss.
@@ -225,16 +225,9 @@ public class GenSimNumerics
         {
             valueType = $"{typeInfo.GetBackingTypeName()}";
         }
+        string code = "";
 
-        var code = $$"""
-
-                    /// <summary>
-                    /// Same as `narrow_to_{{narrowTypeName}}`.
-                    /// Narrowing conversion from {{typeInfo.fin_name}} to {{narrowTypeName}} when you don't expect data loss.
-                    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-                    /// or an exception will be thrown during simulation (if math mode is unsafe).
-                    /// </summary>
-                    public static explicit operator {{narrowTypeName}}({{typeInfo.fin_name}} num) => num.narrow_to_{{narrowTypeName}}();
+        code += $$"""
 
                     /// <summary>
                     /// Narrowing conversion from {{typeInfo.fin_name}} to {{narrowTypeName}} when you don't expect data loss.
@@ -264,6 +257,7 @@ public class GenSimNumerics
                     }
 
                 """;
+
 
         return code;
     }

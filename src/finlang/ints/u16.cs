@@ -126,14 +126,6 @@ public struct u16: IHasU16
     //################################################################
     
     /// <summary>
-    /// Same as `narrow_to_i16`.
-    /// Narrowing conversion from u16 to i16 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator i16(u16 num) => num.narrow_to_i16();
-
-    /// <summary>
     /// Narrowing conversion from u16 to i16 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
@@ -161,14 +153,6 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// Same as `narrow_to_i8`.
-    /// Narrowing conversion from u16 to i8 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator i8(u16 num) => num.narrow_to_i8();
-
-    /// <summary>
     /// Narrowing conversion from u16 to i8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
     /// or an exception will be thrown during simulation (if math mode is unsafe).
@@ -194,14 +178,6 @@ public struct u16: IHasU16
         
         return unchecked((sbyte)value);
     }
-
-    /// <summary>
-    /// Same as `narrow_to_u8`.
-    /// Narrowing conversion from u16 to u8 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator u8(u16 num) => num.narrow_to_u8();
 
     /// <summary>
     /// Narrowing conversion from u16 to u8 when you don't expect data loss.
@@ -392,16 +368,6 @@ public struct u16: IHasU16
         return unchecked((ushort)value);
     }
 
-
-    //################################################################
-    // wrapping conversions (only for unsigned)
-    //################################################################
-    
-    /// <summary>
-    /// Safe explicit wrapping conversion. Truncates upper bits.
-    /// </summary>
-    public u8 wrap_u8 => unchecked((byte)this._csReadValue);
-
     /// <summary>
     /// Narrowing conversion from i8 to u16 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
@@ -485,6 +451,16 @@ public struct u16: IHasU16
     ///// or an exception will be thrown during simulation (if math mode is unsafe).
     ///// </summary>
     public static explicit operator u16(ulong num) => u16.narrow_from(num);
+
+
+    //################################################################
+    // wrapping conversions (only for unsigned)
+    //################################################################
+    
+    /// <summary>
+    /// Safe explicit wrapping conversion. Truncates upper bits.
+    /// </summary>
+    public u8 wrap_u8 => unchecked((byte)this._csReadValue);
 
     //################################################################
     // comparisons
