@@ -3,7 +3,6 @@
 #include "hal_Led.h"
 #include <stdio.h>
 
-bool fake_gpio_state = false;
 
 int main(void)
 {
@@ -28,14 +27,5 @@ int main(void)
     return 0;
 }
 
-bool hal_Gpio_read(hal_Gpio * self)
-{
-    return fake_gpio_state;
-}
 
-void hal_Gpio_write(hal_Gpio * self, bool state)
-{
-    fake_gpio_state = state;
-    printf("hal_Gpio_write(%d)\n", state);
-}
 
