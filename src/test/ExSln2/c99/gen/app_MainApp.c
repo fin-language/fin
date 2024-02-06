@@ -24,9 +24,14 @@
         }
     }
 
-    uint32_t app_MainApp_self_declaration_example(app_MainApp * self)
+    uint32_t app_MainApp_transpilation_test_stuff(app_MainApp * self)
     {
         hal_Helper_calc_stuff(3, 77);
         uint8_t a = 55;
+        uint8_t b;
+        int32_t i32 = 55;
+        b = (uint8_t)i32;
+        b = (uint8_t)(a + i32);
+
         return self->_toggle_at_ms + 20; //u32_ is self-declaration
     }

@@ -27,11 +27,16 @@ public class MainApp : FinObj
         }
     }
 
-    public u32 self_declaration_example()
+    public u32 transpilation_test_stuff()
     {
         math.unsafe_mode();
         Helper.calc_stuff(3, 77);
         u8 a = u8.from(55);
+        u8 b;
+        i32 i32 = 55;
+        b = i32.narrow_to_u8();
+        b = (a + i32).narrow_to_u8();
+
         return _toggle_at_ms.u32_ + 20; //u32_ is self-declaration
     }
 }

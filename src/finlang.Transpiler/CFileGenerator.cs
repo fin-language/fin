@@ -258,6 +258,19 @@ public class CFileGenerator : CSharpSyntaxWalker
                 Visit(arg);
                 done = true;
             }
+            // handle `my_u32.narrow_to_u8()` --> `(uint8_t)my_u32`
+            else if (methodNameSymbol.Name.StartsWith("narrow_to_"))
+            {
+                var finType = methodNameSymbol.Name.Substring("narrow_to_".Length);
+                string? ctype = FinTypeToCType(finType);
+                if (ctype != null)
+                {
+                    VisitLeadingTrivia(ies);
+                    sb.Append($"({ctype})");
+                    Visit(maes.Expression);
+                    done = true;
+                }
+            }
         }
 
         return done;
@@ -307,6 +320,24 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         return found;
+    }
+
+    private string? FinTypeToCType(string finType)
+    {
+        return finType switch
+        {
+            "u8" => "uint8_t",
+            "u16" => "uint16_t",
+            "u32" => "uint32_t",
+            "u64" => "uint64_t",
+            "i8" => "int8_t",
+            "i16" => "int16_t",
+            "i32" => "int32_t",
+            "i64" => "int64_t",
+            "f32" => "float",
+            "f64" => "double",
+            _ => null
+        };
     }
 
     private bool TryFinWideningOrWrapping(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
