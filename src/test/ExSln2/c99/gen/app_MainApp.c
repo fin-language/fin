@@ -13,7 +13,6 @@
 
     void app_MainApp_step(app_MainApp * self, uint32_t ms_time)
     {
-        finlang_math_unsafe_mode(finlang_math);
 
         if (ms_time >= _toggle_at_ms)
         {
@@ -25,6 +24,5 @@
 
     uint32_t app_MainApp_self_declaration_example(app_MainApp * self)
     {
-        finlang_math_unsafe_mode(finlang_math);
         return _toggle_at_ms + 20; //u32_ is self-declaration
     }

@@ -225,6 +225,27 @@ public class CFileGenerator : CSharpSyntaxWalker
         return done;
     }
 
+    public override void VisitExpressionStatement(ExpressionStatementSyntax node)
+    {
+        // detect `finlang.unsafe_mode()`
+        if (node.Expression is InvocationExpressionSyntax ies)
+        {
+            if (ies.Expression is MemberAccessExpressionSyntax maes)
+            {
+                if (maes.Expression is IdentifierNameSyntax ins && ins.Identifier.Text == "math")
+                {
+                    if (maes.Name.Identifier.Text == "unsafe_mode")
+                    {
+                        // do nothing
+                        return;
+                    }
+                }
+            }
+        }
+
+        base.VisitExpressionStatement(node);
+    }
+
     private bool TryHandleFinSpecials(MemberAccessExpressionSyntax node, ISymbol nameSymbol)
     {
         if (nameSymbol.ContainingNamespace.Name != "finlang")
