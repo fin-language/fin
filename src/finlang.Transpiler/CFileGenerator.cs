@@ -161,6 +161,9 @@ public class CFileGenerator : CSharpSyntaxWalker
             sb = oldSb;
         }
 
+        // add dependency
+        cls.cFile.AddFqnDependency(ims.ContainingType);
+
         VisitLeadingTrivia(node);
         Visit(node.Name);
         VisitTrailingTrivia(node);

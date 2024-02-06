@@ -130,8 +130,23 @@ public class C99Transpiler
         }
     }
 
+    public void OptimizeDependencies()
+    {
+        // don't include in .c file the same includes as in .h file
+        foreach (var cls in c99ClassEnum)
+        {
+            foreach (var dep in cls.hFile.fqnDependencies)
+            {
+                cls.cFile.fqnDependencies.Remove(dep);
+            }
+        }
+
+        // we could go further in the future and remove all dependencies that are already included in other files
+    }
+
     public void ResolveDependencies()
     {
+        OptimizeDependencies();
         DependencyResolver resolver = new(fqnToC99Class);
 
         foreach (var cls in c99ClassEnum)

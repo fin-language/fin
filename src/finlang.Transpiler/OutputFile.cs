@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.CodeAnalysis;
+using System.Text;
 
 namespace finlang.Transpiler;
 
@@ -30,5 +31,12 @@ public class OutputFile
         sw.Write(includesSb.ToString());
         sw.Write("\n\n");
         sw.Write(mainCode.ToString());
+    }
+
+    internal void AddFqnDependency(ITypeSymbol type)
+    {
+        var fqn = Namer.GetFqn(type);
+        if (fqn != "System.Void")
+            fqnDependencies.Add(fqn);
     }
 }

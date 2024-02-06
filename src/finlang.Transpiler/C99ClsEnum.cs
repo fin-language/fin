@@ -52,8 +52,6 @@ public class C99ClsEnum
 
     internal void AddHeaderFqnDependency(ITypeSymbol type)
     {
-        var fqn = Namer.GetFqn(type);
-        if (fqn != "System.Void")
-            hFile.fqnDependencies.Add(fqn);
+        hFile.AddFqnDependency(type);
     }
 }
