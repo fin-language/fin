@@ -29,6 +29,9 @@ Test/interim releases are not documented here.
 - Moved Transpiler into main finlang nuget package
 - `transpiler.GetListOfAllGeneratedFiles()`
 
+### Fixed
+- Transpiler supports XML doc comments `///`
+
 --- 
 
 ## [0.2.0-alpha]

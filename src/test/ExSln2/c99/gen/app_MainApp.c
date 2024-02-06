@@ -12,7 +12,10 @@
         self->_redLed = redLed;
         self->period_ms = period_ms;
     }
-
+    
+    /// <summary>
+    /// This is the main loop of the application.
+    /// </summary>
     void app_MainApp_step(app_MainApp * self, uint32_t ms_time)
     {
 

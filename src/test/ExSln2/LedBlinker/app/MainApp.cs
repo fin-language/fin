@@ -14,7 +14,10 @@ public class MainApp : FinObj
         _redLed = redLed;
         this.period_ms = period_ms;
     }
-
+    
+    /// <summary>
+    /// This is the main loop of the application.
+    /// </summary>
     public void step(u32 ms_time)
     {
         math.unsafe_mode();

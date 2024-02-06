@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
@@ -454,7 +454,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitTrivia(SyntaxTrivia trivia)
     {
-        sb.Append(trivia);
+        sb.Append(trivia.ToFullString()); // to full string required for XML doc comments
     }
 
     public override void VisitLeadingTrivia(SyntaxToken token)
