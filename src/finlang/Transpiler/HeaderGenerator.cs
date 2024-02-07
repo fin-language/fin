@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text;
 
 namespace finlang.Transpiler;
 
@@ -56,9 +57,9 @@ public class HeaderGenerator
     {
         var symbol = cls.symbol;
         CFileGenerator visitor = new(cls);
-        visitor.UseHFile();
+        var sb = new StringBuilder();
+        visitor.SetSb(sb);
         visitor.renderingPrototypes = true;
-        var sb = cls.hFile.mainCode;
 
         foreach (var node in cls.syntaxNode.ChildNodes())
         {
@@ -89,6 +90,9 @@ public class HeaderGenerator
                 cls.AddHeaderFqnDependency(param.Type);
             }
         }
+
+        var result = StringUtils.DeIndent(sb.ToString());
+        cls.hFile.mainCode.Append(result);
     }
 
 }

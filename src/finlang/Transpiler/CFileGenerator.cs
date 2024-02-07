@@ -31,6 +31,11 @@ public class CFileGenerator : CSharpSyntaxWalker
         transpilerHelper = new(this, model);
     }
 
+    public void SetSb(StringBuilder sb)
+    {
+        this.sb = sb;
+    }
+
     public void UseHFile()
     {
         sb = cls.hFile.mainCode;

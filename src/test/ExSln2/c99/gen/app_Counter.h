@@ -23,18 +23,18 @@ struct app_Counter
 };
 
 
-    void app_Counter_ctor(app_Counter * self, uint8_t * counts, uint8_t count_length);
+void app_Counter_ctor(app_Counter * self, uint8_t * counts, uint8_t count_length);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="index"></param>
-    /// <returns></returns>
-    uint8_t app_Counter_get(app_Counter * self, uint8_t index);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="index"></param>
+/// <returns></returns>
+uint8_t app_Counter_get(app_Counter * self, uint8_t index);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="index"></param>
-    /// <param name="value"></param>
-    void app_Counter_set(app_Counter * self, uint8_t index, uint8_t value);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="index"></param>
+/// <param name="value"></param>
+void app_Counter_set(app_Counter * self, uint8_t index, uint8_t value);

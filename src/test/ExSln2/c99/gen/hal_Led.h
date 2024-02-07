@@ -12,7 +12,7 @@ struct hal_Led
 };
 
 
-    void hal_Led_ctor(hal_Led * self, hal_Gpio * gpio);
+void hal_Led_ctor(hal_Led * self, hal_Gpio * gpio);
 
-    // Will toggle the state of the LED
-    void hal_Led_toggle(hal_Led * self);
+// Will toggle the state of the LED
+void hal_Led_toggle(hal_Led * self);
