@@ -4,12 +4,24 @@
 #include <stdint.h>
 
 
-typedef struct app_Counter app_Counter;  // forward declaration
+
+/// <summary>
+/// A simple counter class.
+/// </summary>
+typedef struct app_Counter app_Counter;
 struct app_Counter
 {
-    finlang_c_array * _counts;
-    uint32_t _count;
+    /// <summary>
+    /// The counts array.
+    /// </summary>
+    uint8_t * _counts;
+
+    /// <summary>
+    /// Another couple of fields.
+    /// </summary>
+    uint8_t _count_length, _index;
 };
 
-void app_Counter_ctor(app_Counter * self, finlang_c_array * counts);
-void app_Counter_increment(app_Counter * self);
+void app_Counter_ctor(app_Counter * self, finlang_c_array * counts, uint8_t count_length);
+uint8_t app_Counter_get(app_Counter * self, uint8_t index);
+void app_Counter_set(app_Counter * self, uint8_t index, uint8_t value);

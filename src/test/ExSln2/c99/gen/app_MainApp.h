@@ -6,10 +6,11 @@
 #include "hal_Led.h"
 
 
-typedef struct app_MainApp app_MainApp;  // forward declaration
+
+typedef struct app_MainApp app_MainApp;
 struct app_MainApp
 {
-    uint16_t period_ms;
+    uint16_t period_ms; // keep without underscore so that `this.` is required in constructor
     uint32_t _toggle_at_ms;
     hal_Led * _redLed;
 };

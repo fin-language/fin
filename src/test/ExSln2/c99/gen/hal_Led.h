@@ -4,7 +4,8 @@
 #include "hal_Gpio.h"
 
 
-typedef struct hal_Led hal_Led;  // forward declaration
+
+typedef struct hal_Led hal_Led;
 struct hal_Led
 {
     hal_Gpio * _gpio;

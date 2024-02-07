@@ -8,7 +8,7 @@ namespace finlang.Transpiler;
 public class CFileGenerator : CSharpSyntaxWalker
 {
     C99ClsEnum cls;
-    private SemanticModel model;
+    public SemanticModel model;
     StringBuilder sb;
 
     /// <summary>
@@ -30,9 +30,14 @@ public class CFileGenerator : CSharpSyntaxWalker
         transpilerHelper = new(this, model);
     }
 
+    public void UseHFile()
+    {
+        sb = cls.hFile.mainCode;
+    }
+
     public void Generate()
     {
-        // TODO private constants
+        // TODO public constants
 
         foreach (var member in cls.GetMethods())
         {
@@ -57,6 +62,66 @@ public class CFileGenerator : CSharpSyntaxWalker
         body.VisitChildrenNodesWithWalker(this);
         VisitToken(body.CloseBraceToken);
     }
+
+    public override void VisitVariableDeclaration(VariableDeclarationSyntax node)
+    {
+        // a variable declaration can be a field or a local variable. It doesn't contain the semicolon.
+        ITypeSymbol typeSymbol = model.GetTypeInfo(node.Type).Type.ThrowIfNull();
+
+        Visit(node.Type);
+        // ex: `c_array<u8> a, b;` --> `u8 * a, * b;`
+
+        // render the first one
+        {
+            if (typeSymbol.IsReferenceType && typeSymbol.Name != "c_array")
+                sb.Append($"* ");
+
+            VariableDeclaratorSyntax? variable = node.Variables.First();
+            Visit(variable);
+        }
+
+        // render the rest
+        for (int i = 1; i < node.Variables.Count; i++)
+        {
+            sb.Append(", ");
+
+            // handle the case 
+            if (typeSymbol.IsReferenceType || typeSymbol.Name == "c_array")
+            {
+                // This is a bit weird I know. Blame the programmers that declare multiple variables on the same line :)
+                // The problem is that the type of `c_array<uint8_t>` renders as `uint8_t *` with the pointer.
+                sb.Append($"* ");
+            }
+
+            VariableDeclaratorSyntax? variable = node.Variables[i];
+            Visit(variable);
+        }
+        //base.VisitVariableDeclaration(node);
+    }
+
+    //public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+    //{
+    //    ITypeSymbol? typeSymbol = model.GetTypeInfo(node.Declaration.Type).Type.ThrowIfNull();
+
+    //    Visit(node.Declaration.Type);
+
+    //    bool needsStar = typeSymbol.IsReferenceType;
+    //    string joiner = "";
+
+    //    foreach (var variable in node.Declaration.Variables)
+    //    {
+    //        sb.Append(joiner); joiner = ", ";
+    //        if (needsStar)
+    //            sb.Append($"* ");
+
+    //        visitor.Visit(variable);
+    //    }
+    //    sb.Append(";");
+    //    visitor.VisitTrailingTrivia(fds);
+
+    //    //base.VisitFieldDeclaration(node);
+    //}
+
 
     // parameters are declared for methods and constructors
     public override void VisitParameterList(ParameterListSyntax node)
@@ -148,7 +213,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             base.VisitMemberAccessExpression(node);
     }
 
-    private bool HandleSimpleMemberInvocation(MemberAccessExpressionSyntax node, InvocationExpressionSyntax ies)
+    public bool HandleSimpleMemberInvocation(MemberAccessExpressionSyntax node, InvocationExpressionSyntax ies)
     {
         // for non-virtual instance methods: led.toggle() to led_toggle(led)
         // for static methods: Led.toggle() to Led_toggle()
@@ -197,7 +262,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         list.VisitRest();
     }
 
-    private bool HandleSimpleMemberAccess(MemberAccessExpressionSyntax node)
+    public bool HandleSimpleMemberAccess(MemberAccessExpressionSyntax node)
     {
         ISymbol memberNameSymbol = model.GetSymbolInfo(node.Name).Symbol.ThrowIfNull();
         //string nameFqn = nameSymbol.GetFqn();
@@ -251,7 +316,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             base.VisitInvocationExpression(ies);
     }
 
-    private bool TryFinInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, ISymbol methodNameSymbol)
+    public bool TryFinInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, ISymbol methodNameSymbol)
     {
         bool done = false;
 
@@ -316,7 +381,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         base.VisitCastExpression(node);
     }
 
-    private bool TryHandleFinSpecials(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
+    public bool TryHandleFinSpecials(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
     {
         //if (memberNameSymbol.ContainingNamespace.Name != "finlang")
         //    return false;
@@ -333,7 +398,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         return false;
     }
 
-    private bool TryFinSelfDeclaration(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
+    public bool TryFinSelfDeclaration(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
     {
         bool found = false;
         switch (memberNameSymbol.Name)
@@ -362,7 +427,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         return found;
     }
 
-    private string? FinNumberTypeToCType(string finType)
+    public string? FinNumberTypeToCType(string finType)
     {
         return finType switch
         {
@@ -380,7 +445,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         };
     }
 
-    private bool TryFinWideningOrWrapping(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
+    public bool TryFinWideningOrWrapping(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
     {
         string? castType = null;
         bool handled = false;
@@ -544,17 +609,17 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
     }
 
-    private void VisitLeadingTrivia(SyntaxNode node)
+    public void VisitLeadingTrivia(SyntaxNode node)
     {
         VisitLeadingTrivia(node.GetFirstToken());
     }
 
-    private void VisitTrailingTrivia(SyntaxNode node)
+    public void VisitTrailingTrivia(SyntaxNode node)
     {
         VisitTrailingTrivia(node.GetFirstToken());
     }
 
-    private void OutputAttachedCommentTrivia(SyntaxNode node)
+    public void OutputAttachedCommentTrivia(SyntaxNode node)
     {
         List<SyntaxTrivia> toOutput = TranspilerHelper.GetAttachedCommentTrivia(node);
         VisitTriviaList(toOutput);

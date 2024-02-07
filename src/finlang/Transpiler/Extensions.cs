@@ -121,6 +121,12 @@ public static class Extensions
         return node.Modifiers.HasModifier(SyntaxKind.ReadOnlyKeyword);
     }
 
+    // get syntax node parent
+    public static SyntaxNode ParentNotNull(this SyntaxNode node)
+    {
+        return node.Parent.ThrowIfNull();
+    }
+
     public static bool BelongsToFinlangInteger(this ISymbol symbol)
     {
         if (symbol.ContainingNamespace.Name != "finlang")

@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace finlang.Transpiler;
 
@@ -13,6 +14,8 @@ public class HeaderGenerator
         var symbol = cls.symbol;
         var structName = cls.GetCName();
         var sb = cls.hFile.mainCode;
+        CFileGenerator visitor = new(cls);
+        visitor.UseHFile();
 
         // don't generate a struct for FFI classes
         if (cls.IsFFI)
@@ -27,17 +30,21 @@ public class HeaderGenerator
             return;
         }
 
-        sb.AppendLine($"typedef struct {structName} {structName};  // forward declaration");
+        ClassDeclarationSyntax clsDeclSyntax = cls.syntaxNode;
+        visitor.VisitLeadingTrivia(clsDeclSyntax);
+        sb.AppendLine($"typedef struct {structName} {structName};");
         sb.AppendLine($"struct {structName}");
         sb.AppendLine("{");
+
+        foreach (var field in cls.syntaxNode.ChildNodes().OfType<FieldDeclarationSyntax>())
+        {
+            if (!field.IsConst())
+                visitor.VisitFieldDeclaration(field);
+        }
 
         foreach (var field in cls.GetInstanceFields())
         {
             cls.AddHeaderFqnDependency(field.Type);
-            var fieldName = field.Name;
-            var fieldType = Namer.GetCName(field.Type);
-            var starOrSpace = field.Type.IsReferenceType ? " * " : " ";
-            sb.AppendLine($"    {fieldType}{starOrSpace}{fieldName};");
         }
 
         sb.AppendLine("};");
