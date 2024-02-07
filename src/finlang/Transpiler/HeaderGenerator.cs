@@ -6,13 +6,12 @@ namespace finlang.Transpiler;
 
 public class HeaderGenerator
 {
-    public HeaderGenerator(SemanticModel model, Namer namer)
+    public HeaderGenerator()
     {
     }
 
     public void GenerateStruct(C99ClsEnum cls)
     {
-        var symbol = cls.symbol;
         var structName = cls.GetCName();
         CFileGenerator visitor = new(cls);
         visitor.UseHFile();
@@ -55,7 +54,6 @@ public class HeaderGenerator
 
     public void GenerateFunctionPrototypes(C99ClsEnum cls)
     {
-        var symbol = cls.symbol;
         CFileGenerator visitor = new(cls);
         var sb = new StringBuilder();
         visitor.SetSb(sb);
