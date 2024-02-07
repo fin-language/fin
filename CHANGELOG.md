@@ -24,6 +24,13 @@ Test/interim releases are not documented here.
 
 ---
 
+## WIP
+### Added
+- Transpiler - support fin numeric `wrap_lshift()`
+    - ex: `(my_u8 + 10).wrap_lshift(i + 2)` --> `(uint8_t)((my_u8 + 10) << (i + 2))`
+
+---
+
 ## [0.2.2-alpha]
 ### Added
 - Transpiler - support narrowing casts.

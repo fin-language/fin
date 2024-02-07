@@ -425,6 +425,23 @@ public class CFileGenerator : CSharpSyntaxWalker
                 done = true;
             }
         }
+        // handle `my_u8.wrap_lshift(1+1)` --> `(uint8_t)(my_u8 << (1+1))`
+        // handle `(my_u8 + 10).wrap_lshift(1)` --> `(uint8_t)((my_u8 + 10) << (1))`
+        else if (methodNameSymbol.Name == "wrap_lshift")
+        {
+            var finType = methodNameSymbol.ContainingType.Name;
+            string? ctype = FinNumberTypeToCType(finType);
+            if (ctype != null)
+            {
+                VisitLeadingTrivia(ies);
+                sb.Append($"({ctype})(");
+                Visit(maes.Expression);
+                sb.Append(" << (");
+                Visit(ies.ArgumentList.Arguments.Single());
+                sb.Append("))");
+                done = true;
+            }
+        }
 
         return done;
     }
