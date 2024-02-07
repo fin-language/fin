@@ -23,6 +23,11 @@ public class Counter : FinObj
         _count_length = count_length;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
     public u8 get(u8 index)
     {
         u8 result = 0;
@@ -33,6 +38,11 @@ public class Counter : FinObj
         return result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="value"></param>
     public void set(u8 index, u8 value)
     {
         if (index < _count_length)

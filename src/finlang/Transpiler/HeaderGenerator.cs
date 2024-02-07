@@ -13,9 +13,10 @@ public class HeaderGenerator
     {
         var symbol = cls.symbol;
         var structName = cls.GetCName();
-        var sb = cls.hFile.mainCode;
         CFileGenerator visitor = new(cls);
         visitor.UseHFile();
+        visitor.renderingPrototypes = true;
+        var sb = cls.hFile.mainCode;
 
         // don't generate a struct for FFI classes
         if (cls.IsFFI)
@@ -54,32 +55,39 @@ public class HeaderGenerator
     public void GenerateFunctionPrototypes(C99ClsEnum cls)
     {
         var symbol = cls.symbol;
-        var structName = cls.GetCName();
-
+        CFileGenerator visitor = new(cls);
+        visitor.UseHFile();
+        visitor.renderingPrototypes = true;
         var sb = cls.hFile.mainCode;
+
+        foreach (var node in cls.syntaxNode.ChildNodes())
+        {
+            if (node is not MethodDeclarationSyntax && node is not ConstructorDeclarationSyntax)
+            {
+                continue;
+            }
+
+            visitor.Visit(node);
+            
+            // remove last characters from string buffer until we find ')'
+            // this is needed because the closing parenthesis often has a newline/whitespace after it.
+            while (sb[sb.Length - 1] != ')')
+            {
+                sb.Length--;
+            }
+
+            sb.Append(";\n");
+        }
 
         var methods = cls.GetMethods();
         foreach (var method in methods)
         {
-            var args = (method.IsStatic || cls.IsStaticClass) ? "" : $"{structName} * self";
             cls.AddHeaderFqnDependency(method.ReturnType);
-            var returnType = Namer.GetCName(method.ReturnType);
-            var methodName = Namer.GetCName(method);
 
             foreach (var param in method.Parameters)
             {
                 cls.AddHeaderFqnDependency(param.Type);
-                var paramName = param.Name;
-                var paramType = Namer.GetCName(param.Type);
-                var starOrSpace = param.Type.IsReferenceType ? " * " : " ";
-                if (args.Length > 0)
-                {
-                    args += ", ";
-                }
-                args += $"{paramType}{starOrSpace}{paramName}";
             }
-
-            sb.AppendLine($"{returnType} {methodName}({args});");
         }
     }
 

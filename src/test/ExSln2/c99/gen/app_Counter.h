@@ -22,6 +22,19 @@ struct app_Counter
     uint8_t _count_length, _index;
 };
 
-void app_Counter_ctor(app_Counter * self, finlang_c_array * counts, uint8_t count_length);
-uint8_t app_Counter_get(app_Counter * self, uint8_t index);
-void app_Counter_set(app_Counter * self, uint8_t index, uint8_t value);
+
+    void app_Counter_ctor(app_Counter * self, uint8_t * counts, uint8_t count_length);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    uint8_t app_Counter_get(app_Counter * self, uint8_t index);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="value"></param>
+    void app_Counter_set(app_Counter * self, uint8_t index, uint8_t value);

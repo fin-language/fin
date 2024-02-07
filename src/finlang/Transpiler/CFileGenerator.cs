@@ -16,7 +16,8 @@ public class CFileGenerator : CSharpSyntaxWalker
     /// This eventually needs to be made into a stack of string builders, so that nested calls can be handled.
     /// </summary>
     StringBuilder firstArgsSb = new();
-    bool skipNextLeadingTrivia = false; // probably needs to be a stack as well
+    public bool skipNextLeadingTrivia = false; // probably needs to be a stack as well
+    public bool renderingPrototypes = false;
 
     Namer namer;
     TranspilerHelper transpilerHelper;
@@ -55,12 +56,22 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         VisitParameterList(node.ParameterList);
 
+        if (renderingPrototypes)
+            return;
+
         var body = node.Body.ThrowIfNull();
         VisitToken(body.OpenBraceToken);
         sb.Append("        memset(self, 0, sizeof(*self));\n");
         cls.cFile.includes.Add("<string.h>"); // for memset
         body.VisitChildrenNodesWithWalker(this);
         VisitToken(body.CloseBraceToken);
+    }
+
+    public override void VisitBlock(BlockSyntax node)
+    {
+        if (renderingPrototypes)
+            return;
+        base.VisitBlock(node);
     }
 
     public override void VisitVariableDeclaration(VariableDeclarationSyntax node)
@@ -160,16 +171,12 @@ public class CFileGenerator : CSharpSyntaxWalker
         // if the parameter is a reference type, add a star to the type
         if (parameterSymbol != null && parameterSymbol.Type.IsReferenceType)
         {
-            if (parameterSymbol.Type.Name == "c_array")
-            {
-                // type already has a star
-            }
-            else
-            {
-                Visit(node.Type);
+            bool alreadyHasStar = parameterSymbol.Type.Name == "c_array";
+
+            Visit(node.Type);
+            if (!alreadyHasStar)
                 sb.Append("* ");
-                VisitToken(node.Identifier);
-            }
+            VisitToken(node.Identifier);
         }
         else
         {

@@ -5,5 +5,4 @@
 
 
 // Class has no fields. No struct generated.
-uint8_t hal_Helper_calc_stuff(uint8_t a, uint8_t b);
-void hal_Helper_ctor();
+    uint8_t hal_Helper_calc_stuff(uint8_t a, uint8_t b);

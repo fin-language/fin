@@ -22,11 +22,10 @@ public class MainApp : FinObj
     {
         math.unsafe_mode();
 
-        if (ms_time >= _toggle_at_ms)
+        if (ms_time >= _toggle_at_ms) // this isn't rollover safe :P
         {
-            // comment out the following line and it all works fine.
             _redLed.toggle();
-            _toggle_at_ms = (ms_time.u64 + period_ms).wrap_u32; // won't need when have a wrapping add
+            _toggle_at_ms = (ms_time.u64 + period_ms).wrap_u32; // this will be nicer when we have a wrapping add method
         }
     }
 
