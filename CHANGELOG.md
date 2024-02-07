@@ -32,6 +32,7 @@ Test/interim releases are not documented here.
     - ex: `u8.narrow_from(my_i32)` --> `(uint8_t)my_i32`
 - Transpiler - support c style naked arrays `c_array<T>`
 - Improve 1-1 transpilation of fin to C99
+    - removed indentation from C# and other small improvements
 
 --- 
 

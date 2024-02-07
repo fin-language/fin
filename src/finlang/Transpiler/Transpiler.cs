@@ -110,6 +110,11 @@ public class Transpiler
 
             CFileGenerator cFileGenerator = new(cls);
             cFileGenerator.Generate();
+
+            // de indent c file
+            var deIndented = StringUtils.DeIndent(cls.cFile.mainCode.ToString());
+            cls.cFile.mainCode.Clear();
+            cls.cFile.mainCode.Append(deIndented);
         }
     }
 
