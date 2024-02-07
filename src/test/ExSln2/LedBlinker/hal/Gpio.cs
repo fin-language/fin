@@ -9,9 +9,9 @@ namespace hal;
 [ffi]
 public class Gpio : FinObj
 {
-    public bool _state;
+    public GpioPinState _state;
 
-    public bool read()
+    public GpioPinState read()
     {
         // STM HAL code:
         // GPIO_PinState pinState = HAL_GPIO_ReadPin(GPIOx, GPIO_PIN_x);
@@ -19,7 +19,7 @@ public class Gpio : FinObj
         return _state;
     }
 
-    public void write(bool state)
+    public void write(GpioPinState state)
     {
         // STM HAL code:
         // HAL_GPIO_WritePin(GPIOx, GPIO_PIN_x, GPIO_PIN_RESET); // Set pin low

@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Security.Policy;
 using System.Text;
 
 namespace finlang.Transpiler;
@@ -50,6 +51,33 @@ public class CFileGenerator : CSharpSyntaxWalker
             if (member.DeclaringSyntaxReferences.Any())
                 Visit(member.DeclaringSyntaxReferences[0].GetSyntax());
         }
+    }
+
+    public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
+    {
+        VisitLeadingTrivia(node);
+        string name = new Namer(model).GetCName(node);
+
+        sb.AppendTokenAndTrivia(node.Identifier, overrideTokenText: $"typedef enum {name}");
+        sb.AppendTokenAndTrivia(node.OpenBraceToken);
+
+        foreach (var kid in node.ChildNodesAndTokens().SkipWhile(n => n.IsToken))
+        {
+            if (kid.IsNode)
+            {
+                Visit(kid.AsNode());
+            }
+            else
+            {
+                if (kid == node.CloseBraceToken)
+                    break;
+                VisitToken(kid.AsToken());
+            }
+        }
+
+        VisitLeadingTrivia(node.CloseBraceToken);
+        sb.Append($"}} {name};");
+        VisitTrailingTrivia(node.CloseBraceToken);
     }
 
     public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
@@ -287,7 +315,57 @@ public class CFileGenerator : CSharpSyntaxWalker
             return true;
         }
 
+        bool done;
+
+        done = TryInstanceFieldAccess(node);
+
+        if (done)
+            return true;
+
         return TryHandleFinSpecials(node, memberNameSymbol);
+    }
+
+    /// <summary>
+    /// support stuff like `redLed.my_public_var`, `some_expression.name`
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    private bool TryInstanceFieldAccess(MemberAccessExpressionSyntax node)
+    {
+        bool done = false;
+
+        // support stuff like `redLed.my_public_var = 33;`
+        var exp = node.Expression; // `redLed`
+        var name = node.Name;      // `my_public_var`
+
+        // get symbol of name
+        ISymbol? symbol = model.GetSymbolInfo(name).Symbol;
+        if (symbol != null)
+        {
+            // if it's a field, we need to handle it
+            if (symbol is IFieldSymbol ifs)
+            {
+                // if it's a field, we need to handle it
+                if (ifs.IsStatic)
+                {
+                    // it's a static field
+                    //sb.Append(Namer.GetCName(ifs.ContainingType) + "_");
+                    Visit(name);
+                    done = true;
+                }
+                else
+                {
+                    // if it's an instance field, we need to handle it
+                    // ex: `redLed.my_public_var = 33;` --> `redLed->my_public_var = 33;`
+                    Visit(exp);
+                    sb.Append("->");
+                    Visit(name);
+                    done = true;
+                }
+            }
+        }
+
+        return done;
     }
 
     public override void VisitExpressionStatement(ExpressionStatementSyntax node)
@@ -634,8 +712,16 @@ public class CFileGenerator : CSharpSyntaxWalker
                     // support field accesses
                     if (symbol.Symbol is IFieldSymbol fs)
                     {
-                        result = "self->" + Namer.GetCName(fs);
-                        break;
+                        // note that enum fields count as IFieldSymbol
+                        if (!fs.IsStatic && !fs.IsConst)
+                        {
+                            if (fs.ContainingSymbol.Name == cls.symbol.Name)
+                            {
+                                // if the field is in the same class, it's a member access
+                                result = "self->" + Namer.GetCName(fs);
+                                break;
+                            }
+                        }
                     }
 
                     result = Namer.GetCName(symbol.Symbol.ThrowIfNull());

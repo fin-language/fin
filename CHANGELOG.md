@@ -26,6 +26,8 @@ Test/interim releases are not documented here.
 
 ## WIP
 ### Added
+- Transpiler - support enumerations
+    - They can't be nested inside a class yet.
 - Transpiler - support fin numeric `wrap_lshift()`
     - ex: `(my_u8 + 10).wrap_lshift(i + 2)` --> `(uint8_t)((my_u8 + 10) << (i + 2))`
 

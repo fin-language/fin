@@ -1,4 +1,4 @@
-// finlang generated file for c# app.Counter class
+// finlang generated file for c# app.Counter type
 
 #include "app_Counter.h"
 #include <string.h>

@@ -12,6 +12,7 @@ public class MainApp : FinObj
     public MainApp(Led redLed, u16 period_ms)
     {
         _redLed = redLed;
+        _redLed.my_public_var = 5;
         this.period_ms = period_ms;
     }
     

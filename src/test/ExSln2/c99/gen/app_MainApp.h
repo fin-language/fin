@@ -1,4 +1,4 @@
-// finlang generated file for c# app.MainApp class
+// finlang generated file for c# app.MainApp type
 #pragma once
 
 #include <stdint.h>

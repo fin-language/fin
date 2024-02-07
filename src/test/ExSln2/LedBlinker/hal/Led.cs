@@ -5,6 +5,7 @@ namespace hal;
 public class Led : FinObj
 {
     public Gpio _gpio;
+    public u8 my_public_var;
 
     public Led(Gpio gpio)
     {
@@ -14,13 +15,13 @@ public class Led : FinObj
     // Will toggle the state of the LED
     public void toggle()
     {
-        if (_gpio.read())
+        if (_gpio.read() == GpioPinState.High)
         {
-            _gpio.write(false); // Turn off
+            _gpio.write(GpioPinState.Low); // Turn off
         }
         else
         {
-            _gpio.write(true); // Turn on
+            _gpio.write(GpioPinState.High); // Turn on
         }
     }
 }

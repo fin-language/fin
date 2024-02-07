@@ -206,6 +206,12 @@ public static class Extensions
         return false;
     }
 
+    /// <summary>
+    /// C# dot access: <expression>.<name>.
+    /// Examples: "this.Name", "(1 + 2).some_function()", ...
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
     public static bool IsSimpleMemberAccess(this MemberAccessExpressionSyntax node)
     {
         return node.IsKind(SyntaxKind.SimpleMemberAccessExpression);

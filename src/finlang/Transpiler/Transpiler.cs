@@ -12,7 +12,7 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public List<C99ClsEnum> c99ClassEnum = new();
+    public List<C99ClsEnum> c99ClassesEnums = new();
     public Dictionary<string, C99ClsEnum> fqnToC99Class = new();
 
     public Transpiler(string destinationDirPath, string solutionPath, string projectName)
@@ -53,23 +53,44 @@ public class Transpiler
 
         foreach (var syntaxTree in compilation.SyntaxTrees)
         {
-            var fileName = Path.GetFileName(syntaxTree.FilePath);
+            //var fileName = Path.GetFileName(syntaxTree.FilePath);
             var model = compilation.GetSemanticModel(syntaxTree);
-            var root = syntaxTree.GetRoot();
 
-            // Find all class declarations in the syntax tree
-            var allClasses = model.SyntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
+            FindAllClasses(model);
+            FindAllEnums(model);
+        }
+    }
 
-            foreach (var classDeclNode in allClasses)
+    private void FindAllEnums(SemanticModel model)
+    {
+        var allEnums = model.SyntaxTree.GetRoot().DescendantNodes().OfType<EnumDeclarationSyntax>();
+
+        foreach (var enumDeclNode in allEnums)
+        {
+            INamedTypeSymbol symbol = model.GetDeclaredSymbol(enumDeclNode).ThrowIfNull();
+
+            //if (SymbolHelper.IsDerivedFrom(symbol, "FinObj"))
             {
-                INamedTypeSymbol symbol = model.GetDeclaredSymbol(classDeclNode).ThrowIfNull();
+                var c99Decl = new C99ClsEnum(model, enumDeclNode, symbol);
+                c99ClassesEnums.Add(c99Decl);
+                fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
+            }
+        }
+    }
 
-                if (SymbolHelper.IsDerivedFrom(symbol, "FinObj"))
-                {
-                    var c99Decl = new C99ClsEnum(model, classDeclNode, symbol);
-                    c99ClassEnum.Add(c99Decl);
-                    fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
-                }
+    private void FindAllClasses(SemanticModel model)
+    {
+        var allClasses = model.SyntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
+
+        foreach (var classDeclNode in allClasses)
+        {
+            INamedTypeSymbol symbol = model.GetDeclaredSymbol(classDeclNode).ThrowIfNull();
+
+            if (SymbolHelper.IsDerivedFrom(symbol, "FinObj"))
+            {
+                var c99Decl = new C99ClsEnum(model, classDeclNode, symbol);
+                c99ClassesEnums.Add(c99Decl);
+                fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }
         }
     }
@@ -100,27 +121,33 @@ public class Transpiler
 
     public void Generate()
     {
-        foreach (var cls in c99ClassEnum)
+        foreach (var cls in c99ClassesEnums)
         {
-            Namer namer = new(cls.model);
             HeaderGenerator gen = new();
 
-            gen.GenerateStruct(cls);
-            gen.GenerateFunctionPrototypes(cls);
+            if (cls.IsEnum)
+            {
+                gen.GenerateEnum(cls);
+            }
+            else
+            {
+                gen.GenerateStruct(cls);
+                gen.GenerateFunctionPrototypes(cls);
 
-            CFileGenerator cFileGenerator = new(cls);
-            cFileGenerator.Generate();
+                CFileGenerator cFileGenerator = new(cls);
+                cFileGenerator.Generate();
 
-            // de indent c file
-            var deIndented = StringUtils.DeIndent(cls.cFile.mainCode.ToString());
-            cls.cFile.mainCode.Clear();
-            cls.cFile.mainCode.Append(deIndented);
+                // de indent c file
+                var deIndented = StringUtils.DeIndent(cls.cFile.mainCode.ToString());
+                cls.cFile.mainCode.Clear();
+                cls.cFile.mainCode.Append(deIndented);
+            }
         }
     }
 
     public void SetFilePaths()
     {         
-        foreach (var cls in c99ClassEnum)
+        foreach (var cls in c99ClassesEnums)
         {
             var fileNameBase = cls.GetCName();
             cls.hFile.relativeFilePath = fileNameBase + ".h";
@@ -131,7 +158,7 @@ public class Transpiler
     public void OptimizeDependencies()
     {
         // don't include in .c file the same includes as in .h file
-        foreach (var cls in c99ClassEnum)
+        foreach (var cls in c99ClassesEnums)
         {
             foreach (var dep in cls.hFile.fqnDependencies)
             {
@@ -147,14 +174,17 @@ public class Transpiler
         OptimizeDependencies();
         DependencyResolver resolver = new(fqnToC99Class);
 
-        foreach (var cls in c99ClassEnum)
+        foreach (var cls in c99ClassesEnums)
         {
             if (cls.IsFFI)
             {
                 cls.hFile.includesSb.AppendLine($"#include \"{cls.GetCName()}_port_implementation.h\" // You need to provide this");
             }
 
-            cls.cFile.includesSb.AppendLine("#include \"" + cls.hFile.relativeFilePath + "\"");
+            if (cls.HasCFile())
+            {
+                cls.cFile.includesSb.AppendLine("#include \"" + cls.hFile.relativeFilePath + "\"");
+            }
 
             ResolveFileDependencies(resolver, cls.hFile);
             ResolveFileDependencies(resolver, cls.cFile);
@@ -175,9 +205,9 @@ public class Transpiler
 
     public void SetupFileHeaders()
     {
-        foreach (var cls in c99ClassEnum)
+        foreach (var cls in c99ClassesEnums)
         {
-            string msg = $"// finlang generated file for c# {cls.GetFqn()} class";
+            string msg = $"// finlang generated file for c# {cls.GetFqn()} type";
             cls.hFile.preIncludes.AppendLine(msg);
             cls.hFile.preIncludes.AppendLine("#pragma once");
             cls.cFile.preIncludes.AppendLine(msg);
@@ -189,17 +219,14 @@ public class Transpiler
         // delete all files in the destination directory
         if (Directory.Exists(destinationDirPath))
             Directory.Delete(destinationDirPath, recursive: true);
+
         Directory.CreateDirectory(destinationDirPath);
 
-        foreach (var cls in c99ClassEnum)
+        foreach (var cls in c99ClassesEnums)
         {
             cls.hFile.WriteToFile(destinationDirPath);
 
-            if (cls.IsFFI)
-            {
-                //don't write the c file for FFI classes
-            }
-            else
+            if (cls.HasCFile())
             {
                 cls.cFile.WriteToFile(destinationDirPath);
             }
@@ -209,10 +236,10 @@ public class Transpiler
     public List<string> GetListOfAllGeneratedFiles()
     {
         List<string> result = new();
-        foreach (var cls in c99ClassEnum)
+        foreach (var cls in c99ClassesEnums)
         {
             result.Add(cls.hFile.relativeFilePath.ThrowIfNull());
-            if (!cls.IsFFI)
+            if (cls.HasCFile())
             {
                 result.Add(cls.cFile.relativeFilePath.ThrowIfNull());
             }

@@ -1,4 +1,4 @@
-// finlang generated file for c# app.Counter class
+// finlang generated file for c# app.Counter type
 #pragma once
 
 #include <stdint.h>

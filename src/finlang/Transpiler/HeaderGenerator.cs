@@ -10,6 +10,22 @@ public class HeaderGenerator
     {
     }
 
+    public void GenerateEnum(C99ClsEnum cls)
+    {
+        var enumName = cls.GetCName();
+        CFileGenerator visitor = new(cls);
+        visitor.UseHFile();
+        visitor.renderingPrototypes = true;
+        var sb = cls.hFile.mainCode;
+
+        if (!cls.IsEnum)
+        {
+            throw new InvalidOperationException("Object has to be an enum for this code.");
+        }
+
+        visitor.Visit(cls.syntaxNode);
+    }
+
     public void GenerateStruct(C99ClsEnum cls)
     {
         var structName = cls.GetCName();
@@ -31,7 +47,7 @@ public class HeaderGenerator
             return;
         }
 
-        ClassDeclarationSyntax clsDeclSyntax = cls.syntaxNode;
+        ClassDeclarationSyntax clsDeclSyntax = (ClassDeclarationSyntax)cls.syntaxNode;
         visitor.VisitLeadingTrivia(clsDeclSyntax);
         sb.AppendLine($"typedef struct {structName} {structName};");
         sb.AppendLine($"struct {structName}");

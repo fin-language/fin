@@ -6,7 +6,7 @@ namespace finlang.Transpiler;
 public class C99ClsEnum
 {
     readonly public INamedTypeSymbol symbol;
-    readonly public ClassDeclarationSyntax syntaxNode;
+    readonly public SyntaxNode syntaxNode;
     readonly public SemanticModel model;
 
     readonly public OutputFile hFile = new();
@@ -15,7 +15,7 @@ public class C99ClsEnum
     public bool IsFFI { get; init; }
     public bool IsStaticClass { get; init; }
 
-    public C99ClsEnum(SemanticModel model, ClassDeclarationSyntax syntaxNode, INamedTypeSymbol symbol)
+    public C99ClsEnum(SemanticModel model, SyntaxNode syntaxNode, INamedTypeSymbol symbol)
     {
         this.IsFFI = symbol.GetAttributes().Any(a => a.AttributeClass?.Name == "ffiAttribute");
         this.syntaxNode = syntaxNode;
@@ -23,6 +23,19 @@ public class C99ClsEnum
         this.model = model;
 
         this.IsStaticClass = GetInstanceFields().Any() == false;
+    }
+
+    public bool HasCFile()
+    {
+        return !IsFFI && !IsEnum;
+    }
+
+    public bool IsEnum
+    {
+        get
+        {
+            return syntaxNode is EnumDeclarationSyntax;
+        }
     }
 
     public IEnumerable<IMethodSymbol> GetMethods()

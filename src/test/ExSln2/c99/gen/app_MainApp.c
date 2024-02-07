@@ -1,4 +1,4 @@
-// finlang generated file for c# app.MainApp class
+// finlang generated file for c# app.MainApp type
 
 #include "app_MainApp.h"
 #include "hal_Helper.h"
@@ -10,6 +10,7 @@ void app_MainApp_ctor(app_MainApp * self, hal_Led * redLed, uint16_t period_ms)
 {
     memset(self, 0, sizeof(*self));
     self->_redLed = redLed;
+    self->_redLed->my_public_var = 5;
     self->period_ms = period_ms;
 }
 

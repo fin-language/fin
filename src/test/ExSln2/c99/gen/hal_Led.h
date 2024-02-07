@@ -1,7 +1,8 @@
-// finlang generated file for c# hal.Led class
+// finlang generated file for c# hal.Led type
 #pragma once
 
 #include "hal_Gpio.h"
+#include <stdint.h>
 
 
 
@@ -9,6 +10,7 @@ typedef struct hal_Led hal_Led;
 struct hal_Led
 {
     hal_Gpio * _gpio;
+    uint8_t my_public_var;
 };
 
 

@@ -1,4 +1,4 @@
-// finlang generated file for c# hal.Helper class
+// finlang generated file for c# hal.Helper type
 #pragma once
 
 #include <stdint.h>
