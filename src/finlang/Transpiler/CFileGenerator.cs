@@ -335,11 +335,6 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         bool done = false;
 
-        if (methodNameSymbol.Name == "unsafe_get")
-        {
-            int x = 222;
-        }
-
         if (TryFinNumericInvocations(ies, maes, methodNameSymbol))
             return true;
 
