@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## wip
+## [0.2.2-alpha]
 ### Added
 - Transpiler - support narrowing casts.
     - ex: `b = (u8)my_i32;` --> `b = (uint8_t)my_i32;`
