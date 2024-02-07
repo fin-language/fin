@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## WIP
+## [0.2.3-alpha]
 ### Added
 - Transpiler - support enumerations
     - They can't be nested inside a class yet.
