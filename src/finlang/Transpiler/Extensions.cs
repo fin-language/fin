@@ -121,6 +121,11 @@ public static class Extensions
         return node.Modifiers.HasModifier(SyntaxKind.ReadOnlyKeyword);
     }
 
+    public static bool IsMethod(this IMethodSymbol methodSymbol, string className, string methodName)
+    {
+        return methodSymbol.ContainingType.Name == className && methodSymbol.Name == methodName;
+    }
+
     // get syntax node parent
     public static SyntaxNode ParentNotNull(this SyntaxNode node)
     {

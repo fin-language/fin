@@ -297,6 +297,9 @@ public class CFileGenerator : CSharpSyntaxWalker
                     if (maes.Name.Identifier.Text == "unsafe_mode")
                     {
                         // do nothing
+                        VisitLeadingTrivia(node);
+                        sb.Append("/* fin: math.unsafe_mode() */");
+                        VisitTrailingTrivia(node);
                         return;
                     }
                 }
@@ -312,7 +315,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         if (ies.Expression is MemberAccessExpressionSyntax maes)
         {
-            ISymbol methodNameSymbol = model.GetSymbolInfo(maes.Name).Symbol.ThrowIfNull();
+            IMethodSymbol methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(maes.Name).Symbol.ThrowIfNull();
             if (methodNameSymbol.ContainingNamespace.Name == "finlang")
             {
                 done = TryFinInvocations(ies, maes, methodNameSymbol);
@@ -323,46 +326,98 @@ public class CFileGenerator : CSharpSyntaxWalker
             base.VisitInvocationExpression(ies);
     }
 
-    public bool TryFinInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, ISymbol methodNameSymbol)
+    public bool TryFinInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol)
     {
         bool done = false;
 
-        if (methodNameSymbol.BelongsToFinlangInteger())
+        if (methodNameSymbol.Name == "unsafe_get")
         {
-            // handle `u8.from(42)` --> `42`
-            if (methodNameSymbol.Name == "from")
+            int x = 222;
+        }
+
+        if (TryFinNumericInvocations(ies, maes, methodNameSymbol))
+            return true;
+
+        if (TryFinCArrayInvocations(ies, maes, methodNameSymbol))
+            return true;
+
+        return done;
+    }
+
+    private bool TryFinCArrayInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol)
+    {
+        bool done = false;
+
+        if (methodNameSymbol.ContainingType.Name != "c_array")
+        {
+            return done;
+        }
+
+        // handle `my_c_array.unsafe_get(index)` --> `my_c_array[index]`
+        if (methodNameSymbol.Name == "unsafe_get")
+        {
+            Visit(maes.Expression); // `my_c_array`
+            sb.Append("[");
+            Visit(ies.ArgumentList.Arguments.Single());
+            sb.Append("]");
+            done = true;
+        }
+        // handle `my_c_array.unsafe_set(index, value)` --> `my_c_array[index] = value`
+        else if (methodNameSymbol.Name == "unsafe_set")
+        {
+            Visit(maes.Expression); // `my_c_array`
+            sb.Append("[");
+            Visit(ies.ArgumentList.Arguments[0]);
+            sb.Append("] = ");
+            Visit(ies.ArgumentList.Arguments[1]);
+            done = true;
+        }
+
+        return done;
+    }
+
+    private bool TryFinNumericInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol)
+    {
+        bool done = false;
+
+        if (!methodNameSymbol.BelongsToFinlangInteger())
+        {
+            return done;
+        }
+
+        // handle `u8.from(42)` --> `42`
+        if (methodNameSymbol.Name == "from")
+        {
+            VisitLeadingTrivia(ies);
+            // get the argument
+            var arg = ies.ArgumentList.Arguments[0].Expression;
+            Visit(arg);
+            done = true;
+        }
+        // handle `my_u32.narrow_to_u8()` --> `(uint8_t)my_u32`
+        else if (methodNameSymbol.Name.StartsWith("narrow_to_"))
+        {
+            var finType = methodNameSymbol.Name.Substring("narrow_to_".Length);
+            string? ctype = FinNumberTypeToCType(finType);
+            if (ctype != null)
             {
                 VisitLeadingTrivia(ies);
-                // get the argument
-                var arg = ies.ArgumentList.Arguments[0].Expression;
-                Visit(arg);
+                sb.Append($"({ctype})");
+                Visit(maes.Expression);
                 done = true;
             }
-            // handle `my_u32.narrow_to_u8()` --> `(uint8_t)my_u32`
-            else if (methodNameSymbol.Name.StartsWith("narrow_to_"))
+        }
+        // handle `u8.narrow_from(my_i32)` --> `(uint8_t)my_i32`
+        else if (methodNameSymbol.Name == "narrow_from")
+        {
+            var finType = methodNameSymbol.ContainingType.Name;
+            string? ctype = FinNumberTypeToCType(finType);
+            if (ctype != null)
             {
-                var finType = methodNameSymbol.Name.Substring("narrow_to_".Length);
-                string? ctype = FinNumberTypeToCType(finType);
-                if (ctype != null)
-                {
-                    VisitLeadingTrivia(ies);
-                    sb.Append($"({ctype})");
-                    Visit(maes.Expression);
-                    done = true;
-                }
-            }
-            // handle `u8.narrow_from(my_i32)` --> `(uint8_t)my_i32`
-            else if (methodNameSymbol.Name == "narrow_from")
-            {
-                var finType = methodNameSymbol.ContainingType.Name;
-                string? ctype = FinNumberTypeToCType(finType);
-                if (ctype != null)
-                {
-                    VisitLeadingTrivia(ies);
-                    sb.Append($"({ctype})");
-                    Visit(ies.ArgumentList.Arguments.Single());
-                    done = true;
-                }
+                VisitLeadingTrivia(ies);
+                sb.Append($"({ctype})");
+                Visit(ies.ArgumentList.Arguments.Single());
+                done = true;
             }
         }
 
@@ -623,7 +678,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public void VisitTrailingTrivia(SyntaxNode node)
     {
-        VisitTrailingTrivia(node.GetFirstToken());
+        VisitTrailingTrivia(node.GetLastToken());
     }
 
     public void OutputAttachedCommentTrivia(SyntaxNode node)

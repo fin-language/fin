@@ -18,6 +18,7 @@
     /// </summary>
     void app_MainApp_step(app_MainApp * self, uint32_t ms_time)
     {
+        /* fin: math.unsafe_mode() */
 
         if (ms_time >= self->_toggle_at_ms) // this isn't rollover safe :P
         {
@@ -28,6 +29,7 @@
 
     uint32_t app_MainApp_transpilation_test_stuff(app_MainApp * self)
     {
+        /* fin: math.unsafe_mode() */
         hal_Helper_calc_stuff(3, 77);
         uint8_t a = 55;
         uint8_t b;

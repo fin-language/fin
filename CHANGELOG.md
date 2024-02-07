@@ -30,7 +30,9 @@ Test/interim releases are not documented here.
     - ex: `b = (u8)my_i32;` --> `b = (uint8_t)my_i32;`
 - Transpiler - support `u8.narrow_from(some_arg)`
     - ex: `u8.narrow_from(my_i32)` --> `(uint8_t)my_i32`
-    
+- Transpiler - support c style naked arrays `c_array<T>`
+- Improve 1-1 transpilation of fin to C99
+
 --- 
 
 ## [0.2.1-alpha]

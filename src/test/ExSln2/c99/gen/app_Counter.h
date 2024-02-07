@@ -19,7 +19,7 @@ struct app_Counter
     /// <summary>
     /// Another couple of fields.
     /// </summary>
-    uint8_t _count_length, _index;
+    uint8_t _count_length, _set_invocations_counts;
 };
 
 
