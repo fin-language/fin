@@ -1,12 +1,12 @@
-// finlang generated file for c# app.MainApp type
+// finlang generated file for c# app.Main type
 
-#include "app_MainApp.h"
+#include "app_Main.h"
 #include "hal_Helper.h"
 #include <string.h>
 
 
 
-void app_MainApp_ctor(app_MainApp * self, hal_Led * redLed, uint16_t period_ms)
+void app_Main_ctor(app_Main * self, hal_Led * redLed, uint16_t period_ms)
 {
     memset(self, 0, sizeof(*self));
     self->_redLed = redLed;
@@ -17,7 +17,7 @@ void app_MainApp_ctor(app_MainApp * self, hal_Led * redLed, uint16_t period_ms)
 /// <summary>
 /// This is the main loop of the application.
 /// </summary>
-void app_MainApp_step(app_MainApp * self, uint32_t ms_time)
+void app_Main_step(app_Main * self, uint32_t ms_time)
 {
     /* fin: math.unsafe_mode() */
 
@@ -28,7 +28,7 @@ void app_MainApp_step(app_MainApp * self, uint32_t ms_time)
     }
 }
 
-uint32_t app_MainApp_transpilation_test_stuff(app_MainApp * self)
+uint32_t app_Main_transpilation_test_stuff(app_Main * self)
 {
     /* fin: math.unsafe_mode() */
     hal_Helper_calc_stuff(3, 77);

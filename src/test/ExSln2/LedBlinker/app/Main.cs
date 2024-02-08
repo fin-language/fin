@@ -3,13 +3,13 @@ using finlang;
 
 namespace app;
 
-public class MainApp : FinObj
+public class Main : FinObj
 {
     public u16 period_ms; // keep without underscore so that `this.` is required in constructor
     public u32 _toggle_at_ms;
     public readonly Led _redLed;
 
-    public MainApp(Led redLed, u16 period_ms)
+    public Main(Led redLed, u16 period_ms)
     {
         _redLed = redLed;
         _redLed.my_public_var = 5;

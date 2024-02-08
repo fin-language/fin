@@ -42,8 +42,8 @@ public class C99TranspilerTest
         transpiler.GenerateAndWrite();
 
         transpiler.GetListOfAllGeneratedFiles().Should().Contain(
-            "app_MainApp.h",
-            "app_MainApp.c",
+            "app_Main.h",
+            "app_Main.c",
             "hal_Led.h",
             "hal_Led.c",
             "hal_Gpio.h",
