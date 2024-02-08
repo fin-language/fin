@@ -349,19 +349,27 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitInvocationExpression(InvocationExpressionSyntax ies)
     {
-        bool done = false;
-
         if (ies.Expression is MemberAccessExpressionSyntax maes)
         {
             IMethodSymbol methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(maes.Name).Symbol.ThrowIfNull();
             if (methodNameSymbol.ContainingNamespace.Name == "finlang")
             {
-                done = TryFinInvocations(ies, maes, methodNameSymbol);
+                if (TryFinInvocations(ies, maes, methodNameSymbol))
+                    return;
             }
         }
 
-        if (!done)
-            base.VisitInvocationExpression(ies);
+        // handle an object calling its own method without `this` like `toggle()`
+        if (ies.Expression is IdentifierNameSyntax ins)
+        {
+            var methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(ins).Symbol.ThrowIfNull();
+            if (methodNameSymbol.IsStatic == false && methodNameSymbol.ContainingType.Name == cls.symbol.Name)
+            {
+                firstArgsSb.Append("self");
+            }
+        }
+
+        base.VisitInvocationExpression(ies);
     }
 
     public bool TryFinInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol)

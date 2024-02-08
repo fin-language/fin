@@ -6,6 +6,7 @@ public class LedArray : FinObj
 {
     required public c_array<Led> _leds;
     public u8 _leds_length;
+    public u8 _index;
 
     public LedArray(c_array<Led> leds, u8 leds_length)
     {
@@ -25,8 +26,24 @@ public class LedArray : FinObj
     {
         if (index < _leds_length)
         {
-            return _leds.unsafe_get(index);
+            return _get_led(index);
         }
         return null;
+    }
+
+    public void increment_index()
+    {
+        _index = inc_wrap(_index, _leds_length);
+    }
+
+    // just an excuse for a static method :)    
+    public static u8 inc_wrap(u8 value, u8 max)
+    {
+        value++;
+        if (value >= max)
+        {
+            value = 0;
+        }
+        return value;
     }
 }
