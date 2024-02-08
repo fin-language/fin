@@ -24,6 +24,12 @@ Test/interim releases are not documented here.
 
 ---
 
+## [wip]
+### Fixed
+- Transpiler - now tracks header dependency of type `T` contained in `c_array<T>`
+
+---
+
 ## [0.2.4-alpha]
 ### Added
 - Transpiler - support nested classes/enums although indentation is not correct yet

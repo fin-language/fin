@@ -21,19 +21,32 @@ public class C99TranspilerTest
         transpiler.GatherSolutionDeclarations();
 
         transpiler.Generate();
-        var ledCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.Led");
-        string ledStructCode = ledCls.hFile.mainCode.ToString();
-        ledStructCode.Should().Contain("typedef struct hal_Led hal_Led;");
-        ledStructCode.Should().Contain("  hal_Gpio * _gpio;");
-        ledCls.hFile.fqnDependencies.Should().BeEquivalentTo("hal.Gpio", "finlang.u8");
 
-        var mainAppCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "app.Main");
-        string mainAppStructCode = mainAppCls.hFile.mainCode.ToString();
-        mainAppStructCode.Should().Contain("typedef struct app_Main app_Main;");
-        mainAppStructCode.Should().Contain("  uint16_t period_ms;");
-        mainAppStructCode.Should().Contain("  uint32_t _toggle_at_ms;");
-        mainAppStructCode.Should().Contain("  hal_Led * _redLed;");
-        mainAppCls.hFile.fqnDependencies.Should().Contain("hal.Led", "finlang.u32", "finlang.u16");
+        {
+            var cls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.CArrayDependencyTest");
+            string structCode = cls.hFile.mainCode.ToString();
+            structCode.Should().Contain("  uint8_t * _data;");
+            cls.hFile.fqnDependencies.Should().BeEquivalentTo("finlang.u8");
+        }
+
+        {
+            var ledCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.Led");
+            string ledStructCode = ledCls.hFile.mainCode.ToString();
+            ledStructCode.Should().Contain("typedef struct hal_Led hal_Led;");
+            ledStructCode.Should().Contain("  hal_Gpio * _gpio;");
+            ledCls.hFile.fqnDependencies.Should().BeEquivalentTo("hal.Gpio", "finlang.u8");
+        }
+
+        {
+            var mainAppCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "app.Main");
+            string mainAppStructCode = mainAppCls.hFile.mainCode.ToString();
+            mainAppStructCode.Should().Contain("typedef struct app_Main app_Main;");
+            mainAppStructCode.Should().Contain("  uint16_t period_ms;");
+            mainAppStructCode.Should().Contain("  uint32_t _toggle_at_ms;");
+            mainAppStructCode.Should().Contain("  hal_Led * _redLed;");
+            mainAppCls.hFile.fqnDependencies.Should().Contain("hal.Led", "finlang.u32", "finlang.u16");
+        }
+
     }
 
     [Fact]
