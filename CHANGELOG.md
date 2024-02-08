@@ -27,6 +27,7 @@ Test/interim releases are not documented here.
 ### Fixed
 - Transpiler - fix `c_array` of reference types
 - Transpiler - allow nullable types like `Led?`, convert `null` to `NULL`
+- Transpiler - ignore  `required`, `virtual`, `override`, `sealed`, `in`
 
 ---
 

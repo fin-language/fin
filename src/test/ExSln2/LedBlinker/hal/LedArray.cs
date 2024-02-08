@@ -4,7 +4,7 @@ namespace hal;
 
 public class LedArray : FinObj
 {
-    public c_array<Led> _leds;
+    required public c_array<Led> _leds;
     public u8 _leds_length;
 
     public LedArray(c_array<Led> leds, u8 leds_length)
@@ -13,7 +13,7 @@ public class LedArray : FinObj
         _leds_length = leds_length;
     }
 
-    public Led getLed(u8 index)
+    public virtual Led get_led(u8 index)
     {
         return _leds.unsafe_get(index);
     }

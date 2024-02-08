@@ -777,6 +777,11 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         switch ((SyntaxKind)token.RawKind)
         {
+            case SyntaxKind.RequiredKeyword:
+            case SyntaxKind.VirtualKeyword:
+            case SyntaxKind.OverrideKeyword:
+            case SyntaxKind.SealedKeyword:
+            case SyntaxKind.InKeyword:
             case SyntaxKind.PublicKeyword:
             case SyntaxKind.EnumKeyword:
             case SyntaxKind.StaticKeyword:

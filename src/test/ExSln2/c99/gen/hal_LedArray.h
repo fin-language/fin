@@ -16,6 +16,6 @@ struct hal_LedArray
 
 void hal_LedArray_ctor(hal_LedArray * self, hal_Led * * leds, uint8_t leds_length);
 
-hal_Led * hal_LedArray_getLed(hal_LedArray * self, uint8_t index);
+hal_Led * hal_LedArray_get_led(hal_LedArray * self, uint8_t index);
 
 hal_Led * hal_LedArray_maybe_get_led(hal_LedArray * self, uint8_t index);
