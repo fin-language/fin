@@ -119,9 +119,15 @@ public class Namer
             return symbol.Name;
         }
 
-        if (symbol is IMethodSymbol methodSymbol && methodSymbol.DeclaredAccessibility != Accessibility.Public)
+        if (symbol is IMethodSymbol methodSymbol)
         {
-            return methodSymbol.Name.Replace(".", ""); // for .ctor
+            string prefix = "";
+            if (methodSymbol.Name.StartsWith("_") || methodSymbol.DeclaredAccessibility != Accessibility.Public)
+            {
+                prefix = "PRIVATE_";
+            }
+
+            return prefix + MangleTypeSymbolName(fqn);
         }
 
         var name = MangleTypeSymbolName(fqn);

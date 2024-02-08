@@ -13,12 +13,15 @@ public class LedArray : FinObj
         _leds_length = leds_length;
     }
 
-    public virtual Led get_led(u8 index)
+    /// <summary>
+    /// This is actually a private method
+    /// </summary>
+    public Led _get_led(u8 index)
     {
         return _leds.unsafe_get(index);
     }
 
-    public Led? maybe_get_led(u8 index)
+    public virtual Led? maybe_get_led(u8 index)
     {
         if (index < _leds_length)
         {

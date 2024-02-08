@@ -24,10 +24,14 @@ Test/interim releases are not documented here.
 
 ---
 
-### Fixed
-- Transpiler - fix `c_array` of reference types
+## WIP
+### Added
 - Transpiler - allow nullable types like `Led?`, convert `null` to `NULL`
 - Transpiler - ignore  `required`, `virtual`, `override`, `sealed`, `in`
+- Transpiler - private methods are prefixed with `PRIVATE_`
+
+### Fixed
+- Transpiler - fix `c_array` of reference types
 
 ---
 
