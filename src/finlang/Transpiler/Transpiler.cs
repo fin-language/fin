@@ -78,6 +78,7 @@ public class Transpiler
         }
     }
 
+    // TODO profile here. might need to handle one class at a time to avoid memory issues
     private void FindAllClasses(SemanticModel model)
     {
         var allClasses = model.SyntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
@@ -103,6 +104,10 @@ public class Transpiler
 
         foreach (var error in errors)
         {
+            // this might show up as an error if `<WarningsAsErrors>Nullable</WarningsAsErrors>` is set in the .csproj file
+            if (error.Id == "CS8632") // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context
+                continue;
+
             message += "\n" + error.ToString();
         }
 

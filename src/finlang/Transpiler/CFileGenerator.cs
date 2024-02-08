@@ -643,6 +643,27 @@ public class CFileGenerator : CSharpSyntaxWalker
         base.VisitGenericName(node);
     }
 
+    public override void VisitLiteralExpression(LiteralExpressionSyntax node)
+    {
+        // convert `null` to `NULL`
+        if (node.IsKind(SyntaxKind.NullLiteralExpression))
+        {
+            sb.Append("NULL");
+        }
+        else
+        {
+            base.VisitLiteralExpression(node);
+        }
+    }
+
+    public override void VisitNullableType(NullableTypeSyntax node)
+    {
+        // converts `Led?` to `Led`
+        Visit(node.ElementType);
+        VisitLeadingTrivia(node.QuestionToken);
+        VisitTrailingTrivia(node.QuestionToken);
+    }
+
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
         var result = node.Identifier.Text;

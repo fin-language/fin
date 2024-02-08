@@ -24,6 +24,12 @@ Test/interim releases are not documented here.
 
 ---
 
+### Fixed
+- Transpiler - fix `c_array` of reference types
+- Transpiler - allow nullable types like `Led?`, convert `null` to `NULL`
+
+---
+
 ## [0.2.3-alpha]
 ### Added
 - Transpiler - support enumerations
