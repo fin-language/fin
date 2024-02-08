@@ -171,6 +171,12 @@ public class Transpiler
             }
         }
 
+        // don't include .h file in itself
+        foreach (var cls in c99ClassesEnums)
+        {
+            cls.hFile.fqnDependencies.Remove(cls.GetFqn());
+        }
+
         // we could go further in the future and remove all dependencies that are already included in other files
     }
 
