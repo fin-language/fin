@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## WIP
+## [0.2.4-alpha]
 ### Added
 - Transpiler - support nested classes/enums although indentation is not correct yet
 - Transpiler - handle an object calling its own method without `this` like `toggle()`
