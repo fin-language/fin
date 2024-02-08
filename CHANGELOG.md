@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [wip]
+## [0.2.5]
 ### Fixed
 - Transpiler - now tracks header dependency of type `T` contained in `c_array<T>`
 - Transpiler - fix pass `self` to method calls like `this.toggle()`
@@ -32,7 +32,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [0.2.4-alpha]
+## [0.2.4]
 ### Added
 - Transpiler - support nested classes/enums although indentation is not correct yet
 - Transpiler - handle an object calling its own method without `this` like `toggle()`
@@ -45,7 +45,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [0.2.3-alpha]
+## [0.2.3]
 ### Added
 - Transpiler - support enumerations
     - They can't be nested inside a class yet.
@@ -54,7 +54,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [0.2.2-alpha]
+## [0.2.2]
 ### Added
 - Transpiler - support narrowing casts.
     - ex: `b = (u8)my_i32;` --> `b = (uint8_t)my_i32;`
@@ -66,7 +66,7 @@ Test/interim releases are not documented here.
 
 --- 
 
-## [0.2.1-alpha]
+## [0.2.1]
 ### Added
 - Moved Transpiler into main finlang nuget package
 - `transpiler.GetListOfAllGeneratedFiles()`
@@ -76,7 +76,7 @@ Test/interim releases are not documented here.
 
 --- 
 
-## [0.2.0-alpha]
+## [0.2.0]
 ### Fixed
 - fix ambiguous cast between fin types
 
@@ -85,14 +85,14 @@ Test/interim releases are not documented here.
 
 --- 
 
-## [0.1.5-alpha]
+## [0.1.5]
 ### Added
 - integer self type declaration like `my_u16.u16_`
     - https://github.com/fin-language/fin/issues/21
 
 ---
 
-## [0.1.4-alpha]
+## [0.1.4]
 ### Added
 - `narrow_to_x()` methods like `u32.narrow_to_u8()`
 - `narrow_from()` methods like `u8.narrow_from_u32()`
@@ -103,7 +103,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [0.1.0-alpha]
+## [0.1.0]
 Still only simulating in C#. Not generating C99 yet.
 
 ### Added
