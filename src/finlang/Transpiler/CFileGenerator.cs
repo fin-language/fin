@@ -112,8 +112,10 @@ public class CFileGenerator : CSharpSyntaxWalker
         // a variable declaration can be a field or a local variable. It doesn't contain the semicolon.
         ITypeSymbol typeSymbol = model.GetTypeInfo(node.Type).Type.ThrowIfNull();
 
+        // c_array type already provides one star
         Visit(node.Type);
         // ex: `c_array<u8> a, b;` --> `u8 * a, * b;`
+        // ex: `c_array<SomeRefType> a, b;` --> `SomeRefType ** a, ** b;`
 
         // render the first one
         {
@@ -680,8 +682,17 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (node.Identifier.Text == "c_array")
         {
             VisitLeadingTrivia(node);
-            Visit(node.TypeArgumentList.Arguments[0]);
-            sb.Append(" * ");
+            TypeSyntax arrayTypeSyntax = node.TypeArgumentList.Arguments.Single();
+            base.Visit(arrayTypeSyntax);
+            sb.Append(" *");
+
+            var arrayTypeSymbol = (INamedTypeSymbol)model.GetSymbolInfo(arrayTypeSyntax).Symbol.ThrowIfNull();
+
+            if (arrayTypeSymbol.IsReferenceType)
+                sb.Append("*");
+
+            sb.Append(" ");
+
             return;
         }
         base.VisitGenericName(node);

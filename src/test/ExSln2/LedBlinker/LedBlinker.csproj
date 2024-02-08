@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="finlang" Version="0.2.0-alpha" />
+    <PackageReference Include="finlang" Version="0.2.3-alpha" />
     <!-- <ProjectReference Include="..\..\..\finlang\finlang.csproj" /> -->
   </ItemGroup>
 

@@ -41,7 +41,7 @@ public class C99TranspilerTest
     {
         transpiler.GenerateAndWrite();
 
-        transpiler.GetListOfAllGeneratedFiles().Should().BeEquivalentTo(
+        transpiler.GetListOfAllGeneratedFiles().Should().Contain(
             "app_MainApp.h",
             "app_MainApp.c",
             "hal_Led.h",

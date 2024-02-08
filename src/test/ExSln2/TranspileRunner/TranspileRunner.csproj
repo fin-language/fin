@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\finlang\finlang.csproj" />
+    <!-- <ProjectReference Include="..\..\..\finlang\finlang.csproj" /> -->
     <ProjectReference Include="..\LedBlinker\LedBlinker.csproj" />
   </ItemGroup>
 
