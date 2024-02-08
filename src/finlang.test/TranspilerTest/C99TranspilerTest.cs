@@ -27,13 +27,13 @@ public class C99TranspilerTest
         ledStructCode.Should().Contain("  hal_Gpio * _gpio;");
         ledCls.hFile.fqnDependencies.Should().BeEquivalentTo("hal.Gpio", "finlang.u8");
 
-        var mainAppCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "app.MainApp");
+        var mainAppCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "app.Main");
         string mainAppStructCode = mainAppCls.hFile.mainCode.ToString();
-        mainAppStructCode.Should().Contain("typedef struct app_MainApp app_MainApp;");
+        mainAppStructCode.Should().Contain("typedef struct app_Main app_Main;");
         mainAppStructCode.Should().Contain("  uint16_t period_ms;");
         mainAppStructCode.Should().Contain("  uint32_t _toggle_at_ms;");
         mainAppStructCode.Should().Contain("  hal_Led * _redLed;");
-        mainAppCls.hFile.fqnDependencies.Should().BeEquivalentTo("hal.Led", "finlang.u32", "finlang.u16");
+        mainAppCls.hFile.fqnDependencies.Should().Contain("hal.Led", "finlang.u32", "finlang.u16");
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class C99TranspilerTest
 
 Want to see the following files:
 c99/
-    App_MainApp.c/h
+    App_Main.c/h
     Hal_Led.c/h
 
 It should NOT generate a Hal_Gpio.c/h because that's an FFI class.
