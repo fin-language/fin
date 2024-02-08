@@ -9,10 +9,10 @@
 typedef struct hal_LedArray hal_LedArray;
 struct hal_LedArray
 {
-    hal_Led ** leds;
+    hal_Led * * leds;
 };
 
 
-void hal_LedArray_ctor(hal_LedArray * self, hal_Led ** leds);
+void hal_LedArray_ctor(hal_LedArray * self, hal_Led * * leds);
 
-hal_Led hal_LedArray_getLed(hal_LedArray * self, uint8_t index);
+hal_Led * hal_LedArray_getLed(hal_LedArray * self, uint8_t index);

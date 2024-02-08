@@ -107,67 +107,41 @@ public class CFileGenerator : CSharpSyntaxWalker
         base.VisitBlock(node);
     }
 
-    public override void VisitVariableDeclaration(VariableDeclarationSyntax node)
-    {
-        // a variable declaration can be a field or a local variable. It doesn't contain the semicolon.
-        ITypeSymbol typeSymbol = model.GetTypeInfo(node.Type).Type.ThrowIfNull();
-
-        // c_array type already provides one star
-        Visit(node.Type);
-        // ex: `c_array<u8> a, b;` --> `u8 * a, * b;`
-        // ex: `c_array<SomeRefType> a, b;` --> `SomeRefType ** a, ** b;`
-
-        // render the first one
-        {
-            if (typeSymbol.IsReferenceType && typeSymbol.Name != "c_array")
-                sb.Append($"* ");
-
-            VariableDeclaratorSyntax? variable = node.Variables.First();
-            Visit(variable);
-        }
-
-        // render the rest
-        for (int i = 1; i < node.Variables.Count; i++)
-        {
-            sb.Append(", ");
-
-            // handle the case 
-            if (typeSymbol.IsReferenceType || typeSymbol.Name == "c_array")
-            {
-                // This is a bit weird I know. Blame the programmers that declare multiple variables on the same line :)
-                // The problem is that the type of `c_array<uint8_t>` renders as `uint8_t *` with the pointer.
-                sb.Append($"* ");
-            }
-
-            VariableDeclaratorSyntax? variable = node.Variables[i];
-            Visit(variable);
-        }
-        //base.VisitVariableDeclaration(node);
-    }
-
-    //public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+    // TODOLOW handle multiple variables declared on the same line with array/reference types
+    //public override void VisitVariableDeclaration(VariableDeclarationSyntax node)
     //{
-    //    ITypeSymbol? typeSymbol = model.GetTypeInfo(node.Declaration.Type).Type.ThrowIfNull();
+    //    // a variable declaration can be a field or a local variable. It doesn't contain the semicolon.
+    //    ITypeSymbol typeSymbol = model.GetTypeInfo(node.Type).Type.ThrowIfNull();
 
-    //    Visit(node.Declaration.Type);
+    //    // c_array type already provides one star
+    //    Visit(node.Type);
+    //    // ex: `c_array<u8> a, b;` --> `u8 * a, * b;`
+    //    // ex: `c_array<SomeRefType> a, b;` --> `SomeRefType ** a, ** b;`
 
-    //    bool needsStar = typeSymbol.IsReferenceType;
-    //    string joiner = "";
-
-    //    foreach (var variable in node.Declaration.Variables)
+    //    // render the first one
     //    {
-    //        sb.Append(joiner); joiner = ", ";
-    //        if (needsStar)
-    //            sb.Append($"* ");
-
-    //        visitor.Visit(variable);
+    //        VariableDeclaratorSyntax? variable = node.Variables.First();
+    //        Visit(variable);
     //    }
-    //    sb.Append(";");
-    //    visitor.VisitTrailingTrivia(fds);
 
-    //    //base.VisitFieldDeclaration(node);
+    //    // render the rest
+    //    for (int i = 0; i < node.Variables.Count; i++)
+    //    {
+    //        sb.Append(", ");
+
+    //        // handle the case 
+    //        if (typeSymbol.IsReferenceType || typeSymbol.Name == "c_array")
+    //        {
+    //            // This is a bit weird I know. Blame the programmers that declare multiple variables on the same line :)
+    //            // The problem is that the type of `c_array<uint8_t>` renders as `uint8_t *` with the pointer.
+    //            sb.Append($"* ");
+    //        }
+
+    //        VariableDeclaratorSyntax? variable = node.Variables[i];
+    //        Visit(variable);
+    //    }
+    //    //base.VisitVariableDeclaration(node);
     //}
-
 
     // parameters are declared for methods and constructors
     public override void VisitParameterList(ParameterListSyntax node)
@@ -198,27 +172,6 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         list.VisitRest();
     }
-
-    public override void VisitParameter(ParameterSyntax node)
-    {
-        var parameterSymbol = model.GetDeclaredSymbol(node);
-
-        // if the parameter is a reference type, add a star to the type
-        if (parameterSymbol != null && parameterSymbol.Type.IsReferenceType)
-        {
-            bool alreadyHasStar = parameterSymbol.Type.Name == "c_array";
-
-            Visit(node.Type);
-            if (!alreadyHasStar)
-                sb.Append("* ");
-            VisitToken(node.Identifier);
-        }
-        else
-        {
-            base.VisitParameter(node);
-        }
-    }
-
 
     // <Expression> <OperatorToken> <Name>
     // `this.stuff` this == Expression. stuff == Name.
@@ -684,15 +637,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             VisitLeadingTrivia(node);
             TypeSyntax arrayTypeSyntax = node.TypeArgumentList.Arguments.Single();
             base.Visit(arrayTypeSyntax);
-            sb.Append(" *");
-
-            var arrayTypeSymbol = (INamedTypeSymbol)model.GetSymbolInfo(arrayTypeSyntax).Symbol.ThrowIfNull();
-
-            if (arrayTypeSymbol.IsReferenceType)
-                sb.Append("*");
-
-            sb.Append(" ");
-
+            sb.Append(" * ");
             return;
         }
         base.VisitGenericName(node);
@@ -736,6 +681,10 @@ public class CFileGenerator : CSharpSyntaxWalker
                     }
 
                     result = Namer.GetCName(symbol.Symbol.ThrowIfNull());
+
+                    if (symbol.Symbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsReferenceType)
+                        result += " *";
+
                     break;
                 }
         }
