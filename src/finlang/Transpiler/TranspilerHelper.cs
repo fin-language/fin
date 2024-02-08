@@ -225,23 +225,6 @@ public class TranspilerHelper
     }
 
     /// <summary>
-    /// `this.SomeMethod` to `SomeMethod`
-    /// </summary>
-    /// <param name="node"></param>
-    /// <returns></returns>
-    public bool HandleThisMethodAccess(MemberAccessExpressionSyntax node)
-    {
-        if (IsThisMethodAccess(node))
-        {
-            transpilerWalker.VisitLeadingTrivia(node.GetFirstToken());
-            node.Name.VisitWith(transpilerWalker);
-            return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Returns attached comment trivia and possible trailing end of line trivia.
     /// Unattached comments have a full blank line trailing them:
     /// <code>

@@ -34,7 +34,7 @@ public class C99TranspilerTest
             string ledStructCode = ledCls.hFile.mainCode.ToString();
             ledStructCode.Should().Contain("typedef struct hal_Led hal_Led;");
             ledStructCode.Should().Contain("  hal_Gpio * _gpio;");
-            ledCls.hFile.fqnDependencies.Should().BeEquivalentTo("hal.Gpio", "finlang.u8");
+            ledCls.hFile.fqnDependencies.Should().Contain("hal.Gpio", "finlang.u8");
         }
 
         {

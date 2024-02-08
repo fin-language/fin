@@ -27,6 +27,7 @@ Test/interim releases are not documented here.
 ## [wip]
 ### Fixed
 - Transpiler - now tracks header dependency of type `T` contained in `c_array<T>`
+- Transpiler - fix pass `self` to method calls like `this.toggle()`
 
 ---
 

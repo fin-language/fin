@@ -182,7 +182,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     }
 
     // <Expression> <OperatorToken> <Name>
-    // `this.stuff` this == Expression. stuff == Name.
+    // ex: `this.stuff`. `this` is Expression. `stuff` is Name.
     public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
         bool done = false;
@@ -193,7 +193,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             Visit(node.Name);
             done = true;
         }
-        else if (transpilerHelper.HandleThisMethodAccess(node))
+        else if (HandleThisMethodAccess(node))
         {
             done = true;
         }
@@ -214,6 +214,22 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         if (!done)
             base.VisitMemberAccessExpression(node);
+    }
+
+    /// <summary>
+    /// `this.SomeMethod(args)`
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    public bool HandleThisMethodAccess(MemberAccessExpressionSyntax node)
+    {
+        if (!transpilerHelper.IsThisMethodAccess(node))
+            return false;
+
+        VisitLeadingTrivia(node);
+        firstArgsSb.Append("self");
+        Visit(node.Name);
+        return true;
     }
 
     public bool HandleSimpleMemberInvocation(MemberAccessExpressionSyntax node, InvocationExpressionSyntax ies)
