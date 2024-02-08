@@ -173,15 +173,23 @@ public class CFileGenerator : CSharpSyntaxWalker
         list.VisitRest();
     }
 
+    public override void VisitQualifiedName(QualifiedNameSyntax node)
+    {
+        // used for nested classes/enums
+        // MyOuterClass.MyInnerClass.DoSomething();
+        VisitLeadingTrivia(node);
+        Visit(node.Right);
+    }
+
     // <Expression> <OperatorToken> <Name>
     // `this.stuff` this == Expression. stuff == Name.
     public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
         bool done = false;
 
+        // used for enum access: `MyEnumClass.EnumName`
         if (transpilerHelper.ExpressionIsEnumMember(node.Expression))
         {
-            // used for enum access: `MyEnumClass.EnumName`
             Visit(node.Name);
             done = true;
         }

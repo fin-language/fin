@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdint.h>
 #include "hal_Led.h"
+#include "hal_LedArray_LedArrayStatus.h"
 
 
 
@@ -13,6 +14,7 @@ struct app_Main
     uint16_t period_ms; // keep without underscore so that `this.` is required in constructor
     uint32_t _toggle_at_ms;
     hal_Led * _redLed;
+    hal_LedArray_LedArrayStatus _led_array_status;
 };
 
 

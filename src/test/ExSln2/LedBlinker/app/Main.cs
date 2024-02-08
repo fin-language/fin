@@ -8,6 +8,7 @@ public class Main : FinObj
     public u16 period_ms; // keep without underscore so that `this.` is required in constructor
     public u32 _toggle_at_ms;
     public readonly Led _redLed;
+    public LedArray.LedArrayStatus _led_array_status;
 
     public Main(Led redLed, u16 period_ms)
     {

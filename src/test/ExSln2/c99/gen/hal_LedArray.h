@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "hal_LedArray_LedInfo.h"
 #include "hal_Led.h"
 
 
@@ -9,9 +10,11 @@
 typedef struct hal_LedArray hal_LedArray;
 struct hal_LedArray
 {
+
     hal_Led * * _leds;
     uint8_t _leds_length;
     uint8_t _index;
+    hal_LedArray_LedInfo * _led_info;
 };
 
 

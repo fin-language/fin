@@ -26,6 +26,7 @@ Test/interim releases are not documented here.
 
 ## WIP
 ### Added
+- Transpiler - support nested classes/enums although indentation is not correct yet
 - Transpiler - handle an object calling its own method without `this` like `toggle()`
 - Transpiler - allow nullable types like `Led?`, convert `null` to `NULL`
 - Transpiler - ignore  `required`, `virtual`, `override`, `sealed`, `in`

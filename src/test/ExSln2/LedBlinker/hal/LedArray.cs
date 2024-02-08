@@ -4,9 +4,16 @@ namespace hal;
 
 public class LedArray : FinObj
 {
+    public enum LedArrayStatus { OFF, ON, BLINKING }
+    public class LedInfo : FinObj
+    {
+        public u8 something;
+    }
+
     required public c_array<Led> _leds;
     public u8 _leds_length;
     public u8 _index;
+    public LedInfo _led_info;
 
     public LedArray(c_array<Led> leds, u8 leds_length)
     {
