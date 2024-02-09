@@ -15,10 +15,11 @@ public class LedArray : FinObj
     public u8 _index;
     public LedInfo _led_info;
 
-    public LedArray(c_array<Led> leds, u8 leds_length)
+    public LedArray(c_array<Led> leds, u8 leds_length, LedInfo led_info)
     {
         this._leds = leds;
         _leds_length = leds_length;
+        _led_info = led_info;
     }
 
     /// <summary>
