@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="finlang" Version="0.2.3-alpha" />
-    <!-- <ProjectReference Include="..\..\..\finlang\finlang.csproj" /> -->
+    <!-- test with nuget -->
+    <!-- <PackageReference Include="finlang" Version="0.2.3-alpha" /> -->
+
+    <!-- test with local fin project -->
+    <ProjectReference Include="..\..\..\finlang\finlang.csproj" />
   </ItemGroup>
 
   <!-- required for finlang -->

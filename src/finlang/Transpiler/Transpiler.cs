@@ -46,7 +46,7 @@ public class Transpiler
     /// <param name="project"></param>
     public void GatherDeclarationsForProject(Project project)
     {
-        project = project.AddMetadataReferences(GetAssemblies());
+        project = AdjustProjectForTranspilation(project);
         Compilation compilation = project.GetCompilationAsync().Result.ThrowIfNull();
 
         ThrowAnyDiagnosticError(compilation.GetDiagnostics(), "");
@@ -59,6 +59,19 @@ public class Transpiler
             FindAllClasses(model);
             FindAllEnums(model);
         }
+    }
+
+    private Project AdjustProjectForTranspilation(Project project)
+    {
+        // remove finlang.csproj reference for test projects otherwise we get errors while running our tests
+        var toRemove = project.ProjectReferences.Where(pr => pr.ProjectId.ToString().Contains("finlang.csproj")).ToList();
+        foreach (var pr in toRemove)
+        {
+            project = project.RemoveProjectReference(pr);
+        }
+
+        project = project.AddMetadataReferences(GetAssemblies());
+        return project;
     }
 
     private void FindAllEnums(SemanticModel model)
