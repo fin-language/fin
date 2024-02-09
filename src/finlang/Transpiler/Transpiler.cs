@@ -58,6 +58,7 @@ public class Transpiler
 
             FindAllClasses(model);
             FindAllEnums(model);
+            FindAllInterfaces(model);
         }
     }
 
@@ -81,8 +82,8 @@ public class Transpiler
         foreach (var enumDeclNode in allEnums)
         {
             INamedTypeSymbol symbol = model.GetDeclaredSymbol(enumDeclNode).ThrowIfNull();
-
-            //if (SymbolHelper.IsDerivedFrom(symbol, "FinObj"))
+            
+            // could check for [simonly] attribute
             {
                 var c99Decl = new C99ClsEnum(model, enumDeclNode, symbol);
                 c99ClassesEnums.Add(c99Decl);
@@ -100,9 +101,27 @@ public class Transpiler
         {
             INamedTypeSymbol symbol = model.GetDeclaredSymbol(classDeclNode).ThrowIfNull();
 
-            if (SymbolHelper.IsDerivedFrom(symbol, "FinObj"))
+            if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)))
             {
                 var c99Decl = new C99ClsEnum(model, classDeclNode, symbol);
+                c99ClassesEnums.Add(c99Decl);
+                fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
+            }
+        }
+    }
+
+    private void FindAllInterfaces(SemanticModel model)
+    {
+        var allInterfaces = model.SyntaxTree.GetRoot().DescendantNodes().OfType<InterfaceDeclarationSyntax>();
+
+        foreach (var declNode in allInterfaces)
+        {
+            INamedTypeSymbol symbol = model.GetDeclaredSymbol(declNode).ThrowIfNull();
+
+            // could also check for [simonly] attribute
+            if (symbol.AllInterfaces.Any(iface => iface.Name == nameof(IFinObj)))
+            {
+                var c99Decl = new C99ClsEnum(model, declNode, symbol);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }

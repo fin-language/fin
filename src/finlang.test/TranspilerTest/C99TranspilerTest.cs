@@ -47,6 +47,12 @@ public class C99TranspilerTest
             mainAppCls.hFile.fqnDependencies.Should().Contain("hal.Led", "finlang.u32", "finlang.u16");
         }
 
+        {
+            var cls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.IDigIn");
+            string structCode = cls.hFile.mainCode.ToString();
+            //structCode.Should().Contain("  uint8_t * _data;");
+            //cls.hFile.fqnDependencies.Should().BeEquivalentTo("finlang.u8");
+        }
     }
 
     [Fact]

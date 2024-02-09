@@ -27,7 +27,7 @@ public class C99ClsEnum
 
     public bool HasCFile()
     {
-        return !IsFFI && !IsEnum;
+        return !IsFFI && !IsEnum && !IsEnum;
     }
 
     public bool IsEnum
@@ -35,6 +35,14 @@ public class C99ClsEnum
         get
         {
             return syntaxNode is EnumDeclarationSyntax;
+        }
+    }
+
+    public bool IsInterface
+    {
+        get
+        {
+            return syntaxNode is InterfaceDeclarationSyntax;
         }
     }
 

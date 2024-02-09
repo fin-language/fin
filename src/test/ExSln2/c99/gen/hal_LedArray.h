@@ -18,7 +18,7 @@ struct hal_LedArray
 };
 
 
-void hal_LedArray_ctor(hal_LedArray * self, hal_Led * * leds, uint8_t leds_length);
+void hal_LedArray_ctor(hal_LedArray * self, hal_Led * * leds, uint8_t leds_length, hal_LedArray_LedInfo * led_info);
 
 /// <summary>
 /// This is actually a private method

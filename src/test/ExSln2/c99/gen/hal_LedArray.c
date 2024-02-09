@@ -5,11 +5,12 @@
 
 
 
-void hal_LedArray_ctor(hal_LedArray * self, hal_Led * * leds, uint8_t leds_length)
+void hal_LedArray_ctor(hal_LedArray * self, hal_Led * * leds, uint8_t leds_length, hal_LedArray_LedInfo * led_info)
 {
     memset(self, 0, sizeof(*self));
     self->_leds = leds;
     self->_leds_length = leds_length;
+    self->_led_info = led_info;
 }
 
 /// <summary>
