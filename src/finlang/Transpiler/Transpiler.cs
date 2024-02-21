@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Reflection;
@@ -12,8 +12,8 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public List<C99ClsEnum> c99ClassesEnums = new();
-    public Dictionary<string, C99ClsEnum> fqnToC99Class = new();
+    public List<C99ClsEnumInterface> c99ClassesEnums = new();
+    public Dictionary<string, C99ClsEnumInterface> fqnToC99Class = new();
 
     public Transpiler(string destinationDirPath, string solutionPath, string projectName)
     {
@@ -62,7 +62,7 @@ public class Transpiler
         }
     }
 
-    private Project AdjustProjectForTranspilation(Project project)
+    private static Project AdjustProjectForTranspilation(Project project)
     {
         // remove finlang.csproj reference for test projects otherwise we get errors while running our tests
         var toRemove = project.ProjectReferences.Where(pr => pr.ProjectId.ToString().Contains("finlang.csproj")).ToList();
@@ -85,7 +85,7 @@ public class Transpiler
             
             // could check for [simonly] attribute
             {
-                var c99Decl = new C99ClsEnum(model, enumDeclNode, symbol);
+                var c99Decl = new C99ClsEnumInterface(model, enumDeclNode, symbol);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }
@@ -103,7 +103,7 @@ public class Transpiler
 
             if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)))
             {
-                var c99Decl = new C99ClsEnum(model, classDeclNode, symbol);
+                var c99Decl = new C99ClsEnumInterface(model, classDeclNode, symbol);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }
@@ -121,7 +121,7 @@ public class Transpiler
             // could also check for [simonly] attribute
             if (symbol.AllInterfaces.Any(iface => iface.Name == nameof(IFinObj)))
             {
-                var c99Decl = new C99ClsEnum(model, declNode, symbol);
+                var c99Decl = new C99ClsEnumInterface(model, declNode, symbol);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }

@@ -8,7 +8,7 @@ namespace finlang.Transpiler;
 
 public class CFileGenerator : CSharpSyntaxWalker
 {
-    C99ClsEnum cls;
+    C99ClsEnumInterface cls;
     public SemanticModel model;
     StringBuilder sb;
 
@@ -23,7 +23,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     Namer namer;
     TranspilerHelper transpilerHelper;
 
-    public CFileGenerator(C99ClsEnum cls) : base(SyntaxWalkerDepth.StructuredTrivia)
+    public CFileGenerator(C99ClsEnumInterface cls) : base(SyntaxWalkerDepth.StructuredTrivia)
     {
         this.cls = cls;
         this.model = cls.model;

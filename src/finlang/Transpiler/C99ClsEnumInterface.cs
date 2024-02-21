@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace finlang.Transpiler;
 
-public class C99ClsEnum
+public class C99ClsEnumInterface
 {
     readonly public INamedTypeSymbol symbol;
     readonly public SyntaxNode syntaxNode;
@@ -15,7 +15,7 @@ public class C99ClsEnum
     public bool IsFFI { get; init; }
     public bool IsStaticClass { get; init; }
 
-    public C99ClsEnum(SemanticModel model, SyntaxNode syntaxNode, INamedTypeSymbol symbol)
+    public C99ClsEnumInterface(SemanticModel model, SyntaxNode syntaxNode, INamedTypeSymbol symbol)
     {
         this.IsFFI = symbol.GetAttributes().Any(a => a.AttributeClass?.Name == "ffiAttribute");
         this.syntaxNode = syntaxNode;

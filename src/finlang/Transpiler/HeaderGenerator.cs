@@ -10,7 +10,7 @@ public class HeaderGenerator
     {
     }
 
-    public void GenerateEnum(C99ClsEnum cls)
+    public void GenerateEnum(C99ClsEnumInterface cls)
     {
         var enumName = cls.GetCName();
         CFileGenerator visitor = new(cls);
@@ -26,7 +26,7 @@ public class HeaderGenerator
         visitor.Visit(cls.syntaxNode);
     }
 
-    public void GenerateStruct(C99ClsEnum cls)
+    public void GenerateStruct(C99ClsEnumInterface cls)
     {
         var structName = cls.GetCName();
         CFileGenerator visitor = new(cls);
@@ -68,7 +68,7 @@ public class HeaderGenerator
         sb.AppendLine();
     }
 
-    public void GenerateFunctionPrototypes(C99ClsEnum cls)
+    public void GenerateFunctionPrototypes(C99ClsEnumInterface cls)
     {
         CFileGenerator visitor = new(cls);
         var sb = new StringBuilder();

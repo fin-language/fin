@@ -2,9 +2,9 @@
 
 public class DependencyResolver
 {
-    private readonly Dictionary<string, C99ClsEnum> fqnToC99Class;
+    private readonly Dictionary<string, C99ClsEnumInterface> fqnToC99Class;
 
-    public DependencyResolver(Dictionary<string, C99ClsEnum> fqnToC99Class)
+    public DependencyResolver(Dictionary<string, C99ClsEnumInterface> fqnToC99Class)
     {
         this.fqnToC99Class = fqnToC99Class;
     }
@@ -34,7 +34,7 @@ public class DependencyResolver
 
         if (result == null)
         {
-            if (fqnToC99Class.TryGetValue(key: fqnDependency, out C99ClsEnum? cls))
+            if (fqnToC99Class.TryGetValue(key: fqnDependency, out C99ClsEnumInterface? cls))
             {
                 result =  "\"" + cls.hFile.relativeFilePath + "\"";
             }
