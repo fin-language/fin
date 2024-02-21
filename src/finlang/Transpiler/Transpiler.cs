@@ -1,4 +1,4 @@
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Reflection;
@@ -166,9 +166,14 @@ public class Transpiler
             {
                 gen.GenerateEnum(cls);
             }
+            else if (cls.IsInterface)
+            {
+                var iGen = new InterfaceGenerator(cls);
+                iGen.GenerateInterfaceStructs();
+            }
             else
             {
-                gen.GenerateStruct(cls);
+                gen.GenerateStructures(cls);
                 gen.GenerateFunctionPrototypes(cls);
 
                 CFileGenerator cFileGenerator = new(cls);

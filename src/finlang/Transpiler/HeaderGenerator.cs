@@ -12,11 +12,9 @@ public class HeaderGenerator
 
     public void GenerateEnum(C99ClsEnumInterface cls)
     {
-        var enumName = cls.GetCName();
         CFileGenerator visitor = new(cls);
         visitor.UseHFile();
         visitor.renderingPrototypes = true;
-        var sb = cls.hFile.mainCode;
 
         if (!cls.IsEnum)
         {
@@ -26,7 +24,7 @@ public class HeaderGenerator
         visitor.Visit(cls.syntaxNode);
     }
 
-    public void GenerateStruct(C99ClsEnumInterface cls)
+    public void GenerateStructures(C99ClsEnumInterface cls)
     {
         var structName = cls.GetCName();
         CFileGenerator visitor = new(cls);
@@ -97,16 +95,20 @@ public class HeaderGenerator
         var methods = cls.GetMethods();
         foreach (var method in methods)
         {
-            cls.AddHeaderFqnDependency(method.ReturnType);
-
-            foreach (var param in method.Parameters)
-            {
-                cls.AddHeaderFqnDependency(param.Type);
-            }
+            TrackMethodDependencies(cls, method);
         }
 
         var result = StringUtils.DeIndent(sb.ToString());
         cls.hFile.mainCode.Append(result);
     }
 
+    public static void TrackMethodDependencies(C99ClsEnumInterface cls, IMethodSymbol method)
+    {
+        cls.AddHeaderFqnDependency(method.ReturnType);
+
+        foreach (var param in method.Parameters)
+        {
+            cls.AddHeaderFqnDependency(param.Type);
+        }
+    }
 }

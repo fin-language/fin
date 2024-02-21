@@ -4,6 +4,17 @@
 #include <stdbool.h>
 
 
-// Class has no fields. No struct generated.
-void hal_IDigOut_set_state(hal_IDigOut * self, bool state);
-void hal_IDigOut_toggle(hal_IDigOut * self);
+typedef struct hal_IDigOut hal_IDigOut;
+typedef struct hal_IDigOut_vtable hal_IDigOut_vtable;
+
+struct hal_IDigOut
+{
+    hal_IDigOut_vtable const * /*const*/ vtable;
+    void * /*const*/ self;
+};
+
+struct hal_IDigOut_vtable
+{
+    void (*set_state)(hal_IDigOut * self, bool state);
+    void (*toggle)(hal_IDigOut * self);
+};

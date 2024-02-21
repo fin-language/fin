@@ -3,6 +3,7 @@
         "finlang"
     ],
     "files.associations": {
-        "hal_gpio.h": "c"
+        "hal_gpio.h": "c",
+        "hal_ledarray.h": "c"
     }
 }

@@ -157,13 +157,18 @@ public class CFileGenerator : CSharpSyntaxWalker
             symbol = model.GetDeclaredSymbol(cds).ThrowIfNull();
         }
 
+        VisitParameterListCustom(node, symbol);
+    }
+
+    public void VisitParameterListCustom(ParameterListSyntax node, ISymbol? symbol, INamedTypeSymbol? selfType = null)
+    {
         var list = new WalkableChildSyntaxList(this, node.ChildNodesAndTokens());
 
         if (symbol?.IsStatic == false)
         {
             list.VisitUpTo(node.OpenParenToken, including: true);
 
-            sb.Append(Namer.GetCName(symbol.ContainingType) + " * self");
+            sb.Append(Namer.GetCName(selfType ?? symbol.ContainingType) + " * self");
             if (node.Parameters.Count > 0)
             {
                 sb.Append(", ");

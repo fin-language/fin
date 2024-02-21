@@ -4,5 +4,16 @@
 #include <stdbool.h>
 
 
-// Class has no fields. No struct generated.
-bool hal_IDigIn_read_state(hal_IDigIn * self);
+typedef struct hal_IDigIn hal_IDigIn;
+typedef struct hal_IDigIn_vtable hal_IDigIn_vtable;
+
+struct hal_IDigIn
+{
+    hal_IDigIn_vtable const * /*const*/ vtable;
+    void * /*const*/ self;
+};
+
+struct hal_IDigIn_vtable
+{
+    bool (*read_state)(hal_IDigIn * self);
+};
