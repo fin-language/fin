@@ -26,3 +26,18 @@ void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self)
     hal_GpioPinState next_state = hal_Gpio_read(self->_gpio) == hal_GpioPinState_High ? hal_GpioPinState_Low : hal_GpioPinState_High;
     hal_Gpio_write(self->_gpio, next_state);
 }
+
+// hal_IDigInOut_vtable
+const hal_IDigInOut_vtable hal_GpioDigInOut_vtable = {
+    .read_state = &hal_GpioDigInOut_read_state,
+    .set_state = &hal_GpioDigInOut_set_state,
+    .toggle = &hal_GpioDigInOut_toggle
+};
+
+hal_IDigInOut hal_GpioDigInOut__to__hal_IDigInOut(hal_GpioDigInOut * self)
+{
+    hal_IDigInOut result;
+    result.vtable = &hal_GpioDigInOut_vtable;
+    result.self = self;
+    return result;
+}
