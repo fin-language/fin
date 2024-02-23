@@ -28,3 +28,4 @@ struct hal_IDigIn_vtable
 /// <returns></returns>
 bool hal_IDigIn_read_state(hal_IDigIn * self);
 
+

@@ -1,6 +1,8 @@
 // finlang generated file for c# hal.IDigOut type
 
 #include "hal_IDigOut.h"
+#include <stddef.h>
+#include <assert.h>
 
 
 /// <summary>

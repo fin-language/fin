@@ -2,6 +2,8 @@
 #pragma once
 
 #include <stdbool.h>
+#include "hal_IDigIn.h"
+#include "hal_IDigOut.h"
 
 
 typedef struct hal_IDigInOut hal_IDigInOut;
@@ -41,4 +43,11 @@ bool hal_IDigInOut_read_state(hal_IDigInOut * self);
 void hal_IDigInOut_set_state(hal_IDigInOut * self, bool state);
 
 void hal_IDigInOut_toggle(hal_IDigInOut * self);
+
+
+// Up conversion from hal_IDigInOut interface to hal_IDigIn interface
+hal_IDigIn hal_IDigInOut__to__hal_IDigIn(hal_IDigInOut * self);
+
+// Up conversion from hal_IDigInOut interface to hal_IDigOut interface
+hal_IDigOut hal_IDigInOut__to__hal_IDigOut(hal_IDigInOut * self);
 

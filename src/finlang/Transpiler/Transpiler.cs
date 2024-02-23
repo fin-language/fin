@@ -172,6 +172,7 @@ public class Transpiler
                 iGen.GenerateInterfaceStructs();
                 iGen.GeneratePrototypes();
                 iGen.GenerateFunctions();
+                iGen.GenerateConversionFunctions();
             }
             else
             {
