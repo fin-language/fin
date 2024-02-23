@@ -75,27 +75,32 @@ public class HeaderGenerator
 
         foreach (var node in cls.syntaxNode.ChildNodes())
         {
-            if (node is not MethodDeclarationSyntax && node is not ConstructorDeclarationSyntax)
+            if (node is MethodDeclarationSyntax || node is ConstructorDeclarationSyntax)
             {
-                continue;
+                var bmds = (BaseMethodDeclarationSyntax)node;
+
+                if (node is MethodDeclarationSyntax mds && mds.Identifier.Text == "_SimOnlyStuff")
+                {
+                    int x = 22;
+                }
+
+                if (bmds.IsSimOnly())
+                    continue;
+
+                visitor.Visit(node);
+
+                // remove last characters from string buffer until we find ')'
+                // this is needed because the closing parenthesis often has a newline/whitespace after it.
+                while (sb[sb.Length - 1] != ')')
+                {
+                    sb.Length--;
+                }
+
+                sb.Append(";\n");
+
+                var symbol = cls.model.GetDeclaredSymbol(bmds).ThrowIfNull();
+                TrackMethodDependencies(cls, (IMethodSymbol)symbol);
             }
-
-            visitor.Visit(node);
-            
-            // remove last characters from string buffer until we find ')'
-            // this is needed because the closing parenthesis often has a newline/whitespace after it.
-            while (sb[sb.Length - 1] != ')')
-            {
-                sb.Length--;
-            }
-
-            sb.Append(";\n");
-        }
-
-        var methods = cls.GetMethods();
-        foreach (var method in methods)
-        {
-            TrackMethodDependencies(cls, method);
         }
 
         var result = StringUtils.DeIndent(sb.ToString());

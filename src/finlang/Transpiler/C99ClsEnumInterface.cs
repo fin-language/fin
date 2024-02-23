@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
 
 namespace finlang.Transpiler;
 
@@ -48,7 +49,17 @@ public class C99ClsEnumInterface
 
     public IEnumerable<IMethodSymbol> GetMethods()
     {
-        return symbol.GetMembers().OfType<IMethodSymbol>();
+        return GetMembers().OfType<IMethodSymbol>();
+    }
+
+    public IEnumerable<ISymbol> GetMembers()
+    {
+        IEnumerable<ISymbol> members = symbol.GetMembers();
+
+        // select members that don't have the [simonly] attribute
+        members = members.Where(m => !m.IsSimOnly());
+
+        return members;
     }
 
     public IEnumerable<IMethodSymbol> GetNonConstructorMethods()
@@ -58,7 +69,7 @@ public class C99ClsEnumInterface
 
     public IEnumerable<IFieldSymbol> GetInstanceFields()
     {
-        return symbol.GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
+        return GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
     }
 
     public string GetCName()

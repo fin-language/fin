@@ -28,8 +28,8 @@ public class GpioDigInOut : FinObj, IDigInOut
     }
 
     [simonly]
-    public void _ThrowIfDestructed()
+    public void _SimOnlyStuff()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

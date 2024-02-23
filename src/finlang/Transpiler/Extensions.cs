@@ -39,6 +39,28 @@ public static class Extensions
         }
     }
 
+    public static bool IsSimOnly(this MemberDeclarationSyntax node)
+    {
+        SyntaxList<AttributeListSyntax> attributeLists = node.AttributeLists;
+        return HasSimOnlyAttribute(attributeLists);
+    }
+
+    public static bool HasSimOnlyAttribute(SyntaxList<AttributeListSyntax> attributeLists)
+    {
+        return attributeLists.Where(attrList => attrList.Attributes.Any(attr => attr.IsSimOnlyAttribute())).Any();
+    }
+
+    public static bool IsSimOnlyAttribute(this AttributeSyntax attribute)
+    {
+        string name = attribute.Name.ToString();
+        return name == "simonly" || name == nameof(simonlyAttribute); // accept "simonly" because we are working with syntax, we don't know the full name of the attribute
+    }
+
+    public static bool IsSimOnly(this ISymbol symbol)
+    {
+        return symbol.GetAttributes().Any(a => a.AttributeClass?.Name == nameof(simonlyAttribute));
+    }
+
     public static bool IsPublic(this MethodDeclarationSyntax node)
     {
         return node.Modifiers.Any(d => (SyntaxKind)d.RawKind == SyntaxKind.PublicKeyword);

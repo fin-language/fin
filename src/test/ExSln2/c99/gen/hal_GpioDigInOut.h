@@ -20,6 +20,3 @@ bool hal_GpioDigInOut_read_state(hal_GpioDigInOut * self);
 void hal_GpioDigInOut_set_state(hal_GpioDigInOut * self, bool state);
 
 void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self);
-
-[finlang_simonlyAttribute_ctor]
-void PRIVATE_hal_GpioDigInOut__ThrowIfDestructed(hal_GpioDigInOut * self);
