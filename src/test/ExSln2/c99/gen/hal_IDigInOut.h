@@ -21,13 +21,13 @@ struct hal_IDigInOut_vtable
     /// Reads the state of the digital input.
     /// </summary>
     /// <returns></returns>
-    bool (*read_state)(hal_IDigInOut * self);
+    bool (*read_state)(void * self);
     /// <summary>
     /// Sets the state of the digital output.
     /// </summary>
     /// <param name="state"></param>
-    void (*set_state)(hal_IDigInOut * self, bool state);
-    void (*toggle)(hal_IDigInOut * self);
+    void (*set_state)(void * self, bool state);
+    void (*toggle)(void * self);
 };
 
 /// <summary>

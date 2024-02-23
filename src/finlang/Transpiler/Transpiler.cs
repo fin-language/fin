@@ -176,6 +176,7 @@ public class Transpiler
             }
             else
             {
+                // this is a class
                 gen.GenerateStructures(cls);
                 gen.GenerateFunctionPrototypes(cls);
 
@@ -186,6 +187,10 @@ public class Transpiler
                 var deIndented = StringUtils.DeIndent(cls.cFile.mainCode.ToString());
                 cls.cFile.mainCode.Clear();
                 cls.cFile.mainCode.Append(deIndented);
+
+                var iImplGen = new InterfaceImplementGenerator(cls);
+                iImplGen.GenerateVtables();
+                iImplGen.GenerateInterfaceConversions();
             }
         }
     }

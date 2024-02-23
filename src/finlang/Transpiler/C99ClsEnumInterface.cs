@@ -47,6 +47,14 @@ public class C99ClsEnumInterface
         }
     }
 
+    public bool IsClass
+    {
+        get
+        {
+            return syntaxNode is ClassDeclarationSyntax;
+        }
+    }
+
     public IEnumerable<IMethodSymbol> GetMethods()
     {
         return GetMembers().OfType<IMethodSymbol>();

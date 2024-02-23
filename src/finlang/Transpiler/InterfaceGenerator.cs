@@ -18,24 +18,29 @@ public class InterfaceGenerator
         visitor = new CFileGenerator(cls);
         this.cls = cls;
 
-        GetAllInterfaceMethods(methods, cls.symbol);
+        methods = GetAllInterfaceMethods(cls.symbol).ToList();
     }
 
-    private static void GetAllInterfaceMethods(List<IMethodSymbol> methodsList, INamedTypeSymbol symbol)
+    public static IEnumerable<IMethodSymbol> GetAllInterfaceMethods(INamedTypeSymbol interfaceSymbol)
+    {
+        return GetAllInheritedInterfaceMethods(interfaceSymbol)
+            .Concat(interfaceSymbol.GetMembers().OfType<IMethodSymbol>());   // put this interface's methods last
+    }
+
+    public static IEnumerable<IMethodSymbol> GetAllInheritedInterfaceMethods(INamedTypeSymbol symbol)
     {
         var superInterfaceTypes = GetSuperInterfaceTypes(symbol);
 
         foreach (var superInterfaceType in superInterfaceTypes)
         {
-            methodsList.AddRange(superInterfaceType.GetMembers().OfType<IMethodSymbol>());
+            foreach (var m in superInterfaceType.GetMembers().OfType<IMethodSymbol>())
+            {
+                yield return m;
+            }
         }
-
-        // put specific interface methods last
-        methodsList.AddRange(symbol.GetMembers().OfType<IMethodSymbol>());
     }
 
-
-    private static IEnumerable<INamedTypeSymbol> GetSuperInterfaceTypes(INamedTypeSymbol symbol)
+    public static IEnumerable<INamedTypeSymbol> GetSuperInterfaceTypes(INamedTypeSymbol symbol)
     {
         return symbol.AllInterfaces.Where(i => i.Name != nameof(IFinObj));
     }
@@ -70,7 +75,7 @@ public class InterfaceGenerator
             visitor.VisitToken(mDecl.ReturnType.GetFirstToken()); // includes comment and indent
 
             sb.Append($"(*{methodSymbol.Name})");
-            visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfType: cls.symbol);
+            visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfTypeName: "void");
             sb.AppendLine(";");
 
             HeaderGenerator.TrackMethodDependencies(cls, methodSymbol);
@@ -127,7 +132,7 @@ public class InterfaceGenerator
 
         var prefix = cls.GetCName() + "_";
         sb.Append($"{prefix}{methodSymbol.Name}");
-        visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfType: cls.symbol);
+        visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfTypeName: Namer.GetCName(cls.symbol));
     }
 
     private void GenerateMethodSignatureDeIndented(StringBuilder sb, IMethodSymbol methodSymbol)
@@ -136,6 +141,11 @@ public class InterfaceGenerator
         GenerateMethodSignature(tempSb, methodSymbol);
         sb.Append(StringUtils.DeIndent(tempSb.ToString()));
         visitor.SetSb(sb);
+    }
+
+    public static string GetInterfaceVtableStructName(string structName)
+    {
+        return structName + "_vtable";
     }
 
     public void GenerateConversionFunctions()
@@ -151,14 +161,14 @@ public class InterfaceGenerator
         var superInterfaceTypes = GetSuperInterfaceTypes(cls.symbol);
 
         var myTypeName = cls.GetCName();
-        var myVtableTypeName = myTypeName + "_vtable";
+        var myVtableTypeName = GetInterfaceVtableStructName(myTypeName);
 
         foreach (var superInterface in superInterfaceTypes)
         {
             var tab = "    ";
-            var resultVarName = "out";
+            var resultVarName = "result";
             var superTypeName = Namer.GetCName(superInterface);
-            var superVtableTypeName = superTypeName + "_vtable";
+            var superVtableTypeName = GetInterfaceVtableStructName(superTypeName);
 
             string comment = $"// Up conversion from {myTypeName} interface to {superTypeName} interface";
             string conversionMethodSignature = $"{superTypeName} {myTypeName}__to__{superTypeName}({myTypeName} * self)";
@@ -175,9 +185,8 @@ public class InterfaceGenerator
                 cls.hFile.mainCode.AppendLine($"{conversionMethodSignature};\n");
             }
 
-            var superMethods = new List<IMethodSymbol>();
-            GetAllInterfaceMethods(superMethods, superInterface);
-            string firstMethodName = superMethods[0].Name;
+            var superMethods = GetAllInterfaceMethods(superInterface);
+            string firstMethodName = superMethods.First().Name;
 
             sb.AppendLine($"{tab}// assert that vtable layouts are compatible");
             // static_assert(offsetof(hal_IDigIn_vtable, read_state) == 0, "Unexpected function pointer offset");
