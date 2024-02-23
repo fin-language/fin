@@ -3,7 +3,7 @@
 public class FinObj : IFinObj
 {
     [simonly]
-    public void _ThrowIfDestructed()
+    public virtual void _ThrowIfDestructed()
     {
 
     }
