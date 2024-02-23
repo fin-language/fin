@@ -42,6 +42,11 @@ public class CFileGenerator : CSharpSyntaxWalker
         sb = cls.hFile.mainCode;
     }
 
+    public void UseCFile()
+    {
+        sb = cls.cFile.mainCode;
+    }
+
     public void Generate()
     {
         // TODO public constants

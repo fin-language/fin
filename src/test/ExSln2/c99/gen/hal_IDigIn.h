@@ -15,5 +15,16 @@ struct hal_IDigIn
 
 struct hal_IDigIn_vtable
 {
+    /// <summary>
+    /// Reads the state of the digital input.
+    /// </summary>
+    /// <returns></returns>
     bool (*read_state)(hal_IDigIn * self);
 };
+
+/// <summary>
+/// Reads the state of the digital input.
+/// </summary>
+/// <returns></returns>
+bool hal_IDigIn_read_state(hal_IDigIn * self);
+

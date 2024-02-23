@@ -6,25 +6,36 @@ namespace finlang.Transpiler;
 
 public class InterfaceGenerator
 {
-    C99ClsEnumInterface cls;
+    private readonly CFileGenerator visitor;
+    private readonly C99ClsEnumInterface cls;
+    private readonly List<IMethodSymbol> methods = new();
 
     public InterfaceGenerator(C99ClsEnumInterface cls)
     {
+        if (!cls.IsInterface)
+            throw new InvalidOperationException("Object has to be an interface for this code.");
+
+        visitor = new CFileGenerator(cls);
         this.cls = cls;
+
+        var superInterfaceTypes = cls.symbol.AllInterfaces.Where(i => i.Name != nameof(IFinObj));
+
+        foreach (var superInterfaceType in superInterfaceTypes)
+        {
+            methods.AddRange(superInterfaceType.GetMembers().OfType<IMethodSymbol>());
+        }
+
+        // put specific interface methods last
+        methods.AddRange(cls.symbol.GetMembers().OfType<IMethodSymbol>());
     }
 
     public void GenerateInterfaceStructs()
     {
-        var interfaceName = cls.GetCName();
-        CFileGenerator visitor = new(cls);
         visitor.UseHFile();
         visitor.renderingPrototypes = true;
         var sb = cls.hFile.mainCode;
 
-        if (!cls.IsInterface)
-        {
-            throw new InvalidOperationException("Object has to be an interface for this code.");
-        }
+        var interfaceName = GetInterfaceStructName();
 
         // generate forward declarations
         sb.AppendLine($"typedef struct {interfaceName} {interfaceName};");
@@ -38,35 +49,83 @@ public class InterfaceGenerator
         sb.AppendLine("};");
         sb.AppendLine();
 
-        // generate vtable struct
-
         sb.AppendLine($"struct {interfaceName}_vtable");
         sb.AppendLine("{");
 
-        // get all methods from interface including inherited ones
-        var thisInterfaceSymbol = cls.symbol;
-        var superInterfaceTypes = cls.symbol.AllInterfaces.Where(i => i.Name != nameof(IFinObj));
 
-        foreach (var superInterfaceType in superInterfaceTypes)
+        foreach (var methodSymbol in methods)
         {
-            RenderVTableEntry(visitor, sb, thisInterfaceSymbol, superInterfaceType);
-        }
-
-        RenderVTableEntry(visitor, sb, thisInterfaceSymbol, cls.symbol);
-        sb.AppendLine("};");
-    }
-
-    private void RenderVTableEntry(CFileGenerator visitor, StringBuilder sb, INamedTypeSymbol implementingInterface, INamedTypeSymbol interfaceWithMethods)
-    {
-        interfaceWithMethods.GetMembers().OfType<IMethodSymbol>().ToList().ForEach(methodSymbol =>
-        {
-            sb.Append($"    {methodSymbol.ReturnType} (*{methodSymbol.Name})");
             var mDecl = (MethodDeclarationSyntax)methodSymbol.DeclaringSyntaxReferences.Single().GetSyntax();
-            visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfType: implementingInterface);
+            visitor.VisitToken(mDecl.ReturnType.GetFirstToken()); // includes comment and indent
+
+            sb.Append($"(*{methodSymbol.Name})");
+            visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfType: cls.symbol);
             sb.AppendLine(";");
 
-            // track dependencies
             HeaderGenerator.TrackMethodDependencies(cls, methodSymbol);
-        });
+        }
+
+        sb.AppendLine("};\n");
+    }
+
+    private string GetInterfaceStructName()
+    {
+        return cls.GetCName();
+    }
+
+    public void GeneratePrototypes()
+    {
+        visitor.UseHFile();
+        var sb = cls.hFile.mainCode;
+        visitor.renderingPrototypes = true;
+
+        foreach (var methodSymbol in methods)
+        {
+            GenerateMethodSignatureDeIndented(sb, methodSymbol);
+            sb.AppendLine(";\n");
+        }
+
+        var mainCode = cls.hFile.mainCode;
+    }
+
+    public void GenerateFunctions()
+    {
+        visitor.UseCFile();
+        visitor.renderingPrototypes = false;
+        var sb = cls.cFile.mainCode;
+
+        foreach (var methodSymbol in methods)
+        {
+            GenerateMethodSignatureDeIndented(sb, methodSymbol);
+            sb.AppendLine("\n{");
+            sb.Append($"    return self->vtable->{methodSymbol.Name}(self");
+            foreach (var parameter in methodSymbol.Parameters)
+            {
+                sb.Append($", {parameter.Name}");
+            }
+            sb.Append($");\n");
+
+            sb.AppendLine("}\n");
+        }
+    }
+
+    // generates stuff like `void hal_IDigInOut_set_state(hal_IDigInOut * self, bool state)` and any leading comments
+    private void GenerateMethodSignature(StringBuilder sb, IMethodSymbol methodSymbol)
+    {
+        var mDecl = (MethodDeclarationSyntax)methodSymbol.DeclaringSyntaxReferences.Single().GetSyntax();
+        visitor.SetSb(sb);
+        visitor.VisitToken(mDecl.ReturnType.GetFirstToken()); // includes comment and indent
+
+        var prefix = cls.GetCName() + "_";
+        sb.Append($"{prefix}{methodSymbol.Name}");
+        visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfType: cls.symbol);
+    }
+
+    private void GenerateMethodSignatureDeIndented(StringBuilder sb, IMethodSymbol methodSymbol)
+    {
+        var tempSb = new StringBuilder();
+        GenerateMethodSignature(tempSb, methodSymbol);
+        sb.Append(StringUtils.DeIndent(tempSb.ToString()));
+        visitor.SetSb(sb);
     }
 }

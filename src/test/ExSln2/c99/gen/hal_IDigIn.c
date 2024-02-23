@@ -3,3 +3,12 @@
 #include "hal_IDigIn.h"
 
 
+/// <summary>
+/// Reads the state of the digital input.
+/// </summary>
+/// <returns></returns>
+bool hal_IDigIn_read_state(hal_IDigIn * self)
+{
+    return self->vtable->read_state(self);
+}
+

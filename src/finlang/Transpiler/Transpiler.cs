@@ -170,6 +170,8 @@ public class Transpiler
             {
                 var iGen = new InterfaceGenerator(cls);
                 iGen.GenerateInterfaceStructs();
+                iGen.GeneratePrototypes();
+                iGen.GenerateFunctions();
             }
             else
             {
