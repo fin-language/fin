@@ -28,12 +28,16 @@ void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self)
 }
 
 // virtual table implementation for IDigInOut
-const hal_IDigInOut_vtable hal_IDigInOut_vtable_imp = {
+static const hal_IDigInOut_vtable hal_IDigInOut_vtable_imp = {
     .read_state = (bool (*)(void * self))hal_GpioDigInOut_read_state,
     .set_state = (void (*)(void * self, bool state))hal_GpioDigInOut_set_state,
     .toggle = (void (*)(void * self))hal_GpioDigInOut_toggle,
 };
 
+const hal_IDigInOut_vtable* hal_GpioDigInOut__get__hal_IDigInOut_vtable(void)
+{
+    return (const hal_IDigInOut_vtable*)(&hal_IDigInOut_vtable_imp.read_state);
+}
 
 // Up conversion from hal_GpioDigInOut to hal_IDigInOut interface
 hal_IDigInOut hal_GpioDigInOut__to__hal_IDigInOut(hal_GpioDigInOut * self)

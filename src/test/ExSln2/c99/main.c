@@ -14,9 +14,8 @@ int main(void)
     hal_GpioDigInOut_ctor(&gpio_dio, &gpio);
 
     hal_Led redLed;
-    hal_IDigInOut idio = hal_GpioDigInOut__to__hal_IDigInOut(&gpio_dio);
-    hal_Led_ctor(&redLed, &idio);
-    
+    hal_Led_ctor(&redLed, M_hal_GpioDigInOut__to__hal_IDigInOut(&gpio_dio));
+
     app_Main mainApp;
     app_Main_ctor(&mainApp, &redLed, 2000);
 

@@ -24,6 +24,13 @@ void hal_GpioDigInOut_set_state(hal_GpioDigInOut * self, bool state);
 
 void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self);
 
+
+const hal_IDigInOut_vtable* hal_GpioDigInOut__get__hal_IDigInOut_vtable(void);
+
+#define M_hal_GpioDigInOut__to__hal_IDigInOut(self_arg)    &(hal_IDigInOut){ .vtable = hal_GpioDigInOut__get__hal_IDigInOut_vtable(), .self = self_arg }
+
+
+
 // Up conversion from hal_GpioDigInOut to hal_IDigInOut interface
 hal_IDigInOut hal_GpioDigInOut__to__hal_IDigInOut(hal_GpioDigInOut * self);
 
