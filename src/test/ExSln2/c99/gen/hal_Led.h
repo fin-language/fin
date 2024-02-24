@@ -1,7 +1,7 @@
 // finlang generated file for c# hal.Led type
 #pragma once
 
-#include "hal_Gpio.h"
+#include "hal_IDigInOut.h"
 #include <stdint.h>
 
 
@@ -9,12 +9,12 @@
 typedef struct hal_Led hal_Led;
 struct hal_Led
 {
-    hal_Gpio * _gpio;
+    hal_IDigInOut * _dig_io;
     uint8_t my_public_var;
 };
 
 
-void hal_Led_ctor(hal_Led * self, hal_Gpio * gpio);
+void hal_Led_ctor(hal_Led * self, hal_IDigInOut * dig_out);
 
 void hal_Led_toggle_twice(hal_Led * self);
 

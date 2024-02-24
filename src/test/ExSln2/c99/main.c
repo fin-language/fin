@@ -2,15 +2,20 @@
 #include "hal_Gpio.h"
 #include "hal_Led.h"
 #include <stdio.h>
+#include "hal_GpioDigInOut.h"
 
 
 int main(void)
 {
     printf("Starting!\n");
+
     hal_Gpio gpio = {13};
-    
+    hal_GpioDigInOut gpio_dio;
+    hal_GpioDigInOut_ctor(&gpio_dio, &gpio);
+
     hal_Led redLed;
-    hal_Led_ctor(&redLed, &gpio);
+    hal_IDigInOut idio = hal_GpioDigInOut__to__hal_IDigInOut(&gpio_dio);
+    hal_Led_ctor(&redLed, &idio);
     
     app_Main mainApp;
     app_Main_ctor(&mainApp, &redLed, 2000);
