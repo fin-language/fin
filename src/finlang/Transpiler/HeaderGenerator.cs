@@ -79,11 +79,6 @@ public class HeaderGenerator
             {
                 var bmds = (BaseMethodDeclarationSyntax)node;
 
-                if (node is MethodDeclarationSyntax mds && mds.Identifier.Text == "_SimOnlyStuff")
-                {
-                    int x = 22;
-                }
-
                 if (bmds.IsSimOnly())
                     continue;
 

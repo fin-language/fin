@@ -242,12 +242,15 @@ public class CFileGenerator : CSharpSyntaxWalker
         return true;
     }
 
-    public bool HandleSimpleMemberInvocation(MemberAccessExpressionSyntax node, InvocationExpressionSyntax ies)
+    public bool HandleSimpleMemberInvocation(MemberAccessExpressionSyntax memberAccessNode, InvocationExpressionSyntax ies)
     {
         // for non-virtual instance methods: led.toggle() to led_toggle(led)
         // for static methods: Led.toggle() to Led_toggle()
 
-        IMethodSymbol ims = (IMethodSymbol)model.GetSymbolInfo(node.Name).Symbol.ThrowIfNull();
+        IMethodSymbol ims = (IMethodSymbol)model.GetSymbolInfo(memberAccessNode.Name).Symbol.ThrowIfNull();
+        // add dependency
+        cls.cFile.AddFqnDependency(ims.ContainingType);
+
         if (ims.IsStatic)
         {
             // no need to provide the object as an argument
@@ -258,17 +261,26 @@ public class CFileGenerator : CSharpSyntaxWalker
             var oldSb = sb;
             sb = renderedExpression;
             skipNextLeadingTrivia = true;
-            Visit(node.Expression);
+            Visit(memberAccessNode.Expression);
             firstArgsSb = renderedExpression;
             sb = oldSb;
         }
 
-        // add dependency
-        cls.cFile.AddFqnDependency(ims.ContainingType);
+        VisitLeadingTrivia(memberAccessNode);
 
-        VisitLeadingTrivia(node);
-        Visit(node.Name);
-        VisitTrailingTrivia(node);
+        // if the method is an interface method, we need to handle it specially
+        if (ims.ContainingType.TypeKind == TypeKind.Interface)
+        {
+            // we need to call the method on the interface type being accessed and not the interface that contains the method (incase of interface inheritance)
+            var objInterfaceType = model.GetTypeInfo(memberAccessNode.Expression).ConvertedType.ThrowIfNull();
+            sb.Append(Namer.GetMethodNamePrefixForPrivate(ims) + Namer.GetCName(objInterfaceType) + "_" + ims.Name);
+        }
+        else
+        {
+            Visit(memberAccessNode.Name);
+        }
+
+        VisitTrailingTrivia(memberAccessNode);
         return true;
     }
 

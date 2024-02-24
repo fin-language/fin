@@ -28,5 +28,5 @@ void hal_Led_toggle_twice_static(hal_Led * led)
 // Will toggle the state of the LED
 void hal_Led_toggle(hal_Led * self)
 {
-    hal_IDigOut_toggle(self->_dig_io);
+    hal_IDigInOut_toggle(self->_dig_io);
 }

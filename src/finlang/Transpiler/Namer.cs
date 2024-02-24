@@ -121,17 +121,24 @@ public class Namer
 
         if (symbol is IMethodSymbol methodSymbol)
         {
-            string prefix = "";
-            if (methodSymbol.Name.StartsWith("_") || methodSymbol.DeclaredAccessibility != Accessibility.Public)
-            {
-                prefix = "PRIVATE_";
-            }
+            string prefix = GetMethodNamePrefixForPrivate(methodSymbol);
 
             return prefix + MangleTypeSymbolName(fqn);
         }
 
         var name = MangleTypeSymbolName(fqn);
         return name;
+    }
+
+    public static string GetMethodNamePrefixForPrivate(IMethodSymbol methodSymbol)
+    {
+        string prefix = "";
+        if (methodSymbol.Name.StartsWith("_") || methodSymbol.DeclaredAccessibility != Accessibility.Public)
+        {
+            prefix = "PRIVATE_";
+        }
+
+        return prefix;
     }
 
     public string GetCName(SymbolInfo symbolInfo)
