@@ -11,6 +11,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     C99ClsEnumInterface cls;
     public SemanticModel model;
     StringBuilder sb;
+    OutputFile outputFile;
 
     /// <summary>
     /// Used to add arguments to a function call. Used for passing an object to its own method call.
@@ -27,7 +28,8 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         this.cls = cls;
         this.model = cls.model;
-        sb = cls.cFile.mainCode;
+        outputFile = cls.cFile;
+        sb = outputFile.mainCode;
         namer = new Namer(model);
         transpilerHelper = new(this, model);
     }
@@ -37,14 +39,21 @@ public class CFileGenerator : CSharpSyntaxWalker
         this.sb = sb;
     }
 
+    public void SetSbFromOutputFile()
+    {
+        sb = outputFile.mainCode;
+    }
+
     public void UseHFile()
     {
-        sb = cls.hFile.mainCode;
+        outputFile = cls.hFile;
+        SetSbFromOutputFile();
     }
 
     public void UseCFile()
     {
-        sb = cls.cFile.mainCode;
+        outputFile = cls.cFile;
+        SetSbFromOutputFile();
     }
 
     public void Generate()
@@ -282,6 +291,15 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         VisitTrailingTrivia(memberAccessNode);
         return true;
+    }
+
+    public override void VisitVariableDeclaration(VariableDeclarationSyntax node)
+    {
+        // track type of variable as a dependency
+        var typeSymbol = model.GetTypeInfo(node.Type).Type.ThrowIfNull();
+        outputFile.AddFqnDependency(typeSymbol);
+
+        base.VisitVariableDeclaration(node);
     }
 
     public override void VisitArgumentList(ArgumentListSyntax node)

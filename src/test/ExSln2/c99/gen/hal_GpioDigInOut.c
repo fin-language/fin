@@ -1,6 +1,7 @@
 // finlang generated file for c# hal.GpioDigInOut type
 
 #include "hal_GpioDigInOut.h"
+#include "hal_GpioPinState.h"
 #include <string.h>
 
 

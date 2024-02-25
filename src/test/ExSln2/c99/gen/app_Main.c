@@ -2,6 +2,8 @@
 
 #include "app_Main.h"
 #include "hal_Helper.h"
+#include <stdint.h>
+#include <stdint.h>
 #include <string.h>
 
 
