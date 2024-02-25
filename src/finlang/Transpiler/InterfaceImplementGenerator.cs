@@ -100,8 +100,8 @@ public class InterfaceImplementGenerator
 
         var superMethods = InterfaceGenerator.GetAllInterfaceMethods(directInterface);
         string firstMethodName = superMethods.First().Name;
-
+        string conversionFunctionName = InterfaceGenerator.GetConversionFunctionName(myTypeName, superTypeName);
         sb.AppendLine($"\n// Up conversion from {myTypeName} to {superTypeName} interface");
-        sb.AppendLine($"#define M_{myTypeName}__to__{superTypeName}(self_arg)    ({superTypeName}){{ .self = self_arg, .vtable = (const {superVtableTypeName}*)(&{vtableInstanceName}.{firstMethodName}) }}");
+        sb.AppendLine($"#define {conversionFunctionName}(self_arg)    ({superTypeName}){{ .self = self_arg, .vtable = (const {superVtableTypeName}*)(&{vtableInstanceName}.{firstMethodName}) }}");
     }
 }

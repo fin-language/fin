@@ -149,6 +149,11 @@ public class InterfaceGenerator
         return structName + "_vtable";
     }
 
+    public static string GetConversionFunctionName(string fromInterfaceName, string toInterfaceName)
+    {
+        return $"M_{fromInterfaceName}__to__{toInterfaceName}";
+    }
+
     public void GenerateConversionFunctions()
     {
         visitor.UseHFile();
@@ -174,7 +179,8 @@ public class InterfaceGenerator
 
             sb.AppendLine($"\n// Up conversion from {myTypeName} interface to {superTypeName} interface");
             sb.AppendLine($"// `self_arg` should be of type `{myTypeName} *`");
-            sb.AppendLine($"#define M_{myTypeName}__to__{superTypeName}(self_arg)    ({superTypeName}){{ .self = self_arg->self, .vtable = (const {superVtableTypeName}*)(&self_arg->vtable->{firstMethodName}) }}");
+            string conversionFunctionName = GetConversionFunctionName(myTypeName, superTypeName);
+            sb.AppendLine($"#define {conversionFunctionName}(self_arg)    ({superTypeName}){{ .self = self_arg->self, .vtable = (const {superVtableTypeName}*)(&self_arg->vtable->{firstMethodName}) }}");
             sb.AppendLine($"// assert that vtable layouts are compatible");
             sb.AppendLine($"static_assert(offsetof({superVtableTypeName}, {firstMethodName}) == 0, \"Unexpected vtable function start\");");
 

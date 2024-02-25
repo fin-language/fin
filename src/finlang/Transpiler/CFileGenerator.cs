@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Operations;
 using System.Security.Policy;
 using System.Text;
 
@@ -319,6 +320,38 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         list.VisitRest();
+    }
+
+    public override void VisitArgument(ArgumentSyntax node)
+    {
+        var done = HandleInterfaceConversion(node);
+
+        if (!done)
+            base.VisitArgument(node);
+    }
+
+    private bool HandleInterfaceConversion(ArgumentSyntax node)
+    {
+        bool done = false;
+        var op = model.GetOperation(node);
+        if (op is IArgumentOperation iao)
+        {
+            var type = iao.Parameter.ThrowIfNull().Type;
+            // check if type is an interface
+            if (type.TypeKind == TypeKind.Interface)
+            {
+                var toName = Namer.GetCName(type);
+                var fromType = model.GetTypeInfo(node.Expression).Type.ThrowIfNull();
+                var fromName = Namer.GetCName(fromType);
+                var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
+                sb.Append($"&{funcName}(");
+                base.VisitArgument(node);
+                sb.Append(")");
+                done = true;
+            }
+        }
+
+        return done;
     }
 
     public bool HandleSimpleMemberAccess(MemberAccessExpressionSyntax node)
