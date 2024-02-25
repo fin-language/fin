@@ -2,6 +2,8 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stddef.h>
+#include <assert.h>
 
 
 typedef struct hal_IDigIn hal_IDigIn;
@@ -27,5 +29,4 @@ struct hal_IDigIn_vtable
 /// </summary>
 /// <returns></returns>
 bool hal_IDigIn_read_state(hal_IDigIn * self);
-
 

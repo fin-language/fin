@@ -2,6 +2,8 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stddef.h>
+#include <assert.h>
 
 
 typedef struct hal_IDigOut hal_IDigOut;
@@ -30,5 +32,4 @@ struct hal_IDigOut_vtable
 void hal_IDigOut_set_state(hal_IDigOut * self, bool state);
 
 void hal_IDigOut_toggle(hal_IDigOut * self);
-
 

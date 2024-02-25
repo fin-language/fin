@@ -151,13 +151,12 @@ public class InterfaceGenerator
 
     public void GenerateConversionFunctions()
     {
-        visitor.UseCFile();
+        visitor.UseHFile();
         visitor.renderingPrototypes = false;
-        var sb = cls.cFile.mainCode;
-        cls.cFile.includes.Add($"<stddef.h>");
-        cls.cFile.includes.Add($"<assert.h>");
-
-        cls.hFile.mainCode.AppendLine();
+        OutputFile codeFile = cls.hFile;
+        var sb = codeFile.mainCode;
+        codeFile.includes.Add($"<stddef.h>");
+        codeFile.includes.Add($"<assert.h>");
 
         var superInterfaceTypes = GetSuperInterfaceTypes(cls.symbol);
 
@@ -166,47 +165,24 @@ public class InterfaceGenerator
 
         foreach (var superInterface in superInterfaceTypes)
         {
-            var tab = "    ";
-            var resultVarName = "result";
-            var superTypeName = Namer.GetCName(superInterface);
-            var superVtableTypeName = GetInterfaceVtableStructName(superTypeName);
-
-            string comment = $"// Up conversion from {myTypeName} interface to {superTypeName} interface";
-            string conversionMethodSignature = $"{superTypeName} {myTypeName}__to__{superTypeName}({myTypeName} * self)";
-            sb.AppendLine(comment);
-            sb.AppendLine(conversionMethodSignature);
-            sb.AppendLine("{");
-            sb.AppendLine($"{tab}{superTypeName} {resultVarName};");
-            sb.AppendLine();
-
-            // h file stuff
-            {
-                cls.hFile.AddFqnDependency(superInterface);
-                cls.hFile.mainCode.AppendLine(comment);
-                cls.hFile.mainCode.AppendLine($"{conversionMethodSignature};\n");
-            }
-
+            codeFile.AddFqnDependency(superInterface);
             var superMethods = GetAllInterfaceMethods(superInterface);
             string firstMethodName = superMethods.First().Name;
 
-            sb.AppendLine($"{tab}// assert that vtable layouts are compatible");
-            // static_assert(offsetof(hal_IDigIn_vtable, read_state) == 0, "Unexpected function pointer offset");
-            sb.AppendLine($"{tab}static_assert(offsetof({superVtableTypeName}, {firstMethodName}) == 0, \"Unexpected vtable function start\");");
+            var superTypeName = Namer.GetCName(superInterface);
+            var superVtableTypeName = GetInterfaceVtableStructName(superTypeName);
+
+            sb.AppendLine($"\n// Up conversion from {myTypeName} interface to {superTypeName} interface");
+            sb.AppendLine($"// `self_arg` should be of type `{myTypeName} *`");
+            sb.AppendLine($"#define M_{myTypeName}__to__{superTypeName}(self_arg)    ({superTypeName}){{ .self = self_arg->self, .vtable = (const {superVtableTypeName}*)(&self_arg->vtable->{firstMethodName}) }}");
+            sb.AppendLine($"// assert that vtable layouts are compatible");
+            sb.AppendLine($"static_assert(offsetof({superVtableTypeName}, {firstMethodName}) == 0, \"Unexpected vtable function start\");");
 
             foreach (var methodSymbol in superMethods)
             {
                 // static_assert(offsetof(hal_IDigIn_vtable, read_state) == offsetof(hal_IDigInOut_vtable, read_state) - offsetof(hal_IDigInOut_vtable, read_state), "Incompatible vtable layout");
-                sb.AppendLine($"{tab}static_assert(offsetof({superVtableTypeName}, {methodSymbol.Name}) == offsetof({myVtableTypeName}, {methodSymbol.Name}) - offsetof({myVtableTypeName}, {firstMethodName}), \"Incompatible vtable layout\");");
+                sb.AppendLine($"static_assert(offsetof({superVtableTypeName}, {methodSymbol.Name}) == offsetof({myVtableTypeName}, {methodSymbol.Name}) - offsetof({myVtableTypeName}, {firstMethodName}), \"Incompatible vtable layout\");");
             }
-
-            sb.AppendLine($"\n{tab}// adjust vtable pointer");
-
-            //out.vtable = (hal_IDigIn_vtable*)self->vtable + offsetof(hal_IDigInOut_vtable, read_state);
-            sb.AppendLine($"{tab}{resultVarName}.vtable = ({superVtableTypeName}*)self->vtable + offsetof({myVtableTypeName}, {firstMethodName});");
-
-            sb.AppendLine($"{tab}{resultVarName}.self = self->self;");
-            sb.AppendLine($"{tab}return {resultVarName};");
-            sb.AppendLine("}\n");
         }
     }
 }
