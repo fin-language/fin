@@ -324,13 +324,13 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitArgument(ArgumentSyntax node)
     {
-        var done = HandleInterfaceConversion(node);
+        var done = HandleArgumentInterfaceConversion(node);
 
         if (!done)
             base.VisitArgument(node);
     }
 
-    private bool HandleInterfaceConversion(ArgumentSyntax node)
+    private bool HandleArgumentInterfaceConversion(ArgumentSyntax node)
     {
         bool done = false;
         var op = model.GetOperation(node);
@@ -346,7 +346,7 @@ public class CFileGenerator : CSharpSyntaxWalker
                 var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
                 sb.Append($"&{funcName}(");
                 base.VisitArgument(node);
-                sb.Append(")");
+                sb.Append(')');
                 done = true;
             }
         }
@@ -733,6 +733,41 @@ public class CFileGenerator : CSharpSyntaxWalker
     public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
         base.VisitAssignmentExpression(node);
+    }
+
+    public override void VisitEqualsValueClause(EqualsValueClauseSyntax node)
+    {
+        bool done = HandleAssignmentInterfaceConversion(node);
+
+        if (!done)
+            base.VisitEqualsValueClause(node);
+    }
+
+    private bool HandleAssignmentInterfaceConversion(EqualsValueClauseSyntax node)
+    {
+        bool done = false;
+        
+        var op = model.GetOperation(node);
+        if (op is IVariableInitializerOperation vio)
+        {
+            var type = vio.Value.Type.ThrowIfNull();
+            // check if type is an interface
+            if (type.TypeKind == TypeKind.Interface)
+            {
+                var toName = Namer.GetCName(type);
+                var fromType = model.GetTypeInfo(node.Value).Type.ThrowIfNull();
+                var fromName = Namer.GetCName(fromType);
+                var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
+                VisitToken(node.EqualsToken);
+
+                sb.Append($"&{funcName}(");
+                Visit(node.Value);
+                sb.Append(')');
+                done = true;
+            }
+        }
+
+        return done;
     }
 
     public override void VisitGenericName(GenericNameSyntax node)
