@@ -20,12 +20,12 @@ bool hal_IDigInOut_read_state(hal_IDigInOut * self)
 /// <param name="state"></param>
 void hal_IDigInOut_set_state(hal_IDigInOut * self, bool state)
 {
-    return self->vtable->set_state(self, state);
+    self->vtable->set_state(self, state);
 }
 
 void hal_IDigInOut_toggle(hal_IDigInOut * self)
 {
-    return self->vtable->toggle(self);
+    self->vtable->toggle(self);
 }
 
 // Up conversion from hal_IDigInOut interface to hal_IDigIn interface

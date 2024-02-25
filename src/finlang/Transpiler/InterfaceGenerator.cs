@@ -110,9 +110,10 @@ public class InterfaceGenerator
 
         foreach (var methodSymbol in methods)
         {
+            var returnCode = methodSymbol.ReturnsVoid ? "" : "return ";
             GenerateMethodSignatureDeIndented(sb, methodSymbol);
             sb.AppendLine("\n{");
-            sb.Append($"    return self->vtable->{methodSymbol.Name}(self");
+            sb.Append($"    {returnCode}self->vtable->{methodSymbol.Name}(self");
             foreach (var parameter in methodSymbol.Parameters)
             {
                 sb.Append($", {parameter.Name}");
