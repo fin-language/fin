@@ -4,8 +4,6 @@
 #include "hal_Gpio.h"
 #include <stdbool.h>
 #include "hal_IDigInOut.h"
-#include "hal_IDigIn.h"
-#include "hal_IDigOut.h"
 
 
 
@@ -24,21 +22,14 @@ void hal_GpioDigInOut_set_state(hal_GpioDigInOut * self, bool state);
 
 void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self);
 
-
-const hal_IDigInOut_vtable* hal_GpioDigInOut__get__hal_IDigInOut_vtable(void);
-
-#define M_hal_GpioDigInOut__to__hal_IDigInOut(self_arg)    &(hal_IDigInOut){ .vtable = hal_GpioDigInOut__get__hal_IDigInOut_vtable(), .self = self_arg }
-
-
+// vtable is extern to allow const initializations
+extern const hal_IDigInOut_vtable hal_IDigInOut_vtable_imp;
 
 // Up conversion from hal_GpioDigInOut to hal_IDigInOut interface
-hal_IDigInOut hal_GpioDigInOut__to__hal_IDigInOut(hal_GpioDigInOut * self);
-
+#define M_hal_GpioDigInOut__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .self = self_arg, .vtable = (hal_IDigInOut_vtable*)(&hal_IDigInOut_vtable_imp.read_state) }
 
 // Up conversion from hal_GpioDigInOut to hal_IDigIn interface
-hal_IDigIn hal_GpioDigInOut__to__hal_IDigIn(hal_GpioDigInOut * self);
-
+#define M_hal_GpioDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .self = self_arg, .vtable = (hal_IDigIn_vtable*)(&hal_IDigInOut_vtable_imp.read_state) }
 
 // Up conversion from hal_GpioDigInOut to hal_IDigOut interface
-hal_IDigOut hal_GpioDigInOut__to__hal_IDigOut(hal_GpioDigInOut * self);
-
+#define M_hal_GpioDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .self = self_arg, .vtable = (hal_IDigOut_vtable*)(&hal_IDigInOut_vtable_imp.set_state) }

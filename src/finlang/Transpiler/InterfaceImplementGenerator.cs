@@ -28,11 +28,15 @@ public class InterfaceImplementGenerator
         {
             cls.cFile.AddFqnDependency(directInterface);
 
-            sb.AppendLine("\n// virtual table implementation for " + directInterface.Name);
+            sb.AppendLine($"\n// virtual table implementation for {directInterface.Name}. Note that this is extern'd.");
             var vtableStructName = InterfaceGenerator.GetInterfaceVtableStructName(Namer.GetCName(directInterface));
             var vtableInstanceName = GetVtableInstanceName(vtableStructName);
 
-            sb.AppendLine($"const {vtableStructName} {vtableInstanceName} = {{");
+            var decl = $"const {vtableStructName} {vtableInstanceName}";
+
+            cls.hFile.mainCode.AppendLine("\n// vtable is extern to allow const initializations");
+            cls.hFile.mainCode.AppendLine($"extern {decl};");
+            sb.AppendLine($"{decl} = {{");
             foreach (var interfaceMethod in InterfaceGenerator.GetAllInterfaceMethods(directInterface))
             {
                 IMethodSymbol impMethod = cls.GetMethods().Single(m => m.Name == interfaceMethod.Name);
@@ -63,7 +67,7 @@ public class InterfaceImplementGenerator
 
     internal void GenerateInterfaceConversions()
     {
-        var sb = cls.cFile.mainCode;
+        var sb = cls.hFile.mainCode;
         string myTypeName = cls.GetCName();
 
         var directInterfaces = GetDirectInterfaces();
@@ -90,34 +94,14 @@ public class InterfaceImplementGenerator
 
     private void GenConversionMethod(StringBuilder sb, string myTypeName, INamedTypeSymbol directInterface, string vtableStructName)
     {
-        var tab = "    ";
-        var resultVarName = "result";
         var superTypeName = Namer.GetCName(directInterface);
         var superVtableTypeName = InterfaceGenerator.GetInterfaceVtableStructName(superTypeName);
         var vtableInstanceName = GetVtableInstanceName(vtableStructName);
 
-        string comment = $"\n// Up conversion from {myTypeName} to {superTypeName} interface";
-        string conversionMethodSignature = $"{superTypeName} {myTypeName}__to__{superTypeName}({myTypeName} * self)";
-        sb.AppendLine(comment);
-        sb.AppendLine(conversionMethodSignature);
-        sb.AppendLine("{");
-        sb.AppendLine($"{tab}{superTypeName} {resultVarName};");
-
-        // h file stuff
-        {
-            cls.hFile.AddFqnDependency(directInterface);
-            cls.hFile.mainCode.AppendLine(comment);
-            cls.hFile.mainCode.AppendLine($"{conversionMethodSignature};\n");
-        }
-
         var superMethods = InterfaceGenerator.GetAllInterfaceMethods(directInterface);
         string firstMethodName = superMethods.First().Name;
 
-        //ex:result.vtable = (hal_IDigIn_vtable*)(&hal_IDigInOut_vtable_imp.read_state + offsetof(hal_IDigInOut_vtable, read_state));
-        sb.AppendLine($"{tab}{resultVarName}.vtable = ({superVtableTypeName}*)(&{vtableInstanceName}.{firstMethodName});");
-
-        sb.AppendLine($"{tab}{resultVarName}.self = self;");
-        sb.AppendLine($"{tab}return {resultVarName};");
-        sb.AppendLine("}");
+        sb.AppendLine($"\n// Up conversion from {myTypeName} to {superTypeName} interface");
+        sb.AppendLine($"#define M_{myTypeName}__to__{superTypeName}(self_arg)    ({superTypeName}){{ .self = self_arg, .vtable = ({superVtableTypeName}*)(&{vtableInstanceName}.{firstMethodName}) }}");
     }
 }

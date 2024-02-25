@@ -27,41 +27,10 @@ void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self)
     hal_Gpio_write(self->_gpio, next_state);
 }
 
-// virtual table implementation for IDigInOut
-static const hal_IDigInOut_vtable hal_IDigInOut_vtable_imp = {
+// virtual table implementation for IDigInOut. Note that this is extern'd.
+const hal_IDigInOut_vtable hal_IDigInOut_vtable_imp = {
     .read_state = (bool (*)(void * self))hal_GpioDigInOut_read_state,
     .set_state = (void (*)(void * self, bool state))hal_GpioDigInOut_set_state,
     .toggle = (void (*)(void * self))hal_GpioDigInOut_toggle,
 };
 
-const hal_IDigInOut_vtable* hal_GpioDigInOut__get__hal_IDigInOut_vtable(void)
-{
-    return (const hal_IDigInOut_vtable*)(&hal_IDigInOut_vtable_imp.read_state);
-}
-
-// Up conversion from hal_GpioDigInOut to hal_IDigInOut interface
-hal_IDigInOut hal_GpioDigInOut__to__hal_IDigInOut(hal_GpioDigInOut * self)
-{
-    hal_IDigInOut result;
-    result.vtable = (hal_IDigInOut_vtable*)(&hal_IDigInOut_vtable_imp.read_state);
-    result.self = self;
-    return result;
-}
-
-// Up conversion from hal_GpioDigInOut to hal_IDigIn interface
-hal_IDigIn hal_GpioDigInOut__to__hal_IDigIn(hal_GpioDigInOut * self)
-{
-    hal_IDigIn result;
-    result.vtable = (hal_IDigIn_vtable*)(&hal_IDigInOut_vtable_imp.read_state);
-    result.self = self;
-    return result;
-}
-
-// Up conversion from hal_GpioDigInOut to hal_IDigOut interface
-hal_IDigOut hal_GpioDigInOut__to__hal_IDigOut(hal_GpioDigInOut * self)
-{
-    hal_IDigOut result;
-    result.vtable = (hal_IDigOut_vtable*)(&hal_IDigInOut_vtable_imp.set_state);
-    result.self = self;
-    return result;
-}
