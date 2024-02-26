@@ -61,10 +61,23 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         // TODO public constants
 
-        foreach (var member in cls.GetMethods())
+        if (cls.IsFFIClass)
         {
-            if (member.DeclaringSyntaxReferences.Any())
-                Visit(member.DeclaringSyntaxReferences[0].GetSyntax());
+            // FFI classes don't have method implementations
+        }
+        else
+        {
+            foreach (var member in cls.GetMethods())
+            {
+                if (member.IsFFI())
+                {
+                    cls.SetHasFFIMethod();
+                    continue;
+                }
+
+                if (member.DeclaringSyntaxReferences.Any())
+                    Visit(member.DeclaringSyntaxReferences[0].GetSyntax());
+            }
         }
     }
 
@@ -157,6 +170,15 @@ public class CFileGenerator : CSharpSyntaxWalker
     //    }
     //    //base.VisitVariableDeclaration(node);
     //}
+
+    public override void VisitAttributeList(AttributeListSyntax node)
+    {
+        // Ignore attributes
+        VisitLeadingTrivia(node);
+        sb.Append("// FFI function. User code must provide the implementation");
+        VisitTrailingTrivia(node);
+        //base.VisitAttributeList(node);
+    }
 
     // parameters are declared for methods and constructors
     public override void VisitParameterList(ParameterListSyntax node)

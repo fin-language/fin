@@ -26,6 +26,7 @@ public class InterfaceImplementGenerator
         var directInterfaces = GetDirectInterfaces();
         foreach (var directInterface in directInterfaces)
         {
+            cls.SetHasVTable();
             cls.cFile.AddFqnDependency(directInterface);
 
             sb.AppendLine($"\n// virtual table implementation for {directInterface.Name}. Note that this is extern'd.");

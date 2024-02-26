@@ -232,7 +232,7 @@ public class Transpiler
 
         foreach (var cls in c99ClassesEnums)
         {
-            if (cls.IsFFI)
+            if (cls.IsFFIClass || cls.HasFFIMethod)
             {
                 cls.hFile.includesSb.AppendLine($"#include \"{cls.GetCName()}_port_implementation.h\" // You need to provide this");
             }

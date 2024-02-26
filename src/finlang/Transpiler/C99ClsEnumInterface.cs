@@ -13,12 +13,18 @@ public class C99ClsEnumInterface
     readonly public OutputFile hFile = new();
     readonly public OutputFile cFile = new();
 
-    public bool IsFFI { get; init; }
+    private bool hasVTable = false;
+    public bool HasVTable => hasVTable;
+
+    public bool IsFFIClass { get; init; }
+    private bool hasFFIMethod = false;
+    public bool HasFFIMethod => hasFFIMethod;
+
     public bool IsStaticClass { get; init; }
 
     public C99ClsEnumInterface(SemanticModel model, SyntaxNode syntaxNode, INamedTypeSymbol symbol)
     {
-        this.IsFFI = symbol.GetAttributes().Any(a => a.AttributeClass?.Name == "ffiAttribute");
+        this.IsFFIClass = symbol.IsFFI();
         this.syntaxNode = syntaxNode;
         this.symbol = symbol;
         this.model = model;
@@ -26,9 +32,22 @@ public class C99ClsEnumInterface
         this.IsStaticClass = GetInstanceFields().Any() == false;
     }
 
+    public void SetHasFFIMethod()
+    {
+        hasFFIMethod = true;
+    }
+
+    public void SetHasVTable()
+    {
+        hasVTable = true;
+    }
+
     public bool HasCFile()
     {
-        return !IsFFI && !IsEnum && !IsEnum;
+        if (IsFFIClass && !hasVTable)
+            return false;
+
+        return !IsEnum && !IsEnum;
     }
 
     public bool IsEnum

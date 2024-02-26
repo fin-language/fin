@@ -125,6 +125,16 @@ public static class Extensions
         return syntaxTokens.Any(d => (SyntaxKind)d.RawKind == syntaxKind);
     }
 
+    public static bool HasAttribute(this ISymbol symbol, string attributeName)
+    {
+        return symbol.GetAttributes().Any(a => a.AttributeClass?.Name == attributeName);
+    }
+
+    public static bool IsFFI(this ISymbol symbol)
+    {
+        return symbol.HasAttribute(nameof(ffiAttribute));
+    }
+
     public static bool IsConst(this FieldDeclarationSyntax? node)
     {
         if (node == null) return false;

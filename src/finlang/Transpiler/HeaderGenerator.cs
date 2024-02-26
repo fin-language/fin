@@ -33,7 +33,7 @@ public class HeaderGenerator
         var sb = cls.hFile.mainCode;
 
         // don't generate a struct for FFI classes
-        if (cls.IsFFI)
+        if (cls.IsFFIClass)
         {
             sb.AppendLine($"// Class is a Foreign Function Interface. No struct generated.");
             return;
