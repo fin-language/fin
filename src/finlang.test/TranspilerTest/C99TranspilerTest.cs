@@ -26,15 +26,15 @@ public class C99TranspilerTest
             var cls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.CArrayDependencyTest");
             string structCode = cls.hFile.mainCode.ToString();
             structCode.Should().Contain("  uint8_t * _data;");
-            cls.hFile.fqnDependencies.Should().BeEquivalentTo("finlang.u8");
+            cls.hFile.fqnDependencies.Should().BeEquivalentTo("finlang.u8", "finlang.c_array");
         }
 
         {
             var ledCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.Led");
             string ledStructCode = ledCls.hFile.mainCode.ToString();
             ledStructCode.Should().Contain("typedef struct hal_Led hal_Led;");
-            ledStructCode.Should().Contain("  hal_Gpio * _gpio;");
-            ledCls.hFile.fqnDependencies.Should().Contain("hal.Gpio", "finlang.u8");
+            ledStructCode.Should().Contain("  hal_IDigInOut * _dig_io;");
+            ledCls.hFile.fqnDependencies.Should().Contain("hal.IDigInOut", "finlang.u8");
         }
 
         {
