@@ -26,6 +26,8 @@ Test/interim releases are not documented here.
 
 ## [0.2.?]
 ### Added
+- Transpiler - initial support interfaces
+    - interface inheritance, multiple interfaces, interface conversions...
 - Transpiler - allow generating C to ignore unused warning: `FinC.ignore_unused(some_var)`
 
 
