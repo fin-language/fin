@@ -60,8 +60,11 @@ public class InterfaceGenerator
 
         sb.AppendLine($"struct {interfaceName}");
         sb.AppendLine("{");
-        sb.AppendLine($"    {interfaceName}_vtable const * /*const*/ vtable;");
-        sb.AppendLine("    void * /*const*/ self;");
+        sb.AppendLine($"    /** Pointer to implementing object's vtable for this interface */");
+        sb.AppendLine($"    {interfaceName}_vtable const * const obj_vtable;");
+        sb.AppendLine();
+        sb.AppendLine("    /** The actual object that implements this interface */");
+        sb.AppendLine("    void * const obj;");
         sb.AppendLine("};");
         sb.AppendLine();
 
@@ -113,7 +116,7 @@ public class InterfaceGenerator
             var returnCode = methodSymbol.ReturnsVoid ? "" : "return ";
             GenerateMethodSignatureDeIndented(sb, methodSymbol);
             sb.AppendLine("\n{");
-            sb.Append($"    {returnCode}self->vtable->{methodSymbol.Name}(self");
+            sb.Append($"    {returnCode}self->obj_vtable->{methodSymbol.Name}(self->obj");
             foreach (var parameter in methodSymbol.Parameters)
             {
                 sb.Append($", {parameter.Name}");
@@ -180,7 +183,7 @@ public class InterfaceGenerator
             sb.AppendLine($"\n// Up conversion from {myTypeName} interface to {superTypeName} interface");
             sb.AppendLine($"// `self_arg` should be of type `{myTypeName} *`");
             string conversionFunctionName = GetConversionFunctionName(myTypeName, superTypeName);
-            sb.AppendLine($"#define {conversionFunctionName}(self_arg)    ({superTypeName}){{ .self = self_arg->self, .vtable = (const {superVtableTypeName}*)(&self_arg->vtable->{firstMethodName}) }}");
+            sb.AppendLine($"#define {conversionFunctionName}(self_arg)    ({superTypeName}){{ .obj = self_arg->obj, .obj_vtable = (const {superVtableTypeName}*)(&self_arg->obj_vtable->{firstMethodName}) }}");
             sb.AppendLine($"// assert that vtable layouts are compatible");
             sb.AppendLine($"static_assert(offsetof({superVtableTypeName}, {firstMethodName}) == 0, \"Unexpected vtable function start\");");
 

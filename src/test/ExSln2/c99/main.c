@@ -40,32 +40,32 @@ void test_interface_conversions(hal_GpioDigInOut * gpio_dio)
 {
     printf("\n######## Testing interface conversions #######\n");
     hal_IDigInOut * dio = &M_hal_GpioDigInOut__to__hal_IDigInOut(gpio_dio);
-    assert(dio->self == gpio_dio);
+    assert(dio->obj == gpio_dio);
     
     // cast to uint64_t to avoid warnings about comparing function pointers that take different arguments (void* vs hal_GpioDigInOut*)
 
-    assert(dio->self == gpio_dio);
-    assert((uint64_t)dio->vtable->read_state == (uint64_t)hal_GpioDigInOut_read_state);
-    assert((uint64_t)dio->vtable->set_state == (uint64_t)hal_GpioDigInOut_set_state);
-    assert((uint64_t)dio->vtable->toggle == (uint64_t)hal_GpioDigInOut_toggle);
+    assert(dio->obj == gpio_dio);
+    assert((uint64_t)dio->obj_vtable->read_state == (uint64_t)hal_GpioDigInOut_read_state);
+    assert((uint64_t)dio->obj_vtable->set_state == (uint64_t)hal_GpioDigInOut_set_state);
+    assert((uint64_t)dio->obj_vtable->toggle == (uint64_t)hal_GpioDigInOut_toggle);
 
     hal_IDigIn * di = &M_hal_GpioDigInOut__to__hal_IDigIn(gpio_dio);
-    assert(di->self == gpio_dio);
-    assert((uint64_t)di->vtable->read_state == (uint64_t)hal_GpioDigInOut_read_state);
+    assert(di->obj == gpio_dio);
+    assert((uint64_t)di->obj_vtable->read_state == (uint64_t)hal_GpioDigInOut_read_state);
 
     hal_IDigOut * dout = &M_hal_GpioDigInOut__to__hal_IDigOut(gpio_dio);
-    assert(dout->self == gpio_dio);
-    assert((uint64_t)dout->vtable->set_state == (uint64_t)hal_GpioDigInOut_set_state);
-    assert((uint64_t)dout->vtable->toggle == (uint64_t)hal_GpioDigInOut_toggle);
+    assert(dout->obj == gpio_dio);
+    assert((uint64_t)dout->obj_vtable->set_state == (uint64_t)hal_GpioDigInOut_set_state);
+    assert((uint64_t)dout->obj_vtable->toggle == (uint64_t)hal_GpioDigInOut_toggle);
 
     di = &M_hal_IDigInOut__to__hal_IDigIn(dio);
-    assert(di->self == gpio_dio);
-    assert((uint64_t)di->vtable->read_state == (uint64_t)hal_GpioDigInOut_read_state);
+    assert(di->obj == gpio_dio);
+    assert((uint64_t)di->obj_vtable->read_state == (uint64_t)hal_GpioDigInOut_read_state);
 
     dout = &M_hal_IDigInOut__to__hal_IDigOut(dio);
-    assert(dout->self == gpio_dio);
-    assert((uint64_t)dout->vtable->set_state == (uint64_t)hal_GpioDigInOut_set_state);
-    assert((uint64_t)dout->vtable->toggle == (uint64_t)hal_GpioDigInOut_toggle);
+    assert(dout->obj == gpio_dio);
+    assert((uint64_t)dout->obj_vtable->set_state == (uint64_t)hal_GpioDigInOut_set_state);
+    assert((uint64_t)dout->obj_vtable->toggle == (uint64_t)hal_GpioDigInOut_toggle);
 
     printf("Should toggle twice (IDigOut)\n");
     hal_IDigOut_toggle(dout);

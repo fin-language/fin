@@ -26,10 +26,10 @@ void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self);
 extern const hal_IDigInOut_vtable hal_IDigInOut_vtable_imp;
 
 // Up conversion from hal_GpioDigInOut to hal_IDigInOut interface
-#define M_hal_GpioDigInOut__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .self = self_arg, .vtable = (const hal_IDigInOut_vtable*)(&hal_IDigInOut_vtable_imp.read_state) }
+#define M_hal_GpioDigInOut__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg, .obj_vtable = (const hal_IDigInOut_vtable*)(&hal_IDigInOut_vtable_imp.read_state) }
 
 // Up conversion from hal_GpioDigInOut to hal_IDigIn interface
-#define M_hal_GpioDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .self = self_arg, .vtable = (const hal_IDigIn_vtable*)(&hal_IDigInOut_vtable_imp.read_state) }
+#define M_hal_GpioDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg, .obj_vtable = (const hal_IDigIn_vtable*)(&hal_IDigInOut_vtable_imp.read_state) }
 
 // Up conversion from hal_GpioDigInOut to hal_IDigOut interface
-#define M_hal_GpioDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .self = self_arg, .vtable = (const hal_IDigOut_vtable*)(&hal_IDigInOut_vtable_imp.set_state) }
+#define M_hal_GpioDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg, .obj_vtable = (const hal_IDigOut_vtable*)(&hal_IDigInOut_vtable_imp.set_state) }

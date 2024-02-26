@@ -13,8 +13,11 @@ typedef struct hal_IDigInOut_vtable hal_IDigInOut_vtable;
 
 struct hal_IDigInOut
 {
-    hal_IDigInOut_vtable const * /*const*/ vtable;
-    void * /*const*/ self;
+    /** Pointer to implementing object's vtable for this interface */
+    hal_IDigInOut_vtable const * const obj_vtable;
+
+    /** The actual object that implements this interface */
+    void * const obj;
 };
 
 struct hal_IDigInOut_vtable
@@ -49,14 +52,14 @@ void hal_IDigInOut_toggle(hal_IDigInOut * self);
 
 // Up conversion from hal_IDigInOut interface to hal_IDigIn interface
 // `self_arg` should be of type `hal_IDigInOut *`
-#define M_hal_IDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .self = self_arg->self, .vtable = (const hal_IDigIn_vtable*)(&self_arg->vtable->read_state) }
+#define M_hal_IDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigIn_vtable*)(&self_arg->obj_vtable->read_state) }
 // assert that vtable layouts are compatible
 static_assert(offsetof(hal_IDigIn_vtable, read_state) == 0, "Unexpected vtable function start");
 static_assert(offsetof(hal_IDigIn_vtable, read_state) == offsetof(hal_IDigInOut_vtable, read_state) - offsetof(hal_IDigInOut_vtable, read_state), "Incompatible vtable layout");
 
 // Up conversion from hal_IDigInOut interface to hal_IDigOut interface
 // `self_arg` should be of type `hal_IDigInOut *`
-#define M_hal_IDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .self = self_arg->self, .vtable = (const hal_IDigOut_vtable*)(&self_arg->vtable->set_state) }
+#define M_hal_IDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigOut_vtable*)(&self_arg->obj_vtable->set_state) }
 // assert that vtable layouts are compatible
 static_assert(offsetof(hal_IDigOut_vtable, set_state) == 0, "Unexpected vtable function start");
 static_assert(offsetof(hal_IDigOut_vtable, set_state) == offsetof(hal_IDigInOut_vtable, set_state) - offsetof(hal_IDigInOut_vtable, set_state), "Incompatible vtable layout");

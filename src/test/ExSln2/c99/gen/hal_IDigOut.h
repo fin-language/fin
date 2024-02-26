@@ -11,8 +11,11 @@ typedef struct hal_IDigOut_vtable hal_IDigOut_vtable;
 
 struct hal_IDigOut
 {
-    hal_IDigOut_vtable const * /*const*/ vtable;
-    void * /*const*/ self;
+    /** Pointer to implementing object's vtable for this interface */
+    hal_IDigOut_vtable const * const obj_vtable;
+
+    /** The actual object that implements this interface */
+    void * const obj;
 };
 
 struct hal_IDigOut_vtable

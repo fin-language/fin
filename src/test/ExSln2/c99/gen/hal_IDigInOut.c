@@ -9,7 +9,7 @@
 /// <returns></returns>
 bool hal_IDigInOut_read_state(hal_IDigInOut * self)
 {
-    return self->vtable->read_state(self);
+    return self->obj_vtable->read_state(self->obj);
 }
 
 /// <summary>
@@ -18,11 +18,11 @@ bool hal_IDigInOut_read_state(hal_IDigInOut * self)
 /// <param name="state"></param>
 void hal_IDigInOut_set_state(hal_IDigInOut * self, bool state)
 {
-    self->vtable->set_state(self, state);
+    self->obj_vtable->set_state(self->obj, state);
 }
 
 void hal_IDigInOut_toggle(hal_IDigInOut * self)
 {
-    self->vtable->toggle(self);
+    self->obj_vtable->toggle(self->obj);
 }
 

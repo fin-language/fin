@@ -9,6 +9,6 @@
 /// <returns></returns>
 bool hal_IDigIn_read_state(hal_IDigIn * self)
 {
-    return self->vtable->read_state(self);
+    return self->obj_vtable->read_state(self->obj);
 }
 
