@@ -26,7 +26,13 @@ Test/interim releases are not documented here.
 
 ## [0.2.?]
 ### Added
-- Transpiler - initial support interfaces
+- 
+
+---
+
+## [0.2.6]
+### Added
+- Transpiler - initial support for interfaces
     - interface inheritance, multiple interfaces, interface conversions...
 - Transpiler - allow generating C to ignore unused warning: `FinC.ignore_unused(some_var)`
 - Transpiler - support FFI on classes that implement interfaces
