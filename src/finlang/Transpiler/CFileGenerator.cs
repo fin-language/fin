@@ -378,7 +378,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (done)
             return true;
 
-        return TryHandleFinSpecials(node, memberNameSymbol);
+        return TryHandleFinFieldLikeSpecials(node, memberNameSymbol);
     }
 
     /// <summary>
@@ -452,6 +452,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         if (ies.Expression is MemberAccessExpressionSyntax maes)
         {
+            // stuff like: `my_u8.wrap_lshift(1 + 1)`, `FinC.ignore_unused(some_var)`
             IMethodSymbol methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(maes.Name).Symbol.ThrowIfNull();
             if (methodNameSymbol.ContainingNamespace.Name == "finlang")
             {
@@ -464,6 +465,13 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (ies.Expression is IdentifierNameSyntax ins)
         {
             var methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(ins).Symbol.ThrowIfNull();
+
+            if (methodNameSymbol.ContainingNamespace.Name == "finlang")
+            {
+                if (TryFinCInvocations(ies, methodNameSymbol))
+                    return;
+            }
+
             if (methodNameSymbol.IsStatic == false && methodNameSymbol.ContainingType.Name == cls.symbol.Name)
             {
                 firstArgsSb.Append("self");
@@ -481,6 +489,9 @@ public class CFileGenerator : CSharpSyntaxWalker
             return true;
 
         if (TryFinCArrayInvocations(ies, maes, methodNameSymbol))
+            return true;
+
+        if (TryFinCInvocations(ies, methodNameSymbol))
             return true;
 
         return done;
@@ -583,6 +594,25 @@ public class CFileGenerator : CSharpSyntaxWalker
         return done;
     }
 
+    private bool TryFinCInvocations(InvocationExpressionSyntax ies, IMethodSymbol methodNameSymbol)
+    {
+        bool done = false;
+
+        if (methodNameSymbol.ContainingType.Name != nameof(FinC))
+            return done;
+
+        // handle `my_c_array.unsafe_get(index)` --> `my_c_array[index]`
+        if (methodNameSymbol.Name == nameof(FinC.ignore_unused))
+        {
+            VisitLeadingTrivia(ies);
+            sb.Append("(void)");
+            Visit(ies.ArgumentList);
+            done = true;
+        }
+
+        return done;
+    }
+
     public override void VisitCastExpression(CastExpressionSyntax node)
     {
         var symbol = model.GetSymbolInfo(node.Type).Symbol.ThrowIfNull();
@@ -602,7 +632,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         base.VisitCastExpression(node);
     }
 
-    public bool TryHandleFinSpecials(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
+    public bool TryHandleFinFieldLikeSpecials(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
     {
         //if (memberNameSymbol.ContainingNamespace.Name != "finlang")
         //    return false;

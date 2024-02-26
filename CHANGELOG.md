@@ -24,6 +24,13 @@ Test/interim releases are not documented here.
 
 ---
 
+## [0.2.?]
+### Added
+- Transpiler - allow generating C to ignore unused warning: `FinC.ignore_unused(some_var)`
+
+
+---
+
 ## [0.2.5]
 ### Fixed
 - Transpiler - now tracks header dependency of type `T` contained in `c_array<T>`

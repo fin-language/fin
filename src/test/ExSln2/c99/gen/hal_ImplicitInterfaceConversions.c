@@ -16,8 +16,12 @@ void hal_ImplicitInterfaceConversions_Test(hal_GpioDigInOut * gpio_dio)
 
     hal_ImplicitInterfaceConversions_take_dig_in(dig_in); // shouldn't have a conversion
     hal_IDigIn * dig_in2 = dig_in; // shouldn't have a conversion
+
+    (void)(dig_out);
+    (void)(dig_in2);
 }
 
 void hal_ImplicitInterfaceConversions_take_dig_in(hal_IDigIn * dig_in)
 {
+     (void)(dig_in);
 }
