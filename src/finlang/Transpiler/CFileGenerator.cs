@@ -343,11 +343,15 @@ public class CFileGenerator : CSharpSyntaxWalker
                 var toName = Namer.GetCName(type);
                 var fromType = model.GetTypeInfo(node.Expression).Type.ThrowIfNull();
                 var fromName = Namer.GetCName(fromType);
-                var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
-                sb.Append($"&{funcName}(");
-                base.VisitArgument(node);
-                sb.Append(')');
-                done = true;
+
+                if (toName != fromName)
+                {
+                    var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
+                    sb.Append($"&{funcName}(");
+                    base.VisitArgument(node);
+                    sb.Append(')');
+                    done = true;
+                }
             }
         }
 
@@ -757,13 +761,17 @@ public class CFileGenerator : CSharpSyntaxWalker
                 var toName = Namer.GetCName(type);
                 var fromType = model.GetTypeInfo(node.Value).Type.ThrowIfNull();
                 var fromName = Namer.GetCName(fromType);
-                var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
-                VisitToken(node.EqualsToken);
 
-                sb.Append($"&{funcName}(");
-                Visit(node.Value);
-                sb.Append(')');
-                done = true;
+                if (fromName != toName)
+                {
+                    var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
+                    VisitToken(node.EqualsToken);
+
+                    sb.Append($"&{funcName}(");
+                    Visit(node.Value);
+                    sb.Append(')');
+                    done = true;
+                }
             }
         }
 
