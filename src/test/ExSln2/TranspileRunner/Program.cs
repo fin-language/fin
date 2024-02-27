@@ -1,4 +1,4 @@
-﻿using finlang;
+using finlang;
 using finlang.Transpiler;
 using System.Text.RegularExpressions;
 
@@ -15,8 +15,8 @@ Transpiler transpiler = new(destinationDirPath: outDir, solutionPath: slnDir + s
 
 transpiler.SetFileNamer((string originalPath) =>
 {
-    originalPath = Regex.Replace(originalPath, "^mcu_avr8_", "mcu/avr8/");
-    originalPath = Regex.Replace(originalPath, "^mcu_stm32_", "mcu/stm32/");
+    // Replace "mcu_XXX_" with "mcu/XXX/"
+    originalPath = Regex.Replace(originalPath, "^mcu_([^_]+)_", "mcu/$1/");
     return originalPath;
 });
 

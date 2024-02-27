@@ -61,8 +61,8 @@ public class C99TranspilerTest
     {
         transpiler.SetFileNamer((string originalPath) =>
         {
-            originalPath = Regex.Replace(originalPath, "^mcu_avr8_", "mcu/avr8/");
-            originalPath = Regex.Replace(originalPath, "^mcu_stm32_", "mcu/stm32/");
+            // Replace "mcu_XXX_" with "mcu/XXX/"
+            originalPath = Regex.Replace(originalPath, "^mcu_([^_]+)_", "mcu/$1/");
             return originalPath;
         });
 
