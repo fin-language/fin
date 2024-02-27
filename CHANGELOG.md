@@ -27,6 +27,8 @@ Test/interim releases are not documented here.
 ## [0.2.?]
 ### Added
 - Transpiler - add ability to customize the output file path and name
+- Transpiler - add default options to output finlang version, date/time, and MD5 filepath.
+    - Also outputs source file path.
 
 ---
 

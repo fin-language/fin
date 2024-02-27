@@ -10,6 +10,8 @@
         "hal_led.h": "c",
         "hal_idiginout.h": "c",
         "hal_implicitinterfaceconversions.h": "c",
-        "hal_igpio.h": "c"
+        "hal_igpio.h": "c",
+        "hal_gpiopinstate.h": "c",
+        "hal_gpio_port_implementation.h": "c"
     }
 }

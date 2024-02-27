@@ -119,4 +119,9 @@ public class C99ClsEnumInterface
 
         hFile.AddFqnDependency(type);
     }
+
+    public string GetSourceFilePath()
+    {
+        return syntaxNode.SyntaxTree.FilePath;
+    }
 }
