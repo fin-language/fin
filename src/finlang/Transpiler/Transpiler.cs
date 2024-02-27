@@ -14,12 +14,18 @@ public class Transpiler
 
     public List<C99ClsEnumInterface> c99ClassesEnums = new();
     public Dictionary<string, C99ClsEnumInterface> fqnToC99Class = new();
+    private Func<string, string> fileNamer = (string s) => s;
 
     public Transpiler(string destinationDirPath, string solutionPath, string projectName)
     {
         this.destinationDirPath = destinationDirPath;
         this.solutionPath = solutionPath;
         this.projectName = projectName;
+    }
+
+    public void SetFileNamer(Func<string, string> fileNamer)
+    {
+        this.fileNamer = fileNamer;
     }
 
     static List<MetadataReference> GetAssemblies()
@@ -101,7 +107,7 @@ public class Transpiler
         {
             INamedTypeSymbol symbol = model.GetDeclaredSymbol(classDeclNode).ThrowIfNull();
 
-            if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)))
+            if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)) && !symbol.IsSimOnly())
             {
                 var c99Decl = new C99ClsEnumInterface(model, classDeclNode, symbol);
                 c99ClassesEnums.Add(c99Decl);
@@ -200,8 +206,8 @@ public class Transpiler
         foreach (var cls in c99ClassesEnums)
         {
             var fileNameBase = cls.GetCName();
-            cls.hFile.relativeFilePath = fileNameBase + ".h";
-            cls.cFile.relativeFilePath = fileNameBase + ".c";
+            cls.hFile.relativeFilePath = fileNamer(fileNameBase + ".h");
+            cls.cFile.relativeFilePath = fileNamer(fileNameBase + ".c");
         }
     }
 

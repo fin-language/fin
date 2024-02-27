@@ -26,7 +26,7 @@ Test/interim releases are not documented here.
 
 ## [0.2.?]
 ### Added
-- 
+- Transpiler - add ability to customize the output file path and name
 
 ---
 

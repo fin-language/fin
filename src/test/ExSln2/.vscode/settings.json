@@ -9,6 +9,7 @@
         "hal_ledarray.h": "c",
         "hal_led.h": "c",
         "hal_idiginout.h": "c",
-        "hal_implicitinterfaceconversions.h": "c"
+        "hal_implicitinterfaceconversions.h": "c",
+        "hal_igpio.h": "c"
     }
 }

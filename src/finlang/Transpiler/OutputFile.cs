@@ -24,13 +24,23 @@ public class OutputFile
         {
             includesSb.AppendLine("#include " + include + "");
         }
-        
-        using StreamWriter sw = new(Path.Combine(destinationDirPath, relativeFilePath));
+
+        string path = Path.Combine(destinationDirPath, relativeFilePath);
+        EnsureDirectoryExists(path);
+
+        using StreamWriter sw = new(path);
+
         sw.Write(preIncludes.ToString());
         sw.Write("\n");
         sw.Write(includesSb.ToString());
         sw.Write("\n\n");
         sw.Write(mainCode.ToString());
+    }
+
+    private static void EnsureDirectoryExists(string path)
+    {
+        FileInfo fileInfo = new(path);
+        fileInfo.Directory.ThrowIfNull().Create(); // Does nothing if the directory already exists.
     }
 
     internal void AddFqnDependency(ITypeSymbol type)

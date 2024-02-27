@@ -1,4 +1,4 @@
-﻿using finlang;
+using finlang;
 
 namespace hal;
 

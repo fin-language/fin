@@ -1,5 +1,6 @@
 using finlang.Transpiler;
 using FluentAssertions;
+using System.Text.RegularExpressions;
 
 namespace finlang.TranspilerTest;
 
@@ -58,6 +59,13 @@ public class C99TranspilerTest
     [Fact]
     public void GenerateFiles()
     {
+        transpiler.SetFileNamer((string originalPath) =>
+        {
+            originalPath = Regex.Replace(originalPath, "^mcu_avr8_", "mcu/avr8/");
+            originalPath = Regex.Replace(originalPath, "^mcu_stm32_", "mcu/stm32/");
+            return originalPath;
+        });
+
         transpiler.GenerateAndWrite();
 
         transpiler.GetListOfAllGeneratedFiles().Should().Contain(
