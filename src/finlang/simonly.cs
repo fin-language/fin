@@ -2,11 +2,9 @@
 #pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
 
 
-using System;
-
 namespace finlang;
 
-public class simonly
+public class SimOnly
 {
     /// <summary>
     /// This is used to mark methods that should only exist/run in C# simulations.<br/>
