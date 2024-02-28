@@ -41,13 +41,15 @@ public class InterfaceImplementGenerator
             foreach (var interfaceMethod in InterfaceGenerator.GetAllInterfaceMethods(directInterface))
             {
                 IMethodSymbol impMethod = cls.GetMethods().Single(m => m.Name == interfaceMethod.Name);
-                var mDecl = (MethodDeclarationSyntax)interfaceMethod.DeclaringSyntaxReferences.Single().GetSyntax();
+                var mDecl = (MethodDeclarationSyntax)impMethod.DeclaringSyntaxReferences.Single().GetSyntax();
 
-                sb.Append($"    .{interfaceMethod.Name} = ");
+                sb.Append($"    .{impMethod.Name} = ");
 
                 // need to cast to use 'void*' self parameter. Ex: (bool (*)(void *))
-                sb.Append($"({Namer.GetCName(interfaceMethod.ReturnType)} (*)");
-                visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: interfaceMethod, selfTypeName: "void");
+                sb.Append($"({Namer.GetCName(impMethod.ReturnType)} (*)");
+                visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: impMethod, selfTypeName: "void");
+                StringUtils.EraseTrailingWhitespace(sb);
+
                 sb.Append(')');
 
                 sb.AppendLine($"{Namer.GetCName(impMethod)},");

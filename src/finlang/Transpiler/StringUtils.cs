@@ -220,6 +220,12 @@ public partial class StringUtils
         return newName;
     }
 
+    public static void EraseTrailingWhitespace(StringBuilder sb)
+    {
+        while (char.IsWhiteSpace(sb[^1]))
+            sb.Length--;
+    }
+
     [GeneratedRegex("^\\s*?([ \\t]+)\\S")]
     private static partial Regex DeIndentRegex();
     [GeneratedRegex("^[ \\t]+", RegexOptions.Multiline)]
