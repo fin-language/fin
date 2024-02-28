@@ -31,12 +31,15 @@ struct hal_IGpio_vtable
     /// Reads the state of the digital input.
     /// </summary>
     /// <returns></returns>
-    bool (*read_state)(void * self);
+    bool (*read_input)(void * self);
     /// <summary>
     /// Sets the state of the digital output.
     /// </summary>
     /// <param name="state"></param>
-    void (*set_state)(void * self, bool state);
+    void (*set_output_state)(void * self, bool state);
+
+    bool (*get_output_state)(void * self);
+
     void (*toggle)(void * self);
     bool (*enable_pullup)(void * self);
     bool (*enable_pulldown)(void * self);
@@ -46,13 +49,17 @@ struct hal_IGpio_vtable
 /// Reads the state of the digital input.
 /// </summary>
 /// <returns></returns>
-bool hal_IGpio_read_state(hal_IGpio * self);
+bool hal_IGpio_read_input(hal_IGpio * self);
 
 /// <summary>
 /// Sets the state of the digital output.
 /// </summary>
 /// <param name="state"></param>
-void hal_IGpio_set_state(hal_IGpio * self, bool state);
+void hal_IGpio_set_output_state(hal_IGpio * self, bool state);
+
+
+bool hal_IGpio_get_output_state(hal_IGpio * self);
+
 
 void hal_IGpio_toggle(hal_IGpio * self);
 
@@ -63,24 +70,26 @@ bool hal_IGpio_enable_pulldown(hal_IGpio * self);
 
 // Up conversion from hal_IGpio interface to hal_IDigInOut interface
 // `self_arg` should be of type `hal_IGpio *`
-#define M_hal_IGpio__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigInOut_vtable*)(&self_arg->obj_vtable->read_state) }
+#define M_hal_IGpio__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigInOut_vtable*)(&self_arg->obj_vtable->read_input) }
 // assert that vtable layouts are compatible
-static_assert(offsetof(hal_IDigInOut_vtable, read_state) == 0, "Unexpected vtable function start");
-static_assert(offsetof(hal_IDigInOut_vtable, read_state) == offsetof(hal_IGpio_vtable, read_state) - offsetof(hal_IGpio_vtable, read_state), "Incompatible vtable layout");
-static_assert(offsetof(hal_IDigInOut_vtable, set_state) == offsetof(hal_IGpio_vtable, set_state) - offsetof(hal_IGpio_vtable, read_state), "Incompatible vtable layout");
-static_assert(offsetof(hal_IDigInOut_vtable, toggle) == offsetof(hal_IGpio_vtable, toggle) - offsetof(hal_IGpio_vtable, read_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigInOut_vtable, read_input) == 0, "Unexpected vtable function start");
+static_assert(offsetof(hal_IDigInOut_vtable, read_input) == offsetof(hal_IGpio_vtable, read_input) - offsetof(hal_IGpio_vtable, read_input), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigInOut_vtable, set_output_state) == offsetof(hal_IGpio_vtable, set_output_state) - offsetof(hal_IGpio_vtable, read_input), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigInOut_vtable, get_output_state) == offsetof(hal_IGpio_vtable, get_output_state) - offsetof(hal_IGpio_vtable, read_input), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigInOut_vtable, toggle) == offsetof(hal_IGpio_vtable, toggle) - offsetof(hal_IGpio_vtable, read_input), "Incompatible vtable layout");
 
 // Up conversion from hal_IGpio interface to hal_IDigIn interface
 // `self_arg` should be of type `hal_IGpio *`
-#define M_hal_IGpio__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigIn_vtable*)(&self_arg->obj_vtable->read_state) }
+#define M_hal_IGpio__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigIn_vtable*)(&self_arg->obj_vtable->read_input) }
 // assert that vtable layouts are compatible
-static_assert(offsetof(hal_IDigIn_vtable, read_state) == 0, "Unexpected vtable function start");
-static_assert(offsetof(hal_IDigIn_vtable, read_state) == offsetof(hal_IGpio_vtable, read_state) - offsetof(hal_IGpio_vtable, read_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigIn_vtable, read_input) == 0, "Unexpected vtable function start");
+static_assert(offsetof(hal_IDigIn_vtable, read_input) == offsetof(hal_IGpio_vtable, read_input) - offsetof(hal_IGpio_vtable, read_input), "Incompatible vtable layout");
 
 // Up conversion from hal_IGpio interface to hal_IDigOut interface
 // `self_arg` should be of type `hal_IGpio *`
-#define M_hal_IGpio__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigOut_vtable*)(&self_arg->obj_vtable->set_state) }
+#define M_hal_IGpio__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigOut_vtable*)(&self_arg->obj_vtable->set_output_state) }
 // assert that vtable layouts are compatible
-static_assert(offsetof(hal_IDigOut_vtable, set_state) == 0, "Unexpected vtable function start");
-static_assert(offsetof(hal_IDigOut_vtable, set_state) == offsetof(hal_IGpio_vtable, set_state) - offsetof(hal_IGpio_vtable, set_state), "Incompatible vtable layout");
-static_assert(offsetof(hal_IDigOut_vtable, toggle) == offsetof(hal_IGpio_vtable, toggle) - offsetof(hal_IGpio_vtable, set_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigOut_vtable, set_output_state) == 0, "Unexpected vtable function start");
+static_assert(offsetof(hal_IDigOut_vtable, set_output_state) == offsetof(hal_IGpio_vtable, set_output_state) - offsetof(hal_IGpio_vtable, set_output_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigOut_vtable, get_output_state) == offsetof(hal_IGpio_vtable, get_output_state) - offsetof(hal_IGpio_vtable, set_output_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigOut_vtable, toggle) == offsetof(hal_IGpio_vtable, toggle) - offsetof(hal_IGpio_vtable, set_output_state), "Incompatible vtable layout");

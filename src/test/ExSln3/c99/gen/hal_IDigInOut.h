@@ -30,12 +30,15 @@ struct hal_IDigInOut_vtable
     /// Reads the state of the digital input.
     /// </summary>
     /// <returns></returns>
-    bool (*read_state)(void * self);
+    bool (*read_input)(void * self);
     /// <summary>
     /// Sets the state of the digital output.
     /// </summary>
     /// <param name="state"></param>
-    void (*set_state)(void * self, bool state);
+    void (*set_output_state)(void * self, bool state);
+
+    bool (*get_output_state)(void * self);
+
     void (*toggle)(void * self);
 };
 
@@ -43,28 +46,33 @@ struct hal_IDigInOut_vtable
 /// Reads the state of the digital input.
 /// </summary>
 /// <returns></returns>
-bool hal_IDigInOut_read_state(hal_IDigInOut * self);
+bool hal_IDigInOut_read_input(hal_IDigInOut * self);
 
 /// <summary>
 /// Sets the state of the digital output.
 /// </summary>
 /// <param name="state"></param>
-void hal_IDigInOut_set_state(hal_IDigInOut * self, bool state);
+void hal_IDigInOut_set_output_state(hal_IDigInOut * self, bool state);
+
+
+bool hal_IDigInOut_get_output_state(hal_IDigInOut * self);
+
 
 void hal_IDigInOut_toggle(hal_IDigInOut * self);
 
 
 // Up conversion from hal_IDigInOut interface to hal_IDigIn interface
 // `self_arg` should be of type `hal_IDigInOut *`
-#define M_hal_IDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigIn_vtable*)(&self_arg->obj_vtable->read_state) }
+#define M_hal_IDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigIn_vtable*)(&self_arg->obj_vtable->read_input) }
 // assert that vtable layouts are compatible
-static_assert(offsetof(hal_IDigIn_vtable, read_state) == 0, "Unexpected vtable function start");
-static_assert(offsetof(hal_IDigIn_vtable, read_state) == offsetof(hal_IDigInOut_vtable, read_state) - offsetof(hal_IDigInOut_vtable, read_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigIn_vtable, read_input) == 0, "Unexpected vtable function start");
+static_assert(offsetof(hal_IDigIn_vtable, read_input) == offsetof(hal_IDigInOut_vtable, read_input) - offsetof(hal_IDigInOut_vtable, read_input), "Incompatible vtable layout");
 
 // Up conversion from hal_IDigInOut interface to hal_IDigOut interface
 // `self_arg` should be of type `hal_IDigInOut *`
-#define M_hal_IDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigOut_vtable*)(&self_arg->obj_vtable->set_state) }
+#define M_hal_IDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigOut_vtable*)(&self_arg->obj_vtable->set_output_state) }
 // assert that vtable layouts are compatible
-static_assert(offsetof(hal_IDigOut_vtable, set_state) == 0, "Unexpected vtable function start");
-static_assert(offsetof(hal_IDigOut_vtable, set_state) == offsetof(hal_IDigInOut_vtable, set_state) - offsetof(hal_IDigInOut_vtable, set_state), "Incompatible vtable layout");
-static_assert(offsetof(hal_IDigOut_vtable, toggle) == offsetof(hal_IDigInOut_vtable, toggle) - offsetof(hal_IDigInOut_vtable, set_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigOut_vtable, set_output_state) == 0, "Unexpected vtable function start");
+static_assert(offsetof(hal_IDigOut_vtable, set_output_state) == offsetof(hal_IDigInOut_vtable, set_output_state) - offsetof(hal_IDigInOut_vtable, set_output_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigOut_vtable, get_output_state) == offsetof(hal_IDigInOut_vtable, get_output_state) - offsetof(hal_IDigInOut_vtable, set_output_state), "Incompatible vtable layout");
+static_assert(offsetof(hal_IDigOut_vtable, toggle) == offsetof(hal_IDigInOut_vtable, toggle) - offsetof(hal_IDigInOut_vtable, set_output_state), "Incompatible vtable layout");

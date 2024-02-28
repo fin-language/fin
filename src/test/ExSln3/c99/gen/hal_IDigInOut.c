@@ -11,19 +11,26 @@
 /// Reads the state of the digital input.
 /// </summary>
 /// <returns></returns>
-bool hal_IDigInOut_read_state(hal_IDigInOut * self)
+bool hal_IDigInOut_read_input(hal_IDigInOut * self)
 {
-    return self->obj_vtable->read_state(self->obj);
+    return self->obj_vtable->read_input(self->obj);
 }
 
 /// <summary>
 /// Sets the state of the digital output.
 /// </summary>
 /// <param name="state"></param>
-void hal_IDigInOut_set_state(hal_IDigInOut * self, bool state)
+void hal_IDigInOut_set_output_state(hal_IDigInOut * self, bool state)
 {
-    self->obj_vtable->set_state(self->obj, state);
+    self->obj_vtable->set_output_state(self->obj, state);
 }
+
+
+bool hal_IDigInOut_get_output_state(hal_IDigInOut * self)
+{
+    return self->obj_vtable->get_output_state(self->obj);
+}
+
 
 void hal_IDigInOut_toggle(hal_IDigInOut * self)
 {

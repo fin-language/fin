@@ -43,13 +43,13 @@ public class ShiftManager : FinObj
         _piso_shift_or_load_pin.set_output_state(false);
 
         // wait long enough for the shift register to load. 120ns is the worst case minimum time for the 74HC165
-        SpinDelay.wait_120ns();
+        BusyWait.delay_120ns();
 
         // leave shift register in shift mode
         _piso_shift_or_load_pin.set_output_state(true);
 
         // wait long enough for the shift register to be ready to shift. 120ns is the worst case minimum time for the 74HC165
-        SpinDelay.wait_120ns();
+        BusyWait.delay_120ns();
     }
 
     public void _sipo_latch_data()
@@ -58,13 +58,13 @@ public class ShiftManager : FinObj
             return;
 
 
-        SpinDelay.wait_120ns();
+        BusyWait.delay_120ns();
 
         // a rising edge on the shift register's storage pin will store the shift register's input latches
         _sipo_storage_pin.set_output_state(true);
 
         // wait long enough for the shift register to store the data. 120ns is the worst case minimum time for the 74HC595
-        SpinDelay.wait_120ns();
+        BusyWait.delay_120ns();
 
         // leave shift register in shift mode
         _sipo_storage_pin.set_output_state(false);
