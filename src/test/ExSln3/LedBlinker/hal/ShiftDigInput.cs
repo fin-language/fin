@@ -2,7 +2,8 @@
 
 namespace hal;
 
-public class ShiftRegDigIn : FinObj, IDigIn
+
+public class ShiftDigInput : FinObj, IDigIn
 {
     /// <summary>
     /// This is the last state of the digital input when read by the SPI manager.
@@ -15,9 +16,13 @@ public class ShiftRegDigIn : FinObj, IDigIn
     }
 }
 
+/// <summary>
+/// PISO (Parallel In Serial Out) shift register.
+/// 74HC165
+/// </summary>
 public class ShiftInRegManager : FinObj
 {
-    public c_array<ShiftRegDigIn> dig_ins;
+    public c_array<ShiftDigInput> dig_ins;
     public u8 dig_ins_count;
 
     public c_array<u8> shift_reg_data;
@@ -27,7 +32,7 @@ public class ShiftInRegManager : FinObj
 
     public ISpi spi;
 
-    public ShiftInRegManager(c_array<ShiftRegDigIn> dig_ins, u8 dig_ins_count, c_array<u8> shift_reg_data, u8 shift_reg_data_count, IGpio shift_or_load_pin, ISpi spi)
+    public ShiftInRegManager(c_array<ShiftDigInput> dig_ins, u8 dig_ins_count, c_array<u8> shift_reg_data, u8 shift_reg_data_count, IGpio shift_or_load_pin, ISpi spi)
     {
         this.dig_ins = dig_ins;
         this.dig_ins_count = dig_ins_count;
