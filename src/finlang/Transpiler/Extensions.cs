@@ -158,6 +158,11 @@ public static class Extensions
         return methodSymbol.ContainingType.Name == className && methodSymbol.Name == methodName;
     }
 
+    public static bool IsInFinlangNamespace(this ISymbol symbol)
+    {
+        return symbol.ContainingNamespace.Name == nameof(finlang);
+    }
+
     // get syntax node parent
     public static SyntaxNode ParentNotNull(this SyntaxNode node)
     {
@@ -247,6 +252,11 @@ public static class Extensions
     public static bool IsSimpleMemberAccess(this MemberAccessExpressionSyntax node)
     {
         return node.IsKind(SyntaxKind.SimpleMemberAccessExpression);
+    }
+
+    public static bool IsClassMethod(this IMethodSymbol methodNameSymbol, string className, string methodName)
+    {
+        return methodNameSymbol.ContainingType.Name == className && methodNameSymbol.Name == methodName;
     }
 
     public static bool IsIMethodSymbol(this SimpleNameSyntax simpleNameSyntax, SemanticModel semanticModel)

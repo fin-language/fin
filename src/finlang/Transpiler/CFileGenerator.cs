@@ -448,21 +448,29 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitExpressionStatement(ExpressionStatementSyntax node)
     {
-        // handle `finlang.unsafe_mode()`
+        // Some invocations need to be handled up here so that we don't output the trailing semicolon
+        // ex: `finlang.unsafe_mode();`. The statement includes the semicolon, so we need to handle it here.
+
+        // handle `finlang.unsafe_mode();`
         if (node.Expression is InvocationExpressionSyntax ies)
         {
-            if (ies.Expression is MemberAccessExpressionSyntax maes)
+            IMethodSymbol methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(node.Expression).Symbol.ThrowIfNull();
+
+            if (methodNameSymbol.IsInFinlangNamespace())
             {
-                if (maes.Expression is IdentifierNameSyntax ins && ins.Identifier.Text == "math")
+                if (methodNameSymbol.ContainingType.Name == nameof(SimOnly))
                 {
-                    if (maes.Name.Identifier.Text == "unsafe_mode")
-                    {
-                        // do nothing
-                        VisitLeadingTrivia(node);
-                        sb.Append("/* fin: math.unsafe_mode() */");
-                        VisitTrailingTrivia(node);
-                        return;
-                    }
+                    // do nothing
+                    return;
+                }
+
+                if (methodNameSymbol.IsClassMethod(nameof(math), nameof(math.unsafe_mode)))
+                {
+                    // do nothing
+                    VisitLeadingTrivia(node);
+                    sb.Append("/* fin: math.unsafe_mode() */");
+                    VisitTrailingTrivia(node);
+                    return;
                 }
             }
         }
@@ -476,21 +484,26 @@ public class CFileGenerator : CSharpSyntaxWalker
         {
             // stuff like: `my_u8.wrap_lshift(1 + 1)`, `FinC.ignore_unused(some_var)`
             IMethodSymbol methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(maes.Name).Symbol.ThrowIfNull();
-            if (methodNameSymbol.ContainingNamespace.Name == "finlang")
+            if (methodNameSymbol.IsInFinlangNamespace())
             {
-                if (TryFinInvocations(ies, maes, methodNameSymbol))
+                if (TryFinMemberAccessInvocations(ies, maes, methodNameSymbol))
+                    return;
+
+                if (TryFinGlobalInvocations(ies, methodNameSymbol))
                     return;
             }
         }
 
-        // handle an object calling its own method without `this` like `toggle()`
+        // Handle an object calling its own method without `this` like `toggle()`
+        // We have to check some Fin invocations here as well because of `using static ...`.
+        // Allows `ignore_unused()` isntead of `FinC.ignore_unused()`
         if (ies.Expression is IdentifierNameSyntax ins)
         {
             var methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(ins).Symbol.ThrowIfNull();
 
-            if (methodNameSymbol.ContainingNamespace.Name == "finlang")
+            if (methodNameSymbol.IsInFinlangNamespace())
             {
-                if (TryFinCInvocations(ies, methodNameSymbol))
+                if (TryFinGlobalInvocations(ies, methodNameSymbol))
                     return;
             }
 
@@ -503,7 +516,18 @@ public class CFileGenerator : CSharpSyntaxWalker
         base.VisitInvocationExpression(ies);
     }
 
-    public bool TryFinInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol)
+    private bool TryFinGlobalInvocations(InvocationExpressionSyntax ies, IMethodSymbol methodNameSymbol)
+    {
+        if (TryFinCInvocations(ies, methodNameSymbol))
+            return true;
+
+        if (TrySimOnlyInvocations(ies, methodNameSymbol))
+            return true;
+
+        return false;
+    }
+
+    public bool TryFinMemberAccessInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol)
     {
         bool done = false;
 
@@ -511,9 +535,6 @@ public class CFileGenerator : CSharpSyntaxWalker
             return true;
 
         if (TryFinCArrayInvocations(ies, maes, methodNameSymbol))
-            return true;
-
-        if (TryFinCInvocations(ies, methodNameSymbol))
             return true;
 
         return done;
@@ -630,6 +651,21 @@ public class CFileGenerator : CSharpSyntaxWalker
             sb.Append("(void)");
             Visit(ies.ArgumentList);
             done = true;
+        }
+
+        return done;
+    }
+
+
+    private bool TrySimOnlyInvocations(InvocationExpressionSyntax ies, IMethodSymbol methodNameSymbol)
+    {
+        bool done = false;
+
+        // ignore `SimOnly.run(() => {..stuff..})`
+        if (methodNameSymbol.ContainingType.Name == nameof(SimOnly))
+        {
+            done = true;
+            return done;
         }
 
         return done;

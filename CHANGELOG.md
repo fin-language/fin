@@ -29,6 +29,7 @@ Test/interim releases are not documented here.
 - Transpiler - add ability to customize the output file path and name
 - Transpiler - add default options to output finlang version, date/time, and MD5 filepath.
     - Also outputs source file path.
+- Transpiler - Support `SimOnly.run(() => { /* code */ })` for running code in simulation mode only.
 
 ---
 

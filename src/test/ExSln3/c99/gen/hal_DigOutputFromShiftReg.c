@@ -14,14 +14,6 @@ void hal_DigOutputFromShiftReg_ctor(hal_DigOutputFromShiftReg * self, hal_TxShif
     memset(self, 0, sizeof(*self));
     self->_shift_data = shift_data;
     self->_bit_mask = bit_mask;
-
-    finlang_SimOnly_run(() => {
-        // ensure bit mask only has one bit set
-        if ((self->_bit_mask ^ (self->_bit_mask - 1)) != 0)
-        {
-            throw new System_ArgumentException *($"bit_mask must have only one bit set. It was `{self->_bit_mask}`");
-        }
-    });
 }
 
 bool hal_DigOutputFromShiftReg_get_output_state(hal_DigOutputFromShiftReg * self)
