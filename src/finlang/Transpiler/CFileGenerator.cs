@@ -325,6 +325,14 @@ public class CFileGenerator : CSharpSyntaxWalker
             var oldSb = sb;
             sb = renderedExpression;
             skipNextLeadingTrivia = true;
+
+            // if expression is a field and that field is memory (and not a pointer), we need to pass the address of the field
+            // ex: `d1.get_start_x()` where `d1` is mem object, we need to transpile to `D1Class_get_start_x(&self->d1);`
+            if (model.GetSymbolInfo(memberAccessNode.Expression).Symbol is IFieldSymbol ifs && ifs.HasMemAttr())
+            {
+                sb.Append('&');
+            }
+
             Visit(memberAccessNode.Expression);
             firstArgsSb = renderedExpression;
             sb = oldSb;
@@ -384,6 +392,8 @@ public class CFileGenerator : CSharpSyntaxWalker
         {
             VisitLeadingTrivia(node);
 
+            // if the argument is a ref or out argument, we need to pass the address of the argument
+            // ex: `my_obj.do_stuff(ref x)` to `MyObj_do_stuff(&x)`
             if (!node.RefKindKeyword.IsKind(SyntaxKind.None))
             {
                 sb.Append('&');
@@ -1030,7 +1040,7 @@ public class CFileGenerator : CSharpSyntaxWalker
                         {
                             if (fs.ContainingSymbol.Name == cls.symbol.Name)
                             {
-                                // if the field is in the same class, it's a member access
+                                // if the field is in the same class, it's a member access.
                                 result = "self->" + Namer.GetCName(fs);
                                 break;
                             }

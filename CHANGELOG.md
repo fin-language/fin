@@ -26,6 +26,9 @@ Test/interim releases are not documented here.
 
 ## [0.2.?]
 ### Added
+- Transpiler - initial support for classes to have a field an object's memory and not just a pointer
+    - field: `[mem] public SomeObj obj;`
+    - doesn't work with c_arrays yet
 - Transpiler - add ability to customize the output file path and name
 - Transpiler - add default options to output finlang version, date/time, and MD5 filepath.
     - Also outputs source file path.
