@@ -65,7 +65,7 @@ void hal_SpiMasterBitBang_rx_tx_bit_lsb(hal_SpiMasterBitBang * self, ref uint8_t
 
     read_byte >>= 1;
     if (hal_IDigIn_read_input(self->_miso))
-        read_byte |= 0b1000_0000;
+        read_byte |= 0b10000000;
 
     hal_IDigOut_set_output_state(self->_mosi, (tx_byte & 0x01) != 0);
     PRIVATE_hal_SpiMasterBitBang__delay(self);

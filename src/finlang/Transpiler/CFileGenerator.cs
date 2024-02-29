@@ -881,12 +881,30 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitLiteralExpression(LiteralExpressionSyntax node)
     {
+        bool done = false;
+
         // convert `null` to `NULL`
         if (node.IsKind(SyntaxKind.NullLiteralExpression))
         {
             sb.Append("NULL");
+            done = true;
         }
-        else
+        else if (node.IsKind(SyntaxKind.NumericLiteralExpression))
+        {
+            // support C# binary/hex literals that have underscore separators
+            // `0b1010_1110` --> `0b10101110`
+            // `0xFF_AA` --> `0xFFAA`
+            var text = node.Token.Text;
+            if (text.StartsWith("0b") || text.StartsWith("0x"))
+            {
+                VisitLeadingTrivia(node);
+                text = text.Replace("_", "");
+                sb.Append(text);
+                done = true;
+            }
+        }
+        
+        if (!done)
         {
             base.VisitLiteralExpression(node);
         }
