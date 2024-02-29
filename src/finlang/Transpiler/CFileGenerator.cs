@@ -349,7 +349,33 @@ public class CFileGenerator : CSharpSyntaxWalker
         var done = HandleArgumentInterfaceConversion(node);
 
         if (!done)
-            base.VisitArgument(node);
+        {
+            VisitLeadingTrivia(node);
+
+            if (!node.RefKindKeyword.IsKind(SyntaxKind.None))
+            {
+                sb.Append('&');
+            }
+
+            Visit(node.Expression);
+        }
+    }
+
+    public override void VisitParameter(ParameterSyntax node)
+    {
+        VisitLeadingTrivia(node);
+
+        bool addStar = (node.Modifiers.HasModifier(SyntaxKind.OutKeyword) || node.Modifiers.HasModifier(SyntaxKind.RefKeyword));
+        
+        // don't visit modifiers
+        Visit(node.Type);
+
+        if (addStar)
+        {
+            sb.Append("* ");
+        }
+
+        VisitToken(node.Identifier);
     }
 
     private bool HandleArgumentInterfaceConversion(ArgumentSyntax node)
@@ -921,6 +947,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
         var result = node.Identifier.Text;
+        bool needsDeref = false;
 
         switch (result)
         {
@@ -955,6 +982,14 @@ public class CFileGenerator : CSharpSyntaxWalker
                         }
                     }
 
+                    if (symbol.Symbol is IParameterSymbol ps)
+                    {
+                        if (ps.RefKind != RefKind.None)
+                        {
+                            needsDeref = true;
+                        }
+                    }
+
                     result = Namer.GetCName(symbol.Symbol.ThrowIfNull());
 
                     if (symbol.Symbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsReferenceType)
@@ -965,7 +1000,14 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         VisitLeadingTrivia(node);
+        if (needsDeref)
+            sb.Append("(*");
+        
         sb.Append(result);
+        
+        if (needsDeref)
+            sb.Append(')');
+
         VisitTrailingTrivia(node);
     }
 

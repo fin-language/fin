@@ -5,7 +5,7 @@ namespace hal;
 
 public class ImplicitInterfaceConversions : FinObj
 {
-    public static void Test(GpioDigInOut gpio_dio)
+    public static void test(GpioDigInOut gpio_dio)
     {
         IDigInOut dio = gpio_dio;
         IDigIn dig_in = gpio_dio;

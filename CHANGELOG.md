@@ -29,10 +29,11 @@ Test/interim releases are not documented here.
 - Transpiler - add ability to customize the output file path and name
 - Transpiler - add default options to output finlang version, date/time, and MD5 filepath.
     - Also outputs source file path.
-- Transpiler - Support `SimOnly.run(() => { /* code */ })` for running code in simulation mode only.
-- Transpiler - Support C# binary/hex literals with underscore separators
+- Transpiler - support `SimOnly.run(() => { /* code */ })` for running code in simulation mode only.
+- Transpiler - support C# binary/hex literals with underscore separators
     - `0b1010_1110` --> `0b10101110`
     - `0x1234_5678` --> `0x12345678`
+- Transpiler - initial support for C# ref and out parameters
 
 ---
 

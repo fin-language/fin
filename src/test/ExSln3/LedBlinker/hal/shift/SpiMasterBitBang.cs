@@ -64,7 +64,7 @@ public class SpiMasterBitBang : FinObj, ISpi
     public void rx_tx_bit_lsb(ref u8 tx_byte, ref u8 read_byte)
     {
         math.unsafe_mode();
-
+        
         read_byte >>= 1;
         if (_miso.read_input())
             read_byte |= 0b1000_0000;
