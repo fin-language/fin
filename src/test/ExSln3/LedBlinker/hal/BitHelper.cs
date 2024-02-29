@@ -4,19 +4,28 @@ namespace hal;
 
 public class BitHelper : FinObj
 {
-    public static bool is_bit_set(u8 data, u8 bit_mask)
+    public static void ref_set_bit(ref u8 data, u8 bit_index)
     {
-        return (data & bit_mask) > 0;
+        math.unsafe_mode();
+        data |= (u8)(1 << bit_index);
     }
 
-    public static u8 set_bit(u8 data, u8 bit_mask)
+    public static void ref_clear_bit(ref u8 data, u8 bit_index)
     {
-        return (u8)(data | bit_mask);
+        math.unsafe_mode();
+        data &= ~((u8)1 << bit_index);
     }
 
-    public static u8 clear_bit(u8 data, u8 bit_mask)
+    public static void ref_set_bit(ref u8 data, u8 bit_index, bool state)
     {
-        return (u8)(data & ~bit_mask);
+        if (state)
+        {
+            ref_set_bit(ref data, bit_index);
+        }
+        else
+        {
+            ref_clear_bit(ref data, bit_index);
+        }
     }
 
     [simonly]

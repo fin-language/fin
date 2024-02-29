@@ -9,6 +9,9 @@ namespace mcu.avr8;
 [ffi]
 public class Avr8Gpio : FinObj, IGpio
 {
+    public required int _port;
+    public required int _pin;
+
     public bool enable_pulldown()
     {
         throw new System.NotImplementedException();
