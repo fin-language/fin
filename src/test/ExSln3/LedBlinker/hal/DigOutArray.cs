@@ -13,7 +13,7 @@ public class DigOutArray : FinObj
         _count = count;
     }
 
-    public IDigOut get(u8 index)
+    public IDigOut unsafe_get(u8 index)
     {
         return _dig_outs.unsafe_get(index);
     }

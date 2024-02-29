@@ -14,6 +14,8 @@ public class DigInputFromShiftReg : FinObj, IDigIn
     {
         _shift_data = shift_data;
         _bit_mask = bit_mask;
+
+        BitHelper.SimOnlyEnsureSingleBitInMask(bit_mask);
     }
 
     public bool read_input()

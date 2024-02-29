@@ -1,9 +1,8 @@
 ﻿using finlang;
 using hal;
 
-namespace Tests.fakes;
+namespace Tests.Fakes;
 
-[simonly]
 public class FakeGpio : FinObj, IGpio
 {
     public bool _pullup_enabled;

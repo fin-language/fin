@@ -10,18 +10,18 @@ public class DigOutputFromShiftReg : FinObj, IDigOut
     public TxShiftData _shift_data;
     public u8 _bit_mask;
 
+    /// <summary>
+    /// When we support constexpr, we should pass bit index instead of bit mask.
+    /// </summary>
+    /// <param name="shift_data"></param>
+    /// <param name="bit_mask"></param>
+    /// <exception cref="System.ArgumentException"></exception>
     public DigOutputFromShiftReg(TxShiftData shift_data, u8 bit_mask)
     {
         _shift_data = shift_data;
         _bit_mask = bit_mask;
 
-        SimOnly.run(() => {
-            // ensure bit mask only has one bit set
-            if ((_bit_mask ^ (_bit_mask - 1)) != 0)
-            {
-                throw new System.ArgumentException($"bit_mask must have only one bit set. It was `{_bit_mask}`");
-            }
-        });
+        BitHelper.SimOnlyEnsureSingleBitInMask(bit_mask);
     }
 
     public bool get_output_state()

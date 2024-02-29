@@ -24,8 +24,7 @@
     <PackageReference Include="Virtuosity.Fody" Version="3.1.1" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="board\bigbird\" />
-    <Folder Include="board\tweety\" />
+    <Folder Include="board\lynx\" />
   </ItemGroup>
 
 </Project>

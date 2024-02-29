@@ -13,7 +13,7 @@ public class DigInArray : FinObj
         _count = count;
     }
 
-    public IDigIn get(u8 index)
+    public IDigIn unsafe_get(u8 index)
     {
         return _dig_ins.unsafe_get(index);
     }

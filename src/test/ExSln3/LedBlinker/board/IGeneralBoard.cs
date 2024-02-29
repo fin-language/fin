@@ -1,4 +1,5 @@
-﻿using hal;
+﻿using finlang;
+using hal;
 
 namespace board;
 
@@ -19,4 +20,8 @@ public interface IGeneralBoard
     IDigIn get_start_button();
 
     DigInArray get_settings_switches();
+
+    u32 get_time_ms();
+
+    void step();
 }
