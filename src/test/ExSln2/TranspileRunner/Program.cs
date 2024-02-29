@@ -13,6 +13,11 @@ Console.WriteLine("Transpiling " + projectName + " fin/C# project...");
 
 Transpiler transpiler = new(destinationDirPath: outDir, solutionPath: slnDir + slnName, projectName: projectName);
 
+// disable output of info that adds git noise
+transpiler.Options.OutputTimestamp = false;
+transpiler.Options.OutputVersionInfo = false;
+transpiler.Options.OutputChecksum = false;
+
 transpiler.SetFileNamer((string originalPath) =>
 {
     // Replace "mcu_XXX_" with "mcu/XXX/"

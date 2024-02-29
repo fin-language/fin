@@ -109,6 +109,9 @@ public class Transpiler
         {
             INamedTypeSymbol symbol = model.GetDeclaredSymbol(classDeclNode).ThrowIfNull();
 
+            if (System.Diagnostics.Debugger.IsAttached && symbol.Name != "MemExample1")
+                continue;
+
             if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)) && !symbol.IsSimOnly())
             {
                 var c99Decl = new C99ClsEnumInterface(model, classDeclNode, symbol);

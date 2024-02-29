@@ -24,6 +24,8 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     Namer namer;
     TranspilerHelper transpilerHelper;
+    private bool nextTypeIsNotPointer;
+    private bool skipEqualsValueClauseForFieldDeclaration;
 
     public CFileGenerator(C99ClsEnumInterface cls) : base(SyntaxWalkerDepth.StructuredTrivia)
     {
@@ -128,6 +130,30 @@ public class CFileGenerator : CSharpSyntaxWalker
         VisitToken(body.CloseBraceToken);
     }
 
+    public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+    {
+        // we need to skip the equals value clause for fields that have initializers
+        // Example: `[mem]XyPoint start = mem.init(new XyPoint() { x = 1, y = 2});`
+        skipEqualsValueClauseForFieldDeclaration = true;
+        base.VisitFieldDeclaration(node);
+        skipEqualsValueClauseForFieldDeclaration = false;
+        
+        // We can also render manually, but it's a bit more work. The below doesn't yet handle multiple variables declared on the same line.
+        //foreach (var attrList in node.AttributeLists)
+        //    VisitAttributeList(attrList);
+
+        //VisitLeadingTrivia(node.Declaration);
+        //Visit(node.Declaration.Type);
+
+        //foreach (var variable in node.Declaration.Variables)
+        //{
+        //    VisitLeadingTrivia(variable);
+        //    VisitToken(variable.Identifier);
+        //    VisitTrailingTrivia(variable);
+        //}
+
+    }
+
     public override void VisitBlock(BlockSyntax node)
     {
         if (renderingPrototypes)
@@ -175,10 +201,16 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         // Ignore attributes
         VisitLeadingTrivia(node);
-        sb.Append("// FFI function. User code must provide the implementation");
+
+        if (node.HasFFI())
+            sb.Append("// FFI function. User code must provide the implementation");
+
+        if (node.HasMemAttr())
+            nextTypeIsNotPointer = true;
+
         VisitTrailingTrivia(node);
-        //base.VisitAttributeList(node);
     }
+
 
     // parameters are declared for methods and constructors
     public override void VisitParameterList(ParameterListSyntax node)
@@ -468,9 +500,20 @@ public class CFileGenerator : CSharpSyntaxWalker
                 else
                 {
                     // if it's an instance field, we need to handle it
-                    // ex: `redLed.my_public_var = 33;` --> `redLed->my_public_var = 33;`
                     Visit(exp);
-                    sb.Append("->");
+
+                    ISymbol? expressionSymbol = model.GetSymbolInfo(exp).Symbol;
+                    if (expressionSymbol?.HasMemAttr() ?? false)
+                    {
+                        // ex: `redLed.my_public_var = 33;` --> `redLed.my_public_var = 33;`
+                        sb.Append('.');
+                    }
+                    else
+                    {
+                        // ex: `redLed.my_public_var = 33;` --> `redLed->my_public_var = 33;`
+                        sb.Append("->");
+                    }
+
                     Visit(name);
                     done = true;
                 }
@@ -863,6 +906,9 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitEqualsValueClause(EqualsValueClauseSyntax node)
     {
+        if (skipEqualsValueClauseForFieldDeclaration)
+            return;
+
         bool done = HandleAssignmentInterfaceConversion(node);
 
         if (!done)
@@ -1002,12 +1048,14 @@ public class CFileGenerator : CSharpSyntaxWalker
 
                     result = Namer.GetCName(symbol.Symbol.ThrowIfNull());
 
-                    if (symbol.Symbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsReferenceType)
+                    if (symbol.Symbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsReferenceType && !nextTypeIsNotPointer)
                         result += " *";
 
                     break;
                 }
         }
+
+        nextTypeIsNotPointer = false;
 
         VisitLeadingTrivia(node);
         sb.Append(pre);

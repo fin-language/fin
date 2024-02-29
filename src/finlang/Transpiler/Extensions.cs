@@ -135,6 +135,21 @@ public static class Extensions
         return symbol.HasAttribute(nameof(ffiAttribute));
     }
 
+    public static bool HasFFI(this AttributeListSyntax node)
+    {
+        return node.Attributes.Any(attr => attr.Name.ToString() == "ffi" || attr.Name.ToString() == nameof(ffiAttribute));
+    }
+
+    public static bool HasMemAttr(this ISymbol symbol)
+    {
+        return symbol.HasAttribute(nameof(memAttribute));
+    }
+
+    public static bool HasMemAttr(this AttributeListSyntax node)
+    {
+        return node.Attributes.Any(attr => attr.Name.ToString() == "mem" || attr.Name.ToString() == nameof(memAttribute));
+    }
+
     public static bool IsConst(this FieldDeclarationSyntax? node)
     {
         if (node == null) return false;
