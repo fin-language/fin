@@ -44,6 +44,17 @@ public class mem
     internal static Err? userProvidedErr;
 
     /// <summary>
+    /// Should only be used in constructors or field initializers.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    public static T init<T>(T obj) where T : FinObj
+    {
+        return obj;
+    }
+
+    /// <summary>
     /// Tells fin transpiler that object created by this method should be allocated on the stack.
     /// Intended to be used like <code>Bike bike = mem.stack(new Bike());</code>.
     /// </summary>
