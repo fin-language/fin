@@ -12,9 +12,18 @@ public class SimOnly
     /// You are free to use any C# code in here (not restricted to fin subset).
     /// </summary>
     /// <param name="action"></param>
-    [simonly]
-    public static void run(Action action)
+    public static void Run(Action action)
     {
         action();
+    }
+
+    public static void Throw(Exception e)
+    {
+        throw e;
+    }
+
+    public static void ThrowNotImplemented(string? msg = null)
+    {
+        throw new NotImplementedException(msg);
     }
 }
