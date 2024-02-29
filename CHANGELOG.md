@@ -33,7 +33,8 @@ Test/interim releases are not documented here.
 - Transpiler - support C# binary/hex literals with underscore separators
     - `0b1010_1110` --> `0b10101110`
     - `0x1234_5678` --> `0x12345678`
-- Transpiler - initial support for C# ref and out parameters
+- Transpiler - initial support for C# ref and out parameters of primitives
+- Transpiler - initial support for C# in parameters of primitives
 
 ---
 

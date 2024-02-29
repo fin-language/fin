@@ -365,9 +365,17 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         VisitLeadingTrivia(node);
 
-        bool addStar = (node.Modifiers.HasModifier(SyntaxKind.OutKeyword) || node.Modifiers.HasModifier(SyntaxKind.RefKeyword));
+        SyntaxTokenList modifiers = node.Modifiers;
+
+        bool addStar = (modifiers.HasModifier(SyntaxKind.OutKeyword) || modifiers.HasModifier(SyntaxKind.RefKeyword));
         
         // don't visit modifiers
+
+        if (modifiers.HasModifier(SyntaxKind.InKeyword))
+        {
+            sb.Append("const ");
+        }
+
         Visit(node.Type);
 
         if (addStar)
@@ -947,7 +955,8 @@ public class CFileGenerator : CSharpSyntaxWalker
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
         var result = node.Identifier.Text;
-        bool needsDeref = false;
+        string pre = string.Empty;
+        string post = string.Empty;
 
         switch (result)
         {
@@ -984,9 +993,10 @@ public class CFileGenerator : CSharpSyntaxWalker
 
                     if (symbol.Symbol is IParameterSymbol ps)
                     {
-                        if (ps.RefKind != RefKind.None)
+                        if (ps.RefKind == RefKind.Ref || ps.RefKind == RefKind.Out)
                         {
-                            needsDeref = true;
+                            pre = "(*";
+                            post = ")";
                         }
                     }
 
@@ -1000,14 +1010,9 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         VisitLeadingTrivia(node);
-        if (needsDeref)
-            sb.Append("(*");
-        
+        sb.Append(pre);
         sb.Append(result);
-        
-        if (needsDeref)
-            sb.Append(')');
-
+        sb.Append(post);
         VisitTrailingTrivia(node);
     }
 

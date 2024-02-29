@@ -11,3 +11,5 @@
 void hal_RefParamsExample_test();
 
 void hal_RefParamsExample_inc(uint8_t * a);
+
+uint8_t hal_RefParamsExample_echo(const uint8_t a);

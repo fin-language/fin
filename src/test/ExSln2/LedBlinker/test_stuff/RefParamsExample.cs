@@ -16,4 +16,10 @@ public class RefParamsExample : FinObj
     {
         a++;
     }
+
+    public static u8 echo(in u8 a)
+    {
+        //a++; // can't assign to in parameter
+        return a;
+    }
 }
