@@ -11,5 +11,7 @@
 void ex_mem_XyzPointI8_ctor(ex_mem_XyzPointI8 * self)
 {
     memset(self, 0, sizeof(*self));
+    self->x = -1;
+    self->y = 1;
 
 }

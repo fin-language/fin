@@ -122,10 +122,25 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (renderingPrototypes)
             return;
 
+        cls.cFile.includes.Add("<string.h>"); // for memset
+
         var body = node.Body.ThrowIfNull();
         VisitToken(body.OpenBraceToken);
         sb.Append("        memset(self, 0, sizeof(*self));\n");
-        cls.cFile.includes.Add("<string.h>"); // for memset
+
+        // loop over fields with initializers and set them
+        foreach (var field in cls.GetInstanceFields())
+        {
+            // determine if the field has an initializer
+            var variableDeclartor = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.Single().GetSyntax();
+            if (variableDeclartor.Initializer == null)
+                continue;
+
+            sb.Append($"        self->");
+            Visit(variableDeclartor);
+            sb.Append(";\n");
+        }
+
         body.VisitChildrenNodesWithWalker(this);
         VisitToken(body.CloseBraceToken);
     }

@@ -11,6 +11,8 @@
 void ex_mem_QuadPoint_ctor(ex_mem_QuadPoint * self)
 {
     memset(self, 0, sizeof(*self));
+    self->d1 = finlang_mem_init(new ex_mem_DoublePoint *());
+    self->d2 = finlang_mem_init(new ex_mem_DoublePoint *());
     
 }
 

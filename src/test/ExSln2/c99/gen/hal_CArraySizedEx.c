@@ -11,6 +11,7 @@
 void hal_CArraySizedEx_ctor(hal_CArraySizedEx * self)
 {
     memset(self, 0, sizeof(*self));
+    self->data = finlang_mem_init(new c_array_sized<uint8_t>(5));
 
 }
 

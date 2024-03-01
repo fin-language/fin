@@ -40,6 +40,8 @@ Test/interim releases are not documented here.
     - `0x1234_5678` --> `0x12345678`
 - Transpiler - initial support for C# ref and out parameters of primitives
 - Transpiler - initial support for C# in parameters of primitives
+- Transpiler - initial support for field initializers
+    - https://github.com/fin-language/fin/issues/38
 
 ---
 

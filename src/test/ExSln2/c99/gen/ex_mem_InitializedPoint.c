@@ -11,6 +11,7 @@
 void ex_mem_InitializedPoint_ctor(ex_mem_InitializedPoint * self)
 {
     memset(self, 0, sizeof(*self));
+    self->point = finlang_mem_init(new ex_mem_XyPointU8 *() { x = 1, y = 2 });
 
 }
 
