@@ -11,7 +11,6 @@
 void hal_CArraySizedEx_ctor(hal_CArraySizedEx * self)
 {
     memset(self, 0, sizeof(*self));
-    finlang_c_array_sized_ctor(&self->data, 5);
 
 }
 

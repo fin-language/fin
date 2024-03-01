@@ -26,6 +26,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     TranspilerHelper transpilerHelper;
     private bool nextTypeIsNotPointer;
     private bool skipEqualsValueClauseForFieldDeclaration;
+    string indent = "    ";
 
     public CFileGenerator(C99ClsEnumInterface cls) : base(SyntaxWalkerDepth.StructuredTrivia)
     {
@@ -122,45 +123,36 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (renderingPrototypes)
             return;
 
-        const string indent = "        ";
-
         cls.cFile.includes.Add("<string.h>"); // for memset
 
         var body = node.Body.ThrowIfNull();
         VisitToken(body.OpenBraceToken);
-        sb.Append($"{indent}memset(self, 0, sizeof(*self));\n");
+        sb.Append($"{indent}{indent}memset(self, 0, sizeof(*self));\n");
 
         // loop over fields with initializers and set them
         foreach (var field in cls.GetInstanceFields())
         {
+            // we don't support initialization of c_array_sized<u8> fields yet.
+            if (field.Type.Name == nameof(c_array_sized<u8>))
+                continue;
+
             // determine if the field has an initializer
             var variableDeclartor = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.Single().GetSyntax();
             if (variableDeclartor.Initializer == null)
                 continue;
 
-            //var foundCreations = variableDeclartor.Initializer.DescendantNodes().OfType<ObjectCreationExpressionSyntax>().FirstOrDefault();
+            // hanlde field mem assignment/creation
             if (field.HasMemAttr() && field.Type.IsReferenceType)
             {
-                // the is reference type is there just to allow users to use mem on primitive types if they want.
+                // `IsReferenceType` check is there just to allow users to use mem on primitive types if they want.
                 // the initializer must be a call to mem.init()
-                var arg = variableDeclartor.Initializer.Value.GetMemInitCallArgument();
-                if (arg is null)
-                    throw new TranspilerException("mem.init() must be used to initialize a field with the mem attribute", variableDeclartor);
-
-                // the value must be a new expression
-                if (arg.Expression is not ObjectCreationExpressionSyntax oces)
-                    throw new TranspilerException("mem.init() must be used with a new expression", variableDeclartor);
-
-                // pass field to constructor
-                firstArgsSb.Append($"&self->{field.Name}");
-                sb.Append(indent);
-                sb.Append($"{namer.GetCName(oces.Type)}_ctor");
-                Visit(oces.ArgumentList);
+                ExpressionSyntax value = variableDeclartor.Initializer.Value;
+                HandleMemInit(field, variableDeclartor, value);
                 sb.Append(";\n");
             }
             else
             {
-                sb.Append($"{indent}self->");
+                sb.Append($"{indent}{indent}self->");
                 Visit(variableDeclartor);
                 sb.Append(";\n");
             }
@@ -168,6 +160,23 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         body.VisitChildrenNodesWithWalker(this);
         VisitToken(body.CloseBraceToken);
+    }
+
+    private void HandleMemInit(IFieldSymbol field, SyntaxNode nodeForError, ExpressionSyntax value)
+    {
+        var arg = value.GetMemInitCallArgument();
+        if (arg is null)
+            throw new TranspilerException("mem.init() must be used to initialize a field with the mem attribute", nodeForError);
+
+        // the value must be a new expression
+        if (arg.Expression is not ObjectCreationExpressionSyntax oces)
+            throw new TranspilerException("mem.init() must be used with a new expression", nodeForError);
+
+        // pass field to constructor
+        firstArgsSb.Append($"&self->{field.Name}");
+        sb.Append($"{indent}{indent}");
+        sb.Append($"{namer.GetCName(oces.Type)}_ctor");
+        Visit(oces.ArgumentList);
     }
 
     // From: c_array_sized<u8> data = mem.init(new c_array_sized<u8>(5));
@@ -1007,7 +1016,17 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
-        base.VisitAssignmentExpression(node);
+        bool done = false;
+
+        var leftSymbol = model.GetSymbolInfo(node.Left).Symbol;
+        if (leftSymbol is IFieldSymbol ifs && leftSymbol.HasMemAttr())
+        {
+            HandleMemInit(ifs, node, node.Right);
+            done = true;
+        }
+
+        if (!done)
+            base.VisitAssignmentExpression(node);
     }
 
     public override void VisitEqualsValueClause(EqualsValueClauseSyntax node)

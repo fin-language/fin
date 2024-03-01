@@ -12,7 +12,7 @@ void ex_mem_DoublePoint_ctor(ex_mem_DoublePoint * self)
 {
     memset(self, 0, sizeof(*self));
     ex_mem_XyPointU8_ctor(&self->start);
-    self->end = finlang_mem_init(new ex_mem_XyPointU8 *());
+    ex_mem_XyPointU8_ctor(&self->end);
 }
 
 uint8_t ex_mem_DoublePoint_get_start_x(ex_mem_DoublePoint * self)
