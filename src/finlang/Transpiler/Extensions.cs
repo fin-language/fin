@@ -275,6 +275,23 @@ public static class Extensions
         return false;
     }
 
+    public static ArgumentSyntax? GetMemInitCallArgument(this ExpressionSyntax node)
+    {
+        if (node is not InvocationExpressionSyntax ies)
+            return null;
+
+        if (ies.Expression is not MemberAccessExpressionSyntax maes)
+            return null;
+
+        if (maes.Expression is not IdentifierNameSyntax ins || ins.Identifier.Text != nameof(mem))
+            return null;
+
+        if (maes.Name.Identifier.Text != nameof(mem.init))
+            return null;
+
+        return ies.ArgumentList.Arguments.FirstOrDefault();
+    }
+
     /// <summary>
     /// C# dot access: <expression>.<name>.
     /// Examples: "this.Name", "(1 + 2).some_function()", ...

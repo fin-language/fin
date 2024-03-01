@@ -42,7 +42,8 @@ Test/interim releases are not documented here.
 - Transpiler - initial support for C# in parameters of primitives
 - Transpiler - initial support for field initializers
     - https://github.com/fin-language/fin/issues/38
-
+- Transpiler - wip for support constructing field mem objects
+    - https://github.com/fin-language/fin/issues/37
 ---
 
 ## [0.2.6]

@@ -19,4 +19,4 @@ struct ex_mem_XyzPointI8
 };
 
 
-void ex_mem_XyzPointI8_ctor(ex_mem_XyzPointI8 * self);
+void ex_mem_XyzPointI8_ctor(ex_mem_XyzPointI8 * self, int8_t z);

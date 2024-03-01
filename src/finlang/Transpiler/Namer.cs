@@ -67,6 +67,12 @@ public class Namer
         return GetCName(symbol);
     }
 
+    public string GetCName(TypeSyntax node)
+    {
+        var symbol = model.GetSymbolInfo(node).ThrowIfNull();
+        return GetCName(symbol);
+    }
+
     public static string GetCName(SemanticModel model, ClassDeclarationSyntax node)
     {
         INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();

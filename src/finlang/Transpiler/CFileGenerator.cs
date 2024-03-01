@@ -122,11 +122,13 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (renderingPrototypes)
             return;
 
+        const string indent = "        ";
+
         cls.cFile.includes.Add("<string.h>"); // for memset
 
         var body = node.Body.ThrowIfNull();
         VisitToken(body.OpenBraceToken);
-        sb.Append("        memset(self, 0, sizeof(*self));\n");
+        sb.Append($"{indent}memset(self, 0, sizeof(*self));\n");
 
         // loop over fields with initializers and set them
         foreach (var field in cls.GetInstanceFields())
@@ -136,9 +138,32 @@ public class CFileGenerator : CSharpSyntaxWalker
             if (variableDeclartor.Initializer == null)
                 continue;
 
-            sb.Append($"        self->");
-            Visit(variableDeclartor);
-            sb.Append(";\n");
+            //var foundCreations = variableDeclartor.Initializer.DescendantNodes().OfType<ObjectCreationExpressionSyntax>().FirstOrDefault();
+            if (field.HasMemAttr() && field.Type.IsReferenceType)
+            {
+                // the is reference type is there just to allow users to use mem on primitive types if they want.
+                // the initializer must be a call to mem.init()
+                var arg = variableDeclartor.Initializer.Value.GetMemInitCallArgument();
+                if (arg is null)
+                    throw new TranspilerException("mem.init() must be used to initialize a field with the mem attribute", variableDeclartor);
+
+                // the value must be a new expression
+                if (arg.Expression is not ObjectCreationExpressionSyntax oces)
+                    throw new TranspilerException("mem.init() must be used with a new expression", variableDeclartor);
+
+                // pass field to constructor
+                firstArgsSb.Append($"&self->{field.Name}");
+                sb.Append(indent);
+                sb.Append($"{namer.GetCName(oces.Type)}_ctor");
+                Visit(oces.ArgumentList);
+                sb.Append(";\n");
+            }
+            else
+            {
+                sb.Append($"{indent}self->");
+                Visit(variableDeclartor);
+                sb.Append(";\n");
+            }
         }
 
         body.VisitChildrenNodesWithWalker(this);
