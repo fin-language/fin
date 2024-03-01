@@ -1,9 +1,9 @@
 ﻿using finlang;
 
-namespace hal;
+namespace ex_mem;
 
 /// <summary>
-/// I'm super good at creating examples and naming them :P
+/// Tests mem
 /// </summary>
 public class QuadPoint : FinObj
 {
