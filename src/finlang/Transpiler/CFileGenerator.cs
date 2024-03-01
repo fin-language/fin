@@ -130,8 +130,53 @@ public class CFileGenerator : CSharpSyntaxWalker
         VisitToken(body.CloseBraceToken);
     }
 
+    // From: c_array_sized<u8> data = mem.init(new c_array_sized<u8>(5));
+    // To: u8 data[5];
+    private bool TryCArraySizedFieldDecl(FieldDeclarationSyntax fds)
+    {
+        if (fds.Declaration.Type is not GenericNameSyntax gns)
+            return false;
+        
+        if (gns.Identifier.Text != nameof(c_array_sized<u8>))
+            return false;
+
+        // find size first from the initializer
+        var foundCreations = fds.DescendantNodes().OfType<ObjectCreationExpressionSyntax>();
+
+        if (foundCreations.Count() != 1)
+            throw new TranspilerException($"c_array_sized field declaration must have exactly one initializer.", fds);
+
+        ObjectCreationExpressionSyntax creation = foundCreations.First();
+        ArgumentListSyntax? argList = creation.ArgumentList;
+
+        if (argList == null || argList.Arguments.Count != 1)
+            throw new TranspilerException($"c_array_sized field declaration must have size argument", fds);
+
+        var sizeArg = argList.Arguments[0].Expression;
+
+        if (sizeArg is not LiteralExpressionSyntax les)
+            throw new TranspilerException($"c_array_sized field declaration size argument must be a literal", fds);
+
+        if (les.Token.Value is not int size)
+            throw new TranspilerException($"c_array_sized field declaration size argument must be an integer", fds);
+
+        VisitLeadingTrivia(fds);
+        // get type inside the c_array_sized<T>
+        var type = gns.TypeArgumentList.Arguments.Single();
+        Visit(type);
+        VisitTrailingTrivia(gns.TypeArgumentList);
+
+        sb.Append($"{fds.Declaration.Variables[0].Identifier.Text}[{size}]");
+        VisitToken(fds.SemicolonToken);
+
+        return true;
+    }
+
     public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
     {
+        if (TryCArraySizedFieldDecl(node))
+            return;
+
         // we need to skip the equals value clause for fields that have initializers
         // Example: `[mem]XyPoint start = mem.init(new XyPoint() { x = 1, y = 2});`
         skipEqualsValueClauseForFieldDeclaration = true;
@@ -631,13 +676,13 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         bool done = false;
 
-        if (methodNameSymbol.ContainingType.Name != "c_array")
+        if (methodNameSymbol.ContainingType.IsCArray() == false)
         {
             return done;
         }
 
         // handle `my_c_array.unsafe_get(index)` --> `my_c_array[index]`
-        if (methodNameSymbol.Name == "unsafe_get")
+        if (methodNameSymbol.Name == nameof(c_array<u8>.unsafe_get))
         {
             Visit(maes.Expression); // `my_c_array`
             sb.Append("[");
@@ -646,7 +691,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             done = true;
         }
         // handle `my_c_array.unsafe_set(index, value)` --> `my_c_array[index] = value`
-        else if (methodNameSymbol.Name == "unsafe_set")
+        else if (methodNameSymbol.Name == nameof(c_array<u8>.unsafe_set))
         {
             Visit(maes.Expression); // `my_c_array`
             sb.Append("[");
@@ -669,7 +714,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         // handle `u8.from(42)` --> `42`
-        if (methodNameSymbol.Name == "from")
+        if (methodNameSymbol.Name == nameof(u8.from))
         {
             VisitLeadingTrivia(ies);
             // get the argument
@@ -691,7 +736,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             }
         }
         // handle `u8.narrow_from(my_i32)` --> `(uint8_t)my_i32`
-        else if (methodNameSymbol.Name == "narrow_from")
+        else if (methodNameSymbol.Name == nameof(u8.narrow_from))
         {
             var finType = methodNameSymbol.ContainingType.Name;
             string? ctype = FinNumberTypeToCType(finType);
@@ -705,7 +750,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
         // handle `my_u8.wrap_lshift(1+1)` --> `(uint8_t)(my_u8 << (1+1))`
         // handle `(my_u8 + 10).wrap_lshift(1)` --> `(uint8_t)((my_u8 + 10) << (1))`
-        else if (methodNameSymbol.Name == "wrap_lshift")
+        else if (methodNameSymbol.Name == nameof(u8.wrap_lshift))
         {
             var finType = methodNameSymbol.ContainingType.Name;
             string? ctype = FinNumberTypeToCType(finType);
@@ -762,7 +807,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         var symbol = model.GetSymbolInfo(node.Type).Symbol.ThrowIfNull();
 
-        if (symbol.ContainingNamespace.Name == "finlang")
+        if (symbol.IsInFinlangNamespace())
         {
             string? ctype = FinNumberTypeToCType(symbol.Name);
 
@@ -779,8 +824,19 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public bool TryHandleFinFieldLikeSpecials(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
     {
-        //if (memberNameSymbol.ContainingNamespace.Name != "finlang")
-        //    return false;
+        if (memberNameSymbol.ContainingType.Name == nameof(c_array_sized<u8>))  // note! generic type doesn't affect the name
+        {
+            if (memberNameSymbol.Name == nameof(c_array_sized<u8>.length))
+            {
+                sb.Append("(sizeof(");
+                Visit(node.Expression);
+                sb.Append(")/sizeof(");
+                Visit(node.Expression);
+                sb.Append("[0]))");
+
+                return true;
+            }
+        }
 
         if (memberNameSymbol.BelongsToFinlangInteger())
         {

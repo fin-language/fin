@@ -1,20 +1,15 @@
+﻿using Microsoft.CodeAnalysis;
+
 namespace finlang.Transpiler;
 
-public class TranspilerException : Exception
+public class TranspilerException : System.Exception
 {
-    public string? GilCode { get; }
+    public SyntaxNode? SyntaxNode { get; init; }
 
-    public TranspilerException(string? message) : base(message)
+    public TranspilerException(string message, SyntaxNode? syntaxNode = null) : base(message)
     {
+        SyntaxNode = syntaxNode;
     }
 
-    public TranspilerException(string? message, string gilCode) : base(message)
-    {
-        GilCode = gilCode;
-    }
-
-    public TranspilerException(string? message, Exception? innerException = null, string? gilCode = null) : base(message, innerException)
-    {
-        GilCode = gilCode;
-    }
+    public override string Message => base.Message + SyntaxNode?.GetLocationAndCodeErrorString();
 }

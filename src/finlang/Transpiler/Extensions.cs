@@ -178,6 +178,23 @@ public static class Extensions
         return symbol.ContainingNamespace.Name == nameof(finlang);
     }
 
+    public static string GetLocationErrorString(this SyntaxNode node)
+    {
+        Microsoft.CodeAnalysis.Text.LinePosition startLinePosition = node.GetLocation().GetLineSpan().StartLinePosition;
+        return $"File: {Path.GetFileName(node.SyntaxTree.FilePath)}, Line: {startLinePosition.Line + 1}, Char: {startLinePosition.Character + 1}";
+    }
+
+    public static string GetLocationAndCodeErrorString(this SyntaxNode node)
+    {
+        return $"\n{node.GetLocationErrorString()}"
+            + $"\nCode: `{node.ToFullString().Trim()}`";
+    }
+
+    public static bool IsCArray(this ITypeSymbol typeSymbol)
+    {
+        return typeSymbol.Name == nameof(c_array<u8>);
+    }
+
     // get syntax node parent
     public static SyntaxNode ParentNotNull(this SyntaxNode node)
     {
@@ -186,7 +203,7 @@ public static class Extensions
 
     public static bool BelongsToFinlangInteger(this ISymbol symbol)
     {
-        if (symbol.ContainingNamespace.Name != "finlang")
+        if (!symbol.IsInFinlangNamespace())
             return false;
 
         switch (symbol.ContainingType.Name)

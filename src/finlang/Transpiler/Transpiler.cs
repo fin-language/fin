@@ -12,6 +12,8 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
+    public string selectClassWhenDebugging = "CArraySizedEx";
+
     public TranspilerOptions Options = new();
 
     public List<C99ClsEnumInterface> c99ClassesEnums = new();
@@ -57,7 +59,7 @@ public class Transpiler
         project = AdjustProjectForTranspilation(project);
         Compilation compilation = project.GetCompilationAsync().Result.ThrowIfNull();
 
-        ThrowAnyDiagnosticError(compilation.GetDiagnostics(), "");
+        ThrowAnyDiagnosticError(compilation.GetDiagnostics());
 
         foreach (var syntaxTree in compilation.SyntaxTrees)
         {
@@ -109,7 +111,7 @@ public class Transpiler
         {
             INamedTypeSymbol symbol = model.GetDeclaredSymbol(classDeclNode).ThrowIfNull();
 
-            if (System.Diagnostics.Debugger.IsAttached && symbol.Name != "QuadPoint")
+            if (System.Diagnostics.Debugger.IsAttached && symbol.Name != selectClassWhenDebugging)
                 continue;
 
             if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)) && !symbol.IsSimOnly())
@@ -139,7 +141,7 @@ public class Transpiler
         }
     }
 
-    internal static void ThrowAnyDiagnosticError(IEnumerable<Diagnostic> enumerable, string programText)
+    internal static void ThrowAnyDiagnosticError(IEnumerable<Diagnostic> enumerable)
     {
         var errors = enumerable.Where(d => d.Severity == DiagnosticSeverity.Error);
 
@@ -156,7 +158,7 @@ public class Transpiler
 
         if (message.Length > 0)
         {
-            throw new TranspilerException(message, programText);
+            throw new TranspilerException(message);
         }
     }
 

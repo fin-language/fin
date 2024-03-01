@@ -26,9 +26,11 @@ Test/interim releases are not documented here.
 
 ## [0.2.?]
 ### Added
-- Transpiler - initial support for classes to have a field an object's memory and not just a pointer
+- Transpiler - initial support for a field be an actual class object type and not just a pointer to it.
     - field: `[mem] public SomeObj obj;`
-    - doesn't work with c_arrays yet
+- Transpiler - initial support for `c_array_sized<T>` with a length.
+    - ex: `[mem] c_array_sized<u8> data = mem.init(new c_array_sized<u8>(5));`
+    - Doesn't need `[mem]` because it is implied. You can add it though.
 - Transpiler - add ability to customize the output file path and name
 - Transpiler - add default options to output finlang version, date/time, and MD5 filepath.
     - Also outputs source file path.
