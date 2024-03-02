@@ -48,6 +48,8 @@ Test/interim releases are not documented here.
 	- https://github.com/fin-language/fin/issues/41
 - Transpiler - support `FinC.EchoToC("some code")`
     - https://github.com/fin-language/fin/issues/43
+- Transpiler - support [add_include("some_include")] attribute on classes
+    - https://github.com/fin-language/fin/issues/44
 
 ---
 

@@ -30,6 +30,13 @@ public class C99ClsEnumInterface
         this.model = model;
 
         this.IsStaticClass = GetInstanceFields().Any() == false;
+
+        var inludeAttributes = symbol.GetAttributes().Where(a => a.AttributeClass?.Name == nameof(add_includeAttribute));
+        foreach (var attribute in inludeAttributes)
+        {
+            var include = (string)attribute.ConstructorArguments[0].Value.ThrowIfNull();
+            hFile.includes.Add(include);
+        }
     }
 
     public void SetHasFFIMethod()

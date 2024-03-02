@@ -22,7 +22,8 @@ public class OutputFile
 
         foreach (var include in includes)
         {
-            includesSb.AppendLine("#include " + include + "");
+            var quoteChar = include.StartsWith("<") ? "" : "\"";
+            includesSb.AppendLine($"#include {quoteChar}{include}{quoteChar}");
         }
 
         string path = Path.Combine(destinationDirPath, relativeFilePath);

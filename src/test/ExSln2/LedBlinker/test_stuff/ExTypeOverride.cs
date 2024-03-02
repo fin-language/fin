@@ -3,8 +3,12 @@
 namespace hal;
 
 /// <summary>
-/// Example for https://github.com/fin-language/fin/issues/41
+/// Example for https://github.com/fin-language/fin/issues/41, 
+/// https://github.com/fin-language/fin/issues/43
+/// https://github.com/fin-language/fin/issues/44
 /// </summary>
+[add_include("my_stm_gpio_type.h")]
+[add_include("my_stm_gpio_defines.h")]
 public class ExTypeOverride : FinObj
 {
     /// <summary>

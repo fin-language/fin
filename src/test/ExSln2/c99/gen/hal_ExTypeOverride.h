@@ -4,11 +4,15 @@
 
 #pragma once
 
+#include "my_stm_gpio_type.h"
+#include "my_stm_gpio_defines.h"
 
 
 
 /// <summary>
-/// Example for https://github.com/fin-language/fin/issues/41
+/// Example for https://github.com/fin-language/fin/issues/41, 
+/// https://github.com/fin-language/fin/issues/43
+/// https://github.com/fin-language/fin/issues/44
 /// </summary>
 typedef struct hal_ExTypeOverride hal_ExTypeOverride;
 struct hal_ExTypeOverride
