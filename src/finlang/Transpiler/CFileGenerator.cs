@@ -859,6 +859,13 @@ public class CFileGenerator : CSharpSyntaxWalker
             Visit(ies.ArgumentList);
             done = true;
         }
+        else if (methodNameSymbol.Name == nameof(FinC.EchoToC))
+        {
+            // get string literal
+            var arg = (LiteralExpressionSyntax)ies.ArgumentList.Arguments[0].Expression;
+            sb.Append(arg.Token.ValueText);
+            done = true;
+        }
 
         return done;
     }

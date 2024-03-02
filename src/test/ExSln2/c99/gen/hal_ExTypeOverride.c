@@ -19,3 +19,8 @@ void hal_ExTypeOverride_set_pin(hal_ExTypeOverride * self, uint16_t pin)
 {
     self->pin = pin;
 }
+
+void hal_ExTypeOverride_set_pin_use_example(hal_ExTypeOverride * self)
+{
+    hal_ExTypeOverride_set_pin(self, GPIO_PIN_0);
+}

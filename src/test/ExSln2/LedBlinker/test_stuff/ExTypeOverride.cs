@@ -29,4 +29,9 @@ public class ExTypeOverride : FinObj
     {
         this.pin = pin;
     }
+
+    public void set_pin_use_example()
+    {
+        set_pin(FinC.EchoToC("GPIO_PIN_0"));
+    }
 }

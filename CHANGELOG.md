@@ -46,6 +46,8 @@ Test/interim releases are not documented here.
     - https://github.com/fin-language/fin/issues/37
 - Transpiler - type override for fields and parameters
 	- https://github.com/fin-language/fin/issues/41
+- Transpiler - support `FinC.EchoToC("some code")`
+    - https://github.com/fin-language/fin/issues/43
 
 ---
 
