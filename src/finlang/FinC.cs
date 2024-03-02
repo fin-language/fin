@@ -13,4 +13,9 @@ public class FinC
     {
         // do nothing
     }
+
+    public static T EchoToC<T>(T value)
+    {
+        return value;
+    }
 }

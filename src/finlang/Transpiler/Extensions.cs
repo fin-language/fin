@@ -8,6 +8,20 @@ namespace finlang.Transpiler;
 
 public static class Extensions
 {
+    static readonly string OverrideTypeAttrShortName = GetShortAttributeName(nameof(override_typeAttribute));
+    static readonly string MemAttrShortName = GetShortAttributeName(nameof(memAttribute));
+    static readonly string FFIAttrShortName = GetShortAttributeName(nameof(ffiAttribute));
+
+    /// <summary>
+    /// Takes in a name like "override_typeAttribute" and returns "override_type"
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    private static string GetShortAttributeName(string name)
+    {
+        return name.Substring(0, name.Length - "Attribute".Length);
+    }
+
     public static void VisitChildrenNodesWithWalker(this SyntaxNode node, CSharpSyntaxWalker walker)
     {
         foreach (var kid in node.ChildNodes())
@@ -137,7 +151,17 @@ public static class Extensions
 
     public static bool HasFFI(this AttributeListSyntax node)
     {
-        return node.Attributes.Any(attr => attr.Name.ToString() == "ffi" || attr.Name.ToString() == nameof(ffiAttribute));
+        return node.Attributes.Any(attr => attr.Name.ToString() == FFIAttrShortName);
+    }
+
+    public static AttributeSyntax? GetTypeOverride(this AttributeListSyntax node)
+    {
+        return node.Attributes.FirstOrDefault(attr => attr.Name.ToString() == OverrideTypeAttrShortName);
+    }
+
+    public static bool HasTypeOverride(this AttributeListSyntax node)
+    {
+        return node.GetTypeOverride() != null;
     }
 
     public static bool HasMemAttr(this ISymbol symbol)
@@ -147,7 +171,7 @@ public static class Extensions
 
     public static bool HasMemAttr(this AttributeListSyntax node)
     {
-        return node.Attributes.Any(attr => attr.Name.ToString() == "mem" || attr.Name.ToString() == nameof(memAttribute));
+        return node.Attributes.Any(attr => attr.Name.ToString() == MemAttrShortName);
     }
 
     public static bool IsConst(this FieldDeclarationSyntax? node)

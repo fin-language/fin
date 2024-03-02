@@ -44,6 +44,9 @@ Test/interim releases are not documented here.
     - https://github.com/fin-language/fin/issues/38
 - Transpiler - support constructing field mem objects
     - https://github.com/fin-language/fin/issues/37
+- Transpiler - type override for fields and parameters
+	- https://github.com/fin-language/fin/issues/41
+
 ---
 
 ## [0.2.6]

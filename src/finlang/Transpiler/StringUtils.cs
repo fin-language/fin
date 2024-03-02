@@ -226,6 +226,24 @@ public partial class StringUtils
             sb.Length--;
     }
 
+    public static bool EndsWithNewLineOptSpace(StringBuilder sb)
+    {
+        for (int i = sb.Length - 1; i >= 0; i--)
+        {
+            char c = sb[i];
+            if (c == '\n' || c == '\r')
+            {
+                return true;
+            }
+            else if (c != ' ' && c != '\t')
+            {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     [GeneratedRegex("^\\s*?([ \\t]+)\\S")]
     private static partial Regex DeIndentRegex();
     [GeneratedRegex("^[ \\t]+", RegexOptions.Multiline)]

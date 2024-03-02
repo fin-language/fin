@@ -14,7 +14,7 @@
 typedef struct ex_mem_InitializedPoint ex_mem_InitializedPoint;
 struct ex_mem_InitializedPoint
 {
-     ex_mem_XyPointU8 point ;
+    ex_mem_XyPointU8 point ;
 };
 
 

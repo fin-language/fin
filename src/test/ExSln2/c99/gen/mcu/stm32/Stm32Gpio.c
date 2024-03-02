@@ -4,8 +4,16 @@
 
 
 #include "mcu/stm32/Stm32Gpio.h"
+#include <string.h>
 
 
+
+void mcu_stm32_Stm32Gpio_ctor(mcu_stm32_Stm32Gpio * self, GPIO_TypeDef * port, uint16_t pin)
+{
+    memset(self, 0, sizeof(*self));
+    self->port = port;
+    self->pin = pin;
+}
 
 // virtual table implementation for IGpio. Note that this is extern'd.
 const hal_IGpio_vtable hal_IGpio_vtable_imp = {

@@ -15,8 +15,8 @@
 typedef struct ex_mem_DoublePoint ex_mem_DoublePoint;
 struct ex_mem_DoublePoint
 {
-     ex_mem_XyPointU8 start ;
-     ex_mem_XyPointU8 end;
+    ex_mem_XyPointU8 start ;
+    ex_mem_XyPointU8 end;
 };
 
 

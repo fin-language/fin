@@ -14,7 +14,7 @@
 typedef struct ex_mem_XyzPointUser ex_mem_XyzPointUser;
 struct ex_mem_XyzPointUser
 {
-     ex_mem_XyzPointI8 p1 ;
+    ex_mem_XyzPointI8 p1 ;
 };
 
 

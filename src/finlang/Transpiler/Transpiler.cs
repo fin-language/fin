@@ -12,7 +12,7 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public string selectClassWhenDebugging = "DoublePoint";
+    public string selectClassWhenDebugging = "ExTypeOverride";
 
     public TranspilerOptions Options = new();
 

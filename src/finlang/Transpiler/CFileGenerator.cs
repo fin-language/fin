@@ -26,6 +26,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     TranspilerHelper transpilerHelper;
     private bool nextTypeIsNotPointer;
     private bool skipEqualsValueClauseForFieldDeclaration;
+    private string? nextTypeOverride;
     string indent = "    ";
 
     public CFileGenerator(C99ClsEnumInterface cls) : base(SyntaxWalkerDepth.StructuredTrivia)
@@ -293,16 +294,34 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitAttributeList(AttributeListSyntax node)
     {
-        // Ignore attributes
         VisitLeadingTrivia(node);
 
         if (node.HasFFI())
             sb.Append("// FFI function. User code must provide the implementation");
 
+        // override_type support
+        {
+            AttributeSyntax? overrideType = node.GetTypeOverride();
+            if (overrideType != null)
+            {
+                LiteralExpressionSyntax? les = overrideType.ArgumentList.ThrowIfNull().Arguments.Single().Expression as LiteralExpressionSyntax;
+
+                if (les == null || !les.IsKind(SyntaxKind.StringLiteralExpression))
+                    throw new TranspilerException("Override attribute must have a string literal argument", overrideType);
+
+                nextTypeOverride = les.Token.ValueText;
+
+                if (StringUtils.EndsWithNewLineOptSpace(sb))
+                    StringUtils.EraseTrailingWhitespace(sb);
+            }
+        }
+
         if (node.HasMemAttr())
             nextTypeIsNotPointer = true;
 
-        VisitTrailingTrivia(node);
+        var trailingTrivia = node.GetTrailingTrivia().ToFullString();
+        if (trailingTrivia.Contains('\n') || trailingTrivia.Contains('\r'))
+            sb.Append(trailingTrivia);
     }
 
 
@@ -500,6 +519,13 @@ public class CFileGenerator : CSharpSyntaxWalker
     public override void VisitParameter(ParameterSyntax node)
     {
         VisitLeadingTrivia(node);
+
+        foreach (var attrList in node.AttributeLists)
+        {
+            // note: if there is an attribute present, it doesn't have any leading whitespace.
+            // The whitespace belongs to the opening "(" or to the "," that separates the parameters.
+            VisitAttributeList(attrList);
+        }
 
         SyntaxTokenList modifiers = node.Modifiers;
 
@@ -991,6 +1017,9 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitPredefinedType(PredefinedTypeSyntax node)
     {
+        if (HandleNextTypeOverride(node))
+            return;
+
         string result = node.Keyword.Text switch
         {
             "void" => "void",
@@ -1012,6 +1041,19 @@ public class CFileGenerator : CSharpSyntaxWalker
         VisitLeadingTrivia(node);
         sb.Append(result);
         VisitTrailingTrivia(node);
+    }
+
+    private bool HandleNextTypeOverride(SyntaxNode node)
+    {
+        if (nextTypeOverride == null)
+            return false;
+
+        VisitLeadingTrivia(node);
+        sb.Append(nextTypeOverride);
+        nextTypeOverride = null;
+        VisitTrailingTrivia(node);
+
+        return true;
     }
 
     public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
@@ -1125,6 +1167,9 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
+        if (HandleNextTypeOverride(node))
+            return;
+
         var result = node.Identifier.Text;
         string pre = string.Empty;
         string post = string.Empty;

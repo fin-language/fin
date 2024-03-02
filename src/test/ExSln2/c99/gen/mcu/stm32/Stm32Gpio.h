@@ -9,15 +9,40 @@
 #include "hal_IGpio.h"
 
 
-// Class is a Foreign Function Interface. No struct generated.
+
+/// <summary>
+/// We want a .c/h file to be generated for this class and have it setup the vtable.
+/// </summary>
+typedef struct mcu_stm32_Stm32Gpio mcu_stm32_Stm32Gpio;
+struct mcu_stm32_Stm32Gpio
+{
+    /// <summary>
+    /// This is a string type so that we can use C99 types like GPIO_TypeDef that fin doesn't know about.
+    /// </summary>
+    GPIO_TypeDef * port;
+
+    /// <summary>
+    /// This is a string type so that we can use C99 defines like GPIO_PIN_0 that fin doesn't know about.
+    /// </summary>
+    uint16_t pin;
+};
+
+
+void mcu_stm32_Stm32Gpio_ctor(mcu_stm32_Stm32Gpio * self, GPIO_TypeDef * port, uint16_t pin);
+
+// FFI function. User code must provide the implementation
 bool mcu_stm32_Stm32Gpio_enable_pulldown(mcu_stm32_Stm32Gpio * self);
 
+// FFI function. User code must provide the implementation
 bool mcu_stm32_Stm32Gpio_enable_pullup(mcu_stm32_Stm32Gpio * self);
 
+// FFI function. User code must provide the implementation
 bool mcu_stm32_Stm32Gpio_read_state(mcu_stm32_Stm32Gpio * self);
 
+// FFI function. User code must provide the implementation
 void mcu_stm32_Stm32Gpio_set_state(mcu_stm32_Stm32Gpio * self, bool state);
 
+// FFI function. User code must provide the implementation
 void mcu_stm32_Stm32Gpio_toggle(mcu_stm32_Stm32Gpio * self);
 
 // vtable is extern to allow const initializations
