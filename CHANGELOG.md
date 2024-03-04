@@ -2,7 +2,7 @@
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 # Breaking Changes 🌱
-Fin is very experimental right now! I wouldn't recommend using it for anything other than for exploration and toy examples right now.Fin is very experimental XXX right now! I wouldn't recommend using it for anything other than for exploration and toy examples right now.
+Fin is very experimental right now! I wouldn't recommend using it for anything other than for exploration and toy examples right now.
 
 We will occasionally make changes to `fin` that may affect your projects.
 
