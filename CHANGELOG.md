@@ -26,21 +26,25 @@ Test/interim releases are not documented here.
 
 ## [0.3.0]
 ### Added
-- Transpiler - initial support for a field be an actual class object type and not just a pointer to it.
+- Transpiler - initial support for a field to be an actual class object type and not just a pointer to it.
     - field: `[mem] public SomeObj obj;`
-- Transpiler - initial support for `c_array_sized<T>` with a length.
+- Transpiler - initial support for `c_array_sized<T>`.
     - ex: `[mem] c_array_sized<u8> data = mem.init(new c_array_sized<u8>(5));`
+    - Currently only supports fields (not local variables).
     - Doesn't need `[mem]` because it is implied. You can add it though.
 - Transpiler - add ability to customize the output file path and name
+	- See `transpiler.SetFileNamer()` for more details.
 - Transpiler - add default options to output finlang version, date/time, and MD5 filepath.
     - Also outputs source file path.
+    - See `transpiler.Options` for more details.
 - Transpiler - support `SimOnly.run(() => { /* code */ })` for running code in simulation mode only.
+    - This code can be in constructors, or local methods...
 - Transpiler - support C# binary/hex literals with underscore separators
     - `0b1010_1110` --> `0b10101110`
     - `0x1234_5678` --> `0x12345678`
 - Transpiler - initial support for C# ref and out parameters of primitives
 - Transpiler - initial support for C# in parameters of primitives
-- Transpiler - initial support for field initializers
+- Transpiler - initial support for field declaration initial values.
     - https://github.com/fin-language/fin/issues/38
 - Transpiler - support constructing field mem objects
     - https://github.com/fin-language/fin/issues/37
