@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [0.2.?]
+## [0.3.0]
 ### Added
 - Transpiler - initial support for a field be an actual class object type and not just a pointer to it.
     - field: `[mem] public SomeObj obj;`
