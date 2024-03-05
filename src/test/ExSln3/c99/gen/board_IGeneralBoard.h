@@ -52,23 +52,23 @@ struct board_IGeneralBoard_vtable
 /// Button that player presses to trap the light beam.
 /// </summary>
 /// <returns></returns>
-IDigIn board_IGeneralBoard_get_trap_button(board_IGeneralBoard * self);
+hal_IDigIn * board_IGeneralBoard_get_trap_button(board_IGeneralBoard * self);
 
 
 /// <summary>
 /// Button that player presses to start the game.
 /// </summary>
 /// <returns></returns>
-IDigIn board_IGeneralBoard_get_start_button(board_IGeneralBoard * self);
+hal_IDigIn * board_IGeneralBoard_get_start_button(board_IGeneralBoard * self);
 
 
-IDigOut board_IGeneralBoard_get_main_led(board_IGeneralBoard * self);
+hal_IDigOut * board_IGeneralBoard_get_main_led(board_IGeneralBoard * self);
 
 
 //DigInArray get_settings_switches();
 //DigOutArray get_sweep_leds();
 
-u32 board_IGeneralBoard_get_time_ms(board_IGeneralBoard * self);
+uint32_t board_IGeneralBoard_get_time_ms(board_IGeneralBoard * self);
 
 
 void board_IGeneralBoard_step(board_IGeneralBoard * self);

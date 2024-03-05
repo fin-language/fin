@@ -35,9 +35,9 @@ struct hal_ISpi_vtable
 
 void hal_ISpi_tx_byte(hal_ISpi * self, uint8_t tx_byte);
 
-u8 hal_ISpi_rx_byte(hal_ISpi * self);
+uint8_t hal_ISpi_rx_byte(hal_ISpi * self);
 
-u8 hal_ISpi_rx_tx_byte(hal_ISpi * self, uint8_t tx_byte);
+uint8_t hal_ISpi_rx_tx_byte(hal_ISpi * self, uint8_t tx_byte);
 
 
 void hal_ISpi_rx_array(hal_ISpi * self, uint8_t * data, uint8_t data_length);

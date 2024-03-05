@@ -132,7 +132,7 @@ public class InterfaceGenerator
     {
         var mDecl = (MethodDeclarationSyntax)methodSymbol.DeclaringSyntaxReferences.Single().GetSyntax();
         visitor.SetSb(sb);
-        visitor.VisitToken(mDecl.ReturnType.GetFirstToken()); // includes comment and indent
+        visitor.Visit(mDecl.ReturnType); // includes comment and indent
 
         var prefix = cls.GetCName() + "_";
         sb.Append($"{prefix}{methodSymbol.Name}");

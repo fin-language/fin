@@ -31,7 +31,7 @@ Test/interim releases are not documented here.
 ### Fixed
 - Transpiler - fix `FinC.ignore_unused(this)`
     - https://github.com/fin-language/fin/issues/45
-- Transpiler - fix interface vtable generation for non-bool types
+- Transpiler - fix interface generation for non-bool types
 
 ### Changed
 - Transpiler - output `Source file` header info using Linux path separators

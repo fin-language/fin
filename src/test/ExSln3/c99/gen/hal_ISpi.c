@@ -12,12 +12,12 @@ void hal_ISpi_tx_byte(hal_ISpi * self, uint8_t tx_byte)
     self->obj_vtable->tx_byte(self->obj, tx_byte);
 }
 
-u8 hal_ISpi_rx_byte(hal_ISpi * self)
+uint8_t hal_ISpi_rx_byte(hal_ISpi * self)
 {
     return self->obj_vtable->rx_byte(self->obj);
 }
 
-u8 hal_ISpi_rx_tx_byte(hal_ISpi * self, uint8_t tx_byte)
+uint8_t hal_ISpi_rx_tx_byte(hal_ISpi * self, uint8_t tx_byte)
 {
     return self->obj_vtable->rx_tx_byte(self->obj, tx_byte);
 }
