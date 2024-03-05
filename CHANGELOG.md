@@ -26,7 +26,7 @@ Test/interim releases are not documented here.
 
 ## [0.3.?]
 ### Added
--
+- Transpiler - support `[simonly]` attribute on fields
 
 ### Fixed
 - Transpiler - fix `FinC.ignore_unused(this)`

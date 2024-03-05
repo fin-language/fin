@@ -12,7 +12,7 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public string selectClassWhenDebugging = "TangRev1";
+    public string selectClassWhenDebugging = "Avr8Gpio";
 
     public TranspilerOptions Options = new();
 

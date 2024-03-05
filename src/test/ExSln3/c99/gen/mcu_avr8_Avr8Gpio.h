@@ -26,12 +26,6 @@ struct mcu_avr8_Avr8Gpio
     volatile uint8_t * _port;
 
     uint8_t _pin_mask;
-
-    
-    HashSet<char const *> _instantiations ;
-    hal_GpioDirection sim_direction ;
-    bool sim_pullup ;
-    bool sim_state ;
 };
 
 

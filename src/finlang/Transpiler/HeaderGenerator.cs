@@ -53,7 +53,7 @@ public class HeaderGenerator
 
         foreach (var field in cls.syntaxNode.ChildNodes().OfType<FieldDeclarationSyntax>())
         {
-            if (!field.IsConst())
+            if (!field.IsConst() && !field.IsSimOnly())
                 visitor.VisitFieldDeclaration(field);
         }
 
