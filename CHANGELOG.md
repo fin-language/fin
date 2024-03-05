@@ -34,7 +34,7 @@ Test/interim releases are not documented here.
 
 ### Changed
 - Transpiler - output `Source file` header info using Linux path separators
-	- https://github.com/fin-language/fin/issues/46
+    - https://github.com/fin-language/fin/issues/46
 
 ---
 
