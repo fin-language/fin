@@ -5,8 +5,6 @@ namespace board;
 
 public interface IGeneralBoard
 {
-    DigOutArray get_sweep_leds();
-
     /// <summary>
     /// Button that player presses to trap the light beam.
     /// </summary>
@@ -19,7 +17,10 @@ public interface IGeneralBoard
     /// <returns></returns>
     IDigIn get_start_button();
 
-    DigInArray get_settings_switches();
+    IDigOut get_main_led();
+
+    //DigInArray get_settings_switches();
+    //DigOutArray get_sweep_leds();
 
     u32 get_time_ms();
 

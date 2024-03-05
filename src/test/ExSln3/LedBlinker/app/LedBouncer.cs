@@ -6,16 +6,16 @@ namespace app;
 
 public class LedBouncer : FinObj
 {
-    public readonly IGeneralBoard _board;
     public i16 _ms_per_frame = 100;
     public i16 _ms_before_next_frame;
     public u32 _last_time_ms = 0;
     public u8 _led_index = 0;
-    public i8 _led_direction = 1; 
+    public i8 _led_direction = 1;
+    public DigOutArray _sweep_leds;
 
-    public LedBouncer(IGeneralBoard board)
+    public LedBouncer(DigOutArray sweep_leds)
     {
-        this._board = board;
+        _sweep_leds = sweep_leds;
         reset_frame_time_left();
     }
 
@@ -45,7 +45,7 @@ public class LedBouncer : FinObj
 
     private void show_next_frame()
     {
-        var leds = _board.get_sweep_leds();
+        var leds = _sweep_leds;
 
         // turn off recently lit led
         leds.unsafe_get(_led_index).set_output_state(false);
