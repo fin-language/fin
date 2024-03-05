@@ -1063,6 +1063,13 @@ public class CFileGenerator : CSharpSyntaxWalker
         return true;
     }
 
+    public override void VisitThisExpression(ThisExpressionSyntax node)
+    {
+        VisitLeadingTrivia(node);
+        sb.Append("self");
+        VisitTrailingTrivia(node);
+    }
+
     public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
         bool done = false;

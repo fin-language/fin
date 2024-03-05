@@ -39,7 +39,7 @@ hal_IDigIn * board_tang_TangRev1_get_trap_button(board_tang_TangRev1 * self)
 
 void board_tang_TangRev1_step(board_tang_TangRev1 * self)
 {
-    (void)(this);
+    (void)(self);
 }
 
 // virtual table implementation for IGeneralBoard. Note that this is extern'd.

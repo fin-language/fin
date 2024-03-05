@@ -24,6 +24,15 @@ Test/interim releases are not documented here.
 
 ---
 
+## [0.3.?]
+### Added
+
+### Fixed
+- Transpiler - fix `FinC.ignore_unused(this)`
+    - https://github.com/fin-language/fin/issues/45
+
+---
+
 ## [0.3.0]
 ### Added
 - Transpiler - initial support for a field to be an actual class object type and not just a pointer to it.
