@@ -17,12 +17,12 @@ Transpiler transpiler = new(destinationDirPath: outDir, solutionPath: slnDir + s
 
 transpiler.Options.OutputTimestamp = false;
 
-transpiler.SetFileNamer((string originalPath) =>
-{
-    // Replace "mcu_XXX_" with "mcu/XXX/"
-    originalPath = Regex.Replace(originalPath, "^mcu_([^_]+)_", "mcu/$1/");
-    return originalPath;
-});
+//transpiler.SetFileNamer((string originalPath) =>
+//{
+//    // Replace "mcu_XXX_" with "mcu/XXX/"
+//    originalPath = Regex.Replace(originalPath, "^mcu_([^_]+)_", "mcu/$1/");
+//    return originalPath;
+//});
 
 transpiler.GenerateAndWrite();
 var fileNames = transpiler.GetListOfAllGeneratedFiles();
@@ -32,7 +32,6 @@ foreach (var fileName in fileNames)
 {
     Console.WriteLine("    " + fileName);
 }
-
 
 Console.WriteLine("Deploying code...");
 Deploy(slnDir, c99Dir);
@@ -61,9 +60,7 @@ static void Deploy(string slnDir, string c99Dir)
 
     Matcher matcher = new();
     matcher.AddInclude("gen/**");
-    matcher.AddExclude("gen/mcu/stm32/*");
-
-    //PatternMatchingResult result = matcher.Match("file.md");
+    matcher.AddExclude("gen/stm32*");
 
     foreach (var filePath in filesToCopy)
     {

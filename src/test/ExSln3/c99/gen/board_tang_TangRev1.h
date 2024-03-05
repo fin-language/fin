@@ -6,7 +6,7 @@
 #pragma once
 
 #include "board_tang_TangRev1_port_implementation.h" // You need to provide this
-#include "mcu/avr8/Avr8Gpio.h"
+#include "mcu_avr8_Avr8Gpio.h"
 #include "hal_IDigOut.h"
 #include "hal_IDigIn.h"
 #include <stdint.h>
