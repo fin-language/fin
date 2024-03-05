@@ -33,6 +33,7 @@ public class Avr8Gpio : FinObj, IGpio
         SimOnly.Run(() => { ThrowIfAlreadyInstantiated(port, pin); });
     }
 
+    [simonly]
     private static void ThrowIfAlreadyInstantiated(string port, u8 pin)
     {
         // this can happen because of the ThreadStatic attribute

@@ -1,9 +1,4 @@
 #pragma once
 
-typedef struct hal_Gpio hal_Gpio;  // forward declaration
-
-// for arduino
-struct hal_Gpio
-{
-    int pin;
-};
+#define PORTB   (*(volatile uint8_t *)0x25)
+#define PORTC   (*(volatile uint8_t *)0x28)
