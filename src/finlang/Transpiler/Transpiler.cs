@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Reflection;
@@ -282,6 +282,10 @@ public class Transpiler
 
             string sourceFilePath = cls.GetSourceFilePath();
             string relativeSourcePath = Path.GetRelativePath(Path.GetDirectoryName(solutionPath).ThrowIfNull(), sourceFilePath);
+
+            // Use linux style slashes. See https://github.com/fin-language/fin/issues/46
+            relativeSourcePath = relativeSourcePath.Replace("\\", "/");
+
             msg += $"// Source file: `{relativeSourcePath}` (relative to C# solution).\n";
 
             // calculate MD5 hash of the source file

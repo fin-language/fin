@@ -26,10 +26,15 @@ Test/interim releases are not documented here.
 
 ## [0.3.?]
 ### Added
+-
 
 ### Fixed
 - Transpiler - fix `FinC.ignore_unused(this)`
     - https://github.com/fin-language/fin/issues/45
+
+### Changed
+- Transpiler - output `Source file` header info using Linux path separators
+	- https://github.com/fin-language/fin/issues/46
 
 ---
 
