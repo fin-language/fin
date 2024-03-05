@@ -3,7 +3,7 @@ using hal;
 
 namespace board;
 
-public interface IGeneralBoard
+public interface IGeneralBoard : IFinObj
 {
     /// <summary>
     /// Button that player presses to trap the light beam.

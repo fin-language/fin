@@ -14,6 +14,7 @@
         "hal_gpiopinstate.h": "c",
         "hal_gpio_port_implementation.h": "c",
         "mcu_stm32_stm32gpio_port_implementation.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "board_tang_tangrev1.h": "c"
     }
 }

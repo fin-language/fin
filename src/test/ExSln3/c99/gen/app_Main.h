@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "board_IGeneralBoard.h"
 #include <stdint.h>
 
 

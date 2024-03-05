@@ -9,9 +9,9 @@ namespace board.tang;
 /// </summary>
 public class TangRev1 : FinObj, IGeneralBoard
 {
-    [mem] Avr8Gpio _start_button = mem.init(new Avr8Gpio("PORTC", 0)); // Arduino pin A0. RED button.
-    [mem] Avr8Gpio _trap_button = mem.init(new Avr8Gpio("PORTC", 1));  // Arduino pin A1
-    [mem] Avr8Gpio _main_led = mem.init(new Avr8Gpio("PORTB", 5)); // Arduino pin 13. The main BUILTIN LED.
+    [mem] Avr8Gpio _start_button = mem.init(new Avr8Gpio(FinC.EchoToC("PORTC"), 0)); // Arduino pin A0. RED button.
+    [mem] Avr8Gpio _trap_button = mem.init(new Avr8Gpio(FinC.EchoToC("PORTC"), 1));  // Arduino pin A1
+    [mem] Avr8Gpio _main_led = mem.init(new Avr8Gpio(FinC.EchoToC("PORTB"), 5)); // Arduino pin 13. The main BUILTIN LED.
 
     public TangRev1()
     {
