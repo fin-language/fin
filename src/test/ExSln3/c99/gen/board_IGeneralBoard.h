@@ -30,20 +30,20 @@ struct board_IGeneralBoard_vtable
     /// Button that player presses to trap the light beam.
     /// </summary>
     /// <returns></returns>
-    IDigIn (*get_trap_button)(void * self);
+    hal_IDigIn * (*get_trap_button)(void * self);
 
     /// <summary>
     /// Button that player presses to start the game.
     /// </summary>
     /// <returns></returns>
-    IDigIn (*get_start_button)(void * self);
+    hal_IDigIn * (*get_start_button)(void * self);
 
-    IDigOut (*get_main_led)(void * self);
+    hal_IDigOut * (*get_main_led)(void * self);
 
     //DigInArray get_settings_switches();
     //DigOutArray get_sweep_leds();
 
-    u32 (*get_time_ms)(void * self);
+    uint32_t (*get_time_ms)(void * self);
 
     void (*step)(void * self);
 };

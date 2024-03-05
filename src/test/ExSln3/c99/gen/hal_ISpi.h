@@ -25,8 +25,8 @@ struct hal_ISpi
 struct hal_ISpi_vtable
 {
     void (*tx_byte)(void * self, uint8_t tx_byte);
-    u8 (*rx_byte)(void * self);
-    u8 (*rx_tx_byte)(void * self, uint8_t tx_byte);
+    uint8_t (*rx_byte)(void * self);
+    uint8_t (*rx_tx_byte)(void * self, uint8_t tx_byte);
 
     void (*rx_array)(void * self, uint8_t * data, uint8_t data_length);
     void (*tx_array)(void * self, uint8_t * data, uint8_t data_length);

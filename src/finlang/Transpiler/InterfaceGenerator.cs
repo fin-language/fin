@@ -75,7 +75,7 @@ public class InterfaceGenerator
         foreach (var methodSymbol in methods)
         {
             var mDecl = (MethodDeclarationSyntax)methodSymbol.DeclaringSyntaxReferences.Single().GetSyntax();
-            visitor.VisitToken(mDecl.ReturnType.GetFirstToken()); // includes comment and indent
+            visitor.Visit(mDecl.ReturnType);
 
             sb.Append($"(*{methodSymbol.Name})");
             visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfTypeName: "void");
