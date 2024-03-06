@@ -3,5 +3,8 @@
 
 namespace finlang;
 
-[AttributeUsage(AttributeTargets.Field)]
+/// <summary>
+/// If applied to a method, it means that the method will return a copy of the object and not a reference to the object.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Method)]
 public class memAttribute : Attribute { }

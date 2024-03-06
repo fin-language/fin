@@ -3,6 +3,28 @@ using System;
 
 namespace finlang;
 
+/// <summary>
+/// NOT supported yet. https://github.com/fin-language/fin/issues/47
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public class mem<T> where T : FinObj
+{
+    [simonly]
+    public T _sim_obj;
+
+    public T get()
+    {
+        // TODO: need to deep clone object and keep track of allocation https://github.com/fin-language/fin/issues/47
+        return _sim_obj;
+    }
+
+    internal mem(T obj_to_copy)
+    {
+        // TODO: need to deep clone object and keep track of allocation https://github.com/fin-language/fin/issues/47
+        _sim_obj = obj_to_copy;
+    }
+}
+
 public class mem
 {
     [simonly]

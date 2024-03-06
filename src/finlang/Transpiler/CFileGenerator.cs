@@ -1096,6 +1096,49 @@ public class CFileGenerator : CSharpSyntaxWalker
             base.VisitEqualsValueClause(node);
     }
 
+    public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+    {
+        if (node.AttributeLists.HasMemAttr())
+            nextTypeIsNotPointer = true;
+
+        //var list = new WalkableChildSyntaxList(this, node.ChildNodesAndTokens());
+        //list.VisitUpTo(node.ReturnType);
+        
+        base.VisitMethodDeclaration(node);
+    }
+
+    public override void VisitReturnStatement(ReturnStatementSyntax node)
+    {
+        bool done = false;
+
+        var op = model.GetOperation(node);
+        if (op is IReturnOperation rio)
+        {
+            var type = rio.ReturnedValue?.Type;
+            if (type?.TypeKind == TypeKind.Interface)
+            {
+                var toName = Namer.GetCName(type);
+                var fromType = model.GetTypeInfo(node.Expression.ThrowIfNull()).Type.ThrowIfNull();
+                var fromName = Namer.GetCName(fromType);
+
+                if (fromName != toName)
+                {
+                    var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
+                    VisitToken(node.ReturnKeyword);
+
+                    sb.Append($"{funcName}("); // NOTE! This is returning a copy, not a reference
+                    Visit(node.Expression);
+                    sb.Append(')');
+                    VisitToken(node.SemicolonToken);
+                    done = true;
+                }
+            }
+        }
+
+        if (!done)
+            base.VisitReturnStatement(node);
+    }
+
     private bool HandleAssignmentInterfaceConversion(EqualsValueClauseSyntax node)
     {
         bool done = false;

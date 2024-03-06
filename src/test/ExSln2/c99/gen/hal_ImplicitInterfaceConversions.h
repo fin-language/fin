@@ -12,3 +12,6 @@
 void hal_ImplicitInterfaceConversions_test(hal_GpioDigInOut * gpio_dio);
 
 void hal_ImplicitInterfaceConversions_take_dig_in(hal_IDigIn * dig_in);
+
+
+hal_IDigIn hal_ImplicitInterfaceConversions_convert_gpio(hal_GpioDigInOut * gpio_dio);

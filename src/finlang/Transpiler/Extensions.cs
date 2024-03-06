@@ -174,6 +174,11 @@ public static class Extensions
         return node.Attributes.Any(attr => attr.Name.ToString() == MemAttrShortName);
     }
 
+    public static bool HasMemAttr(this SyntaxList<AttributeListSyntax> attributeLists)
+    {
+        return attributeLists.Any(attrList => attrList.HasMemAttr());
+    }
+
     public static bool IsConst(this FieldDeclarationSyntax? node)
     {
         if (node == null) return false;

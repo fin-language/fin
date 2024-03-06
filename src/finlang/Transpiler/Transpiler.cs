@@ -12,7 +12,7 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public string selectClassWhenDebugging = "Avr8Gpio";
+    public string selectClassWhenDebugging = "ImplicitInterfaceConversions";
 
     public TranspilerOptions Options = new();
 
