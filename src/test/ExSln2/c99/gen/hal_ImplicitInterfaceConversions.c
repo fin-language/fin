@@ -10,6 +10,7 @@
 
 void hal_ImplicitInterfaceConversions_test(hal_GpioDigInOut * gpio_dio)
 {
+    hal_IDigIn _temp_memory;
     hal_IDigInOut * dio = &M_hal_GpioDigInOut__to__hal_IDigInOut(gpio_dio);
     hal_IDigIn * dig_in = &M_hal_GpioDigInOut__to__hal_IDigIn(gpio_dio);
     hal_IDigOut * dig_out = &M_hal_GpioDigInOut__to__hal_IDigOut(gpio_dio);
@@ -20,7 +21,7 @@ void hal_ImplicitInterfaceConversions_test(hal_GpioDigInOut * gpio_dio)
     hal_ImplicitInterfaceConversions_take_dig_in(dig_in); // shouldn't have a conversion
     hal_IDigIn * dig_in2 = dig_in; // shouldn't have a conversion
 
-    dig_in = &hal_ImplicitInterfaceConversions_convert_gpio(gpio_dio);
+    dig_in = hal_ImplicitInterfaceConversions_convert_gpio(gpio_dio, &_temp_memory);
 
     (void)(dig_out);
     (void)(dig_in2);
@@ -32,8 +33,7 @@ void hal_ImplicitInterfaceConversions_take_dig_in(hal_IDigIn * dig_in)
      (void)(dig_in);
 }
 
-
-hal_IDigIn hal_ImplicitInterfaceConversions_convert_gpio(hal_GpioDigInOut * gpio_dio)
+hal_IDigIn * hal_ImplicitInterfaceConversions_convert_gpio(hal_GpioDigInOut * gpio_dio, hal_IDigIn * __caller_allocated_return)
 {
-    return M_hal_GpioDigInOut__to__hal_IDigIn(gpio_dio);
+    return memcpy(__caller_allocated_return, &M_hal_GpioDigInOut__to__hal_IDigIn(gpio_dio), sizeof(*__caller_allocated_return));
 }

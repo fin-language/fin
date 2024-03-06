@@ -17,7 +17,7 @@ public class ImplicitInterfaceConversions : FinObj
         take_dig_in(dig_in); // shouldn't have a conversion
         IDigIn dig_in2 = dig_in; // shouldn't have a conversion
 
-        dig_in = convert_gpio(gpio_dio); // can't do this. Can't take address of return value of method. `dig_in = &hal_ImplicitInterfaceConversions_convert_gpio(gpio_dio);`
+        dig_in = convert_gpio(gpio_dio);
 
         FinC.ignore_unused(dig_out);
         ignore_unused(dig_in2);
@@ -29,9 +29,11 @@ public class ImplicitInterfaceConversions : FinObj
          FinC.ignore_unused(dig_in);
     }
 
-    [mem]
+    [caller_allocated_return]
     public static IDigIn convert_gpio(GpioDigInOut gpio_dio)
     {
-        return gpio_dio;
+        return gpio_dio; // should throw if method lacking `[caller_allocated_return]` attribute.
+        // We want the attribute for 2 reasons: it helps a fair bit with translation, 
+        // and it's a good to alert the user.
     }
 }
