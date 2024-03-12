@@ -12,6 +12,12 @@ uint8_t hal_SizeOfEx_calc_param_sizes(uint8_t a, int32_t b)
     return sizeof(uint8_t /*a*/) + sizeof(int32_t /*b*/);
 }
 
+uint8_t hal_SizeOfEx_calc_param_refs_sizes(uint8_t * a, int32_t * b)
+{
+    /* fin: math.unsafe_mode() */
+    return sizeof(uint8_t /*a*/) + sizeof(int32_t /*b*/); // note generated doesn't return size of pointer
+}
+
 uint8_t hal_SizeOfEx_calc_sizeof_u8_i32()
 {
     /* fin: math.unsafe_mode() */

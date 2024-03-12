@@ -11,4 +11,6 @@
 // Class has no fields. No struct generated.
 uint8_t hal_SizeOfEx_calc_param_sizes(uint8_t a, int32_t b);
 
+uint8_t hal_SizeOfEx_calc_param_refs_sizes(uint8_t * a, int32_t * b);
+
 uint8_t hal_SizeOfEx_calc_sizeof_u8_i32();
