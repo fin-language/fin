@@ -2,6 +2,9 @@
 
 namespace hal;
 
+/// <summary>
+/// https://github.com/fin-language/fin/issues/50
+/// </summary>
 public class SizeOfEx : FinObj
 {
     public static u8 calc_param_sizes(u8 a, i32 b)
