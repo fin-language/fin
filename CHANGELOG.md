@@ -26,7 +26,10 @@ Test/interim releases are not documented here.
 
 ## [0.3.?]
 ### Added
+- Transpiler - support constant fields for numbers
+	- https://github.com/fin-language/fin/issues/51
 - Transpiler - support `[simonly]` attribute on fields
+
 
 ### Fixed
 - Transpiler - fix `FinC.ignore_unused(this)`

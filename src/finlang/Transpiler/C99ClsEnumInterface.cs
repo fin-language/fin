@@ -106,6 +106,11 @@ public class C99ClsEnumInterface
         return GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);
     }
 
+    public IEnumerable<IFieldSymbol> GetCDefineFields()
+    {
+        return GetMembers().OfType<IFieldSymbol>().Where(f => f.IsConst || (f.IsStatic && f.IsReadOnly));
+    }
+
     public string GetCName()
     {
         return Namer.GetCName(symbol);

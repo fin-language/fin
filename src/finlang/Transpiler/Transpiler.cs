@@ -12,7 +12,7 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public string selectClassWhenDebugging = "Avr8Gpio";
+    public string selectClassWhenDebugging = "IConstantsEx";
 
     public TranspilerOptions Options = new();
 
@@ -111,7 +111,7 @@ public class Transpiler
         {
             INamedTypeSymbol symbol = model.GetDeclaredSymbol(classDeclNode).ThrowIfNull();
 
-            if (System.Diagnostics.Debugger.IsAttached && symbol.Name != selectClassWhenDebugging)
+            if (IsIgnoredDuringDebugging(symbol))
                 continue;
 
             if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)) && !symbol.IsSimOnly())
@@ -123,6 +123,11 @@ public class Transpiler
         }
     }
 
+    private bool IsIgnoredDuringDebugging(INamedTypeSymbol symbol)
+    {
+        return System.Diagnostics.Debugger.IsAttached && symbol.Name != selectClassWhenDebugging;
+    }
+
     private void FindAllInterfaces(SemanticModel model)
     {
         var allInterfaces = model.SyntaxTree.GetRoot().DescendantNodes().OfType<InterfaceDeclarationSyntax>();
@@ -130,6 +135,9 @@ public class Transpiler
         foreach (var declNode in allInterfaces)
         {
             INamedTypeSymbol symbol = model.GetDeclaredSymbol(declNode).ThrowIfNull();
+
+            if (IsIgnoredDuringDebugging(symbol))
+                continue;
 
             // could also check for [simonly] attribute
             if (symbol.AllInterfaces.Any(iface => iface.Name == nameof(IFinObj)))
@@ -182,6 +190,7 @@ public class Transpiler
             else if (cls.IsInterface)
             {
                 var iGen = new InterfaceGenerator(cls);
+                gen.GenerateCDefines(cls, cls.hFile.mainCode);
                 iGen.GenerateInterfaceStructs();
                 iGen.GeneratePrototypes();
                 iGen.GenerateFunctions();
@@ -190,6 +199,7 @@ public class Transpiler
             else
             {
                 // this is a class
+                gen.GenerateCDefines(cls, cls.hFile.mainCode);
                 gen.GenerateStructures(cls);
                 gen.GenerateFunctionPrototypes(cls);
 

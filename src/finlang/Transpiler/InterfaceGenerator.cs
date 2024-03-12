@@ -24,7 +24,7 @@ public class InterfaceGenerator
     public static IEnumerable<IMethodSymbol> GetAllInterfaceMethods(INamedTypeSymbol interfaceSymbol)
     {
         return GetAllInheritedInterfaceMethods(interfaceSymbol)
-            .Concat(interfaceSymbol.GetMembers().OfType<IMethodSymbol>());   // put this interface's methods last
+            .Concat(GetInterfaceMethods(interfaceSymbol));   // put this interface's methods last
     }
 
     public static IEnumerable<IMethodSymbol> GetAllInheritedInterfaceMethods(INamedTypeSymbol symbol)
@@ -33,11 +33,17 @@ public class InterfaceGenerator
 
         foreach (var superInterfaceType in superInterfaceTypes)
         {
-            foreach (var m in superInterfaceType.GetMembers().OfType<IMethodSymbol>())
+            foreach (var m in GetInterfaceMethods(superInterfaceType))
             {
                 yield return m;
             }
         }
+    }
+
+    private static IEnumerable<IMethodSymbol> GetInterfaceMethods(INamedTypeSymbol superInterfaceType)
+    {
+        return superInterfaceType.GetMembers().OfType<IMethodSymbol>()
+            .Where(m => m.MethodKind != MethodKind.SharedConstructor); // exclude static constructors
     }
 
     public static IEnumerable<INamedTypeSymbol> GetSuperInterfaceTypes(INamedTypeSymbol symbol)

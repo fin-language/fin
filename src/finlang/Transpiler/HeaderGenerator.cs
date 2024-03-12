@@ -53,7 +53,7 @@ public class HeaderGenerator
 
         foreach (var field in cls.syntaxNode.ChildNodes().OfType<FieldDeclarationSyntax>())
         {
-            if (!field.IsConst() && !field.IsSimOnly())
+            if (!field.IsStatic() && !field.IsConst() && !field.IsSimOnly())
                 visitor.VisitFieldDeclaration(field);
         }
 
@@ -63,6 +63,39 @@ public class HeaderGenerator
         }
 
         sb.AppendLine("};");
+        sb.AppendLine();
+    }
+
+    public void GenerateCDefines(C99ClsEnumInterface cls, StringBuilder sb)
+    {
+        IEnumerable<IFieldSymbol> defineFields = cls.GetCDefineFields();
+
+        if (!defineFields.Any())
+            return;
+        
+        sb.AppendLine("// Defines");
+
+        foreach (var f in defineFields)
+        {
+            var name = Namer.GetCName(f);
+
+            object? value = f.ConstantValue;
+
+            if (value == null)
+            {
+                // try to get the value from the initializer
+                SyntaxNode syntaxNode = f.DeclaringSyntaxReferences.Single().GetSyntax();
+                var initializer = syntaxNode.DescendantNodes().OfType<EqualsValueClauseSyntax>().FirstOrDefault();
+
+                if (initializer == null)
+                    throw new TranspilerException("Field has no constant value and no initializer. Cannot generate C define.", syntaxNode);
+
+                value = initializer.Value;
+            }
+
+            sb.AppendLine($"#define {name}    {value}");
+        }
+
         sb.AppendLine();
     }
 

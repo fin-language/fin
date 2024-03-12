@@ -63,8 +63,6 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public void Generate()
     {
-        // TODO public constants
-
         if (cls.IsFFIClass)
         {
             // FFI classes don't have method implementations
