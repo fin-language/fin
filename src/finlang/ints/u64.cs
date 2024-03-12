@@ -12,6 +12,11 @@ public struct u64: IHasU64
     public const ulong MIN = 0;
 
     /// <summary>
+    /// Size of this type in bytes. Equivalent to `sizeof(uint64_t)` in C.
+    /// </summary>
+    public static readonly u8 SIZE = 8;
+
+    /// <summary>
     /// C# backing value.
     /// </summary>
     internal ulong _csValue;

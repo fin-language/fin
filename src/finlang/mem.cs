@@ -83,4 +83,38 @@ public class mem
     {
         throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// equivalent to `sizeof(uint8_t)` in C.
+    /// </summary>
+    public static u8 size_of(u8 _) => 1;
+    /// <summary>
+    /// equivalent to `sizeof(uint16_t)` in C.
+    /// </summary>
+    public static u8 size_of(u16 _) => 2;
+    /// <summary>
+    /// equivalent to `sizeof(uint32_t)` in C.
+    /// </summary>
+    public static u8 size_of(u32 _) => 4;
+    /// <summary>
+    /// equivalent to `sizeof(uint64_t)` in C.
+    /// </summary>
+    public static u8 size_of(u64 _) => 8;
+
+    /// <summary>
+    /// equivalent to `sizeof(int8_t)` in C.
+    /// </summary>
+    public static u8 size_of(i8 _) => 1;
+    /// <summary>
+    /// equivalent to `sizeof(int16_t)` in C.
+    /// </summary>
+    public static u8 size_of(i16 _) => 2;
+    /// <summary>
+    /// equivalent to `sizeof(int32_t)` in C.
+    /// </summary>
+    public static u8 size_of(i32 _) => 4;
+    /// <summary>
+    /// equivalent to `sizeof(int64_t)` in C.
+    /// </summary>
+    public static u8 size_of(i64 _) => 8;
 }

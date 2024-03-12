@@ -12,6 +12,11 @@ public struct u32: IHasU32
     public const uint MIN = 0;
 
     /// <summary>
+    /// Size of this type in bytes. Equivalent to `sizeof(uint32_t)` in C.
+    /// </summary>
+    public static readonly u8 SIZE = 4;
+
+    /// <summary>
     /// C# backing value.
     /// </summary>
     internal uint _csValue;

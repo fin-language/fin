@@ -467,7 +467,12 @@ public class GenSimNumerics
             {
                 public const {{backing_type}} MAX = {{typeInfo.GetMaxValue()}};
                 public const {{backing_type}} MIN = {{typeInfo.GetMinValue()}};
-            
+
+                /// <summary>
+                /// Size of this type in bytes. Equivalent to `sizeof({{typeInfo.GetC99BackingTypeName()}})` in C.
+                /// </summary>
+                public static readonly u8 SIZE = {{typeInfo.width/8}};
+
                 /// <summary>
                 /// C# backing value.
                 /// </summary>

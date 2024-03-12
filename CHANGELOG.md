@@ -29,7 +29,8 @@ Test/interim releases are not documented here.
 - Transpiler - support constant fields for numbers
 	- https://github.com/fin-language/fin/issues/51
 - Transpiler - support `[simonly]` attribute on fields
-
+- Transpiler - initial support for `sizeof()` like functionality
+	- https://github.com/fin-language/fin/issues/50
 
 ### Fixed
 - Transpiler - fix `FinC.ignore_unused(this)`

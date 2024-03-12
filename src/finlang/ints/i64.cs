@@ -12,6 +12,11 @@ public struct i64: IHasI64
     public const long MIN = -9223372036854775808;
 
     /// <summary>
+    /// Size of this type in bytes. Equivalent to `sizeof(int64_t)` in C.
+    /// </summary>
+    public static readonly u8 SIZE = 8;
+
+    /// <summary>
     /// C# backing value.
     /// </summary>
     internal long _csValue;

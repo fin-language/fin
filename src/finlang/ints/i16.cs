@@ -12,6 +12,11 @@ public struct i16: IHasI16
     public const short MIN = -32768;
 
     /// <summary>
+    /// Size of this type in bytes. Equivalent to `sizeof(int16_t)` in C.
+    /// </summary>
+    public static readonly u8 SIZE = 2;
+
+    /// <summary>
     /// C# backing value.
     /// </summary>
     internal short _csValue;

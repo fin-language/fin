@@ -12,6 +12,11 @@ public struct u8: IHasU8
     public const byte MIN = 0;
 
     /// <summary>
+    /// Size of this type in bytes. Equivalent to `sizeof(uint8_t)` in C.
+    /// </summary>
+    public static readonly u8 SIZE = 1;
+
+    /// <summary>
     /// C# backing value.
     /// </summary>
     internal byte _csValue;

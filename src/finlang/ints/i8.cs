@@ -12,6 +12,11 @@ public struct i8: IHasI8
     public const sbyte MIN = -128;
 
     /// <summary>
+    /// Size of this type in bytes. Equivalent to `sizeof(int8_t)` in C.
+    /// </summary>
+    public static readonly u8 SIZE = 1;
+
+    /// <summary>
     /// C# backing value.
     /// </summary>
     internal sbyte _csValue;

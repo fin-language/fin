@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.VisualBasic;
 using System.Security.Policy;
 using System.Text;
 
@@ -587,14 +588,14 @@ public class CFileGenerator : CSharpSyntaxWalker
             return true;
         }
 
-        bool done;
-
-        done = TryInstanceFieldAccess(node);
-
-        if (done)
+        // need to try Fin special cases first
+        if (TryHandleFinFieldLikeSpecials(node, memberNameSymbol))
             return true;
 
-        return TryHandleFinFieldLikeSpecials(node, memberNameSymbol);
+        if (TryInstanceFieldAccess(node))
+            return true;
+
+        return false;
     }
 
     /// <summary>
@@ -723,6 +724,9 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     private bool TryFinGlobalInvocations(InvocationExpressionSyntax ies, IMethodSymbol methodNameSymbol)
     {
+        if (TryFinMemInvocations(ies, methodNameSymbol))
+            return true;
+
         if (TryFinCInvocations(ies, methodNameSymbol))
             return true;
 
@@ -842,6 +846,32 @@ public class CFileGenerator : CSharpSyntaxWalker
         return done;
     }
 
+    private bool TryFinMemInvocations(InvocationExpressionSyntax ies, IMethodSymbol methodNameSymbol)
+    {
+        bool done = false;
+
+        if (methodNameSymbol.ContainingType.Name != nameof(mem))
+            return done;
+
+        // Handle `mem.size_of(some_var)` --> `sizeof(uint8_t)`
+        // We purposely don't translate to `sizeof(some_var)` because we want to avoid
+        // the case where `some_var` is a pointer and we end up with `sizeof(int*)` instead of `sizeof(int)`
+        if (methodNameSymbol.Name == nameof(mem.size_of))
+        {
+            ArgumentSyntax arg = ies.ArgumentList.Arguments.Single();
+            // get the type of the argument
+            var type = model.GetTypeInfo(arg.Expression).ThrowIfNull().Type.ThrowIfNull();
+            var cType = FinNumberTypeToCType(type.Name);
+
+            VisitLeadingTrivia(ies);
+            sb.Append($"sizeof({cType} /*{arg}*/)");
+            VisitTrailingTrivia(ies);
+            done = true;
+        }
+
+        return done;
+    }
+
     private bool TryFinCInvocations(InvocationExpressionSyntax ies, IMethodSymbol methodNameSymbol)
     {
         bool done = false;
@@ -920,6 +950,9 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         if (memberNameSymbol.BelongsToFinlangInteger())
         {
+            if (TryFinNumberSizeConstant(node, memberNameSymbol))
+                return true;
+
             if (TryFinWideningOrWrapping(node, memberNameSymbol))
                 return true;
 
@@ -975,6 +1008,24 @@ public class CFileGenerator : CSharpSyntaxWalker
             "f64" => "double",
             _ => null
         };
+    }
+
+    /// <summary>
+    /// We already know that memberNameSymbol belongs to a Finlang integer type
+    /// </summary>
+    public bool TryFinNumberSizeConstant(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
+    {
+        if (memberNameSymbol.Name != nameof(u8.SIZE))
+            return false;
+
+        VisitLeadingTrivia(node);
+
+        string cType = FinNumberTypeToCType(memberNameSymbol.ContainingType.Name).ThrowIfNull();
+        sb.Append($"sizeof({cType})");
+
+        VisitTrailingTrivia(node);
+
+        return true;
     }
 
     public bool TryFinWideningOrWrapping(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)

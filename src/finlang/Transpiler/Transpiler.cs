@@ -12,7 +12,7 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public string selectClassWhenDebugging = "IConstantsEx";
+    public string selectClassWhenDebugging = "SizeOfEx";
 
     public TranspilerOptions Options = new();
 

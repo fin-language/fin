@@ -12,6 +12,11 @@ public struct u16: IHasU16
     public const ushort MIN = 0;
 
     /// <summary>
+    /// Size of this type in bytes. Equivalent to `sizeof(uint16_t)` in C.
+    /// </summary>
+    public static readonly u8 SIZE = 2;
+
+    /// <summary>
     /// C# backing value.
     /// </summary>
     internal ushort _csValue;
