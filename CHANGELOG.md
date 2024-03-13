@@ -31,6 +31,8 @@ Test/interim releases are not documented here.
 - Transpiler - support `[simonly]` attribute on fields
 - Transpiler - initial support for `sizeof()` like functionality
 	- https://github.com/fin-language/fin/issues/50
+- Transpiler - initial style support for indent and line endings
+    - https://github.com/fin-language/fin/issues/55
 
 ### Fixed
 - Transpiler - fix `FinC.ignore_unused(this)`
@@ -40,6 +42,8 @@ Test/interim releases are not documented here.
 ### Changed
 - Transpiler - output `Source file` header info using Linux path separators
     - https://github.com/fin-language/fin/issues/46
+- Transpiler - generated line endings now use style settings which default to Environment.NewLine.
+    - https://github.com/fin-language/fin/issues/55
 
 ---
 

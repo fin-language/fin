@@ -2,8 +2,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
-using Microsoft.VisualBasic;
-using System.Security.Policy;
 using System.Text;
 
 namespace finlang.Transpiler;
@@ -14,6 +12,9 @@ public class CFileGenerator : CSharpSyntaxWalker
     public SemanticModel model;
     StringBuilder sb;
     OutputFile outputFile;
+    StyleSettings styleSettings;
+    string Indent => styleSettings.indent;
+    protected string NL => styleSettings.newLine;
 
     /// <summary>
     /// Used to add arguments to a function call. Used for passing an object to its own method call.
@@ -28,16 +29,17 @@ public class CFileGenerator : CSharpSyntaxWalker
     private bool nextTypeIsNotPointer;
     private bool skipEqualsValueClauseForFieldDeclaration;
     private string? nextTypeOverride;
-    string indent = "    ";
 
-    public CFileGenerator(C99ClsEnumInterface cls) : base(SyntaxWalkerDepth.StructuredTrivia)
+
+    public CFileGenerator(C99ClsEnumInterface cls, StyleSettings styleSettings) : base(SyntaxWalkerDepth.StructuredTrivia)
     {
         this.cls = cls;
         this.model = cls.model;
         outputFile = cls.cFile;
-        sb = outputFile.mainCode;
+        sb = outputFile.mainCodeSb;
         namer = new Namer(model);
         transpilerHelper = new(this, model);
+        this.styleSettings = styleSettings;
     }
 
     public void SetSb(StringBuilder sb)
@@ -47,7 +49,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public void SetSbFromOutputFile()
     {
-        sb = outputFile.mainCode;
+        sb = outputFile.mainCodeSb;
     }
 
     public void UseHFile()
@@ -123,11 +125,11 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (renderingPrototypes)
             return;
 
-        cls.cFile.includes.Add("<string.h>"); // for memset
+        cls.cFile.includesSet.Add("<string.h>"); // for memset
 
         var body = node.Body.ThrowIfNull();
         VisitToken(body.OpenBraceToken);
-        sb.Append($"{indent}{indent}memset(self, 0, sizeof(*self));\n");
+        sb.Append($"{Indent}{Indent}memset(self, 0, sizeof(*self));{NL}");
 
         // loop over fields with initializers and set them
         foreach (var field in cls.GetInstanceFields())
@@ -148,13 +150,13 @@ public class CFileGenerator : CSharpSyntaxWalker
                 // the initializer must be a call to mem.init()
                 ExpressionSyntax value = variableDeclartor.Initializer.Value;
                 HandleMemInit(field, variableDeclartor, value);
-                sb.Append(";\n");
+                sb.Append($";{NL}");
             }
             else
             {
-                sb.Append($"{indent}{indent}self->");
+                sb.Append($"{Indent}{Indent}self->");
                 Visit(variableDeclartor);
-                sb.Append(";\n");
+                sb.Append($";{NL}");
             }
         }
 
@@ -174,7 +176,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         // pass field to constructor
         firstArgsSb.Append($"&self->{field.Name}");
-        sb.Append($"{indent}{indent}");
+        sb.Append($"{Indent}{Indent}");
         sb.Append($"{namer.GetCName(oces.Type)}_ctor");
         Visit(oces.ArgumentList);
     }

@@ -80,21 +80,6 @@ public static class Extensions
         return node.Modifiers.Any(d => (SyntaxKind)d.RawKind == SyntaxKind.PublicKeyword);
     }
 
-    public static void AppendLineIfNotBlank(this StringBuilder sb, string text, string optionalTrailer = "")
-    {
-        if (text != string.Empty)
-        {
-            sb.AppendLine(text);
-            sb.AppendIfNotBlank(optionalTrailer);
-        }
-    }
-
-    public static void AppendIfNotBlank(this StringBuilder sb, string text)
-    {
-        if (text != string.Empty)
-            sb.Append(text);
-    }
-
     public static void AppendTokenAndTrivia(this StringBuilder sb, SyntaxToken token, string? overrideTokenText = null)
     {
         sb.Append(token.LeadingTrivia);

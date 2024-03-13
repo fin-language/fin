@@ -7,35 +7,34 @@ public class OutputFile
 {
     public string? relativeFilePath;
     readonly public HashSet<string> fqnDependencies = new();
-    public StringBuilder preIncludes = new();
-    public HashSet<string> includes = new();
+    public StringBuilder preIncludesSb = new();
+    public HashSet<string> includesSet = new();
     public StringBuilder includesSb = new();
-    public StringBuilder mainCode = new();
+    public StringBuilder mainCodeSb = new();
 
     public OutputFile()
     {
     }
 
-    public void WriteToFile(string destinationDirPath)
+    public void WriteToFile(string destinationDirPath, string newLine)
     {
         relativeFilePath.ThrowIfNull();
 
-        foreach (var include in includes)
+        foreach (var include in includesSet)
         {
             var quoteChar = include.StartsWith("<") ? "" : "\"";
-            includesSb.AppendLine($"#include {quoteChar}{include}{quoteChar}");
+            includesSb.Append($"#include {quoteChar}{include}{quoteChar}{newLine}");
         }
 
         string path = Path.Combine(destinationDirPath, relativeFilePath);
         EnsureDirectoryExists(path);
 
-        using StreamWriter sw = new(path);
-
-        sw.Write(preIncludes.ToString());
-        sw.Write("\n");
-        sw.Write(includesSb.ToString());
-        sw.Write("\n\n");
-        sw.Write(mainCode.ToString());
+        using EndLineTrackingWriter writer = new(path, newLine);
+        writer.Write(preIncludesSb.ToString());
+        writer.Write(newLine);
+        writer.Write(includesSb.ToString());
+        writer.Write($"{newLine}{newLine}");
+        writer.Write(mainCodeSb.ToString());
     }
 
     private static void EnsureDirectoryExists(string path)

@@ -8,17 +8,22 @@ public class InterfaceGenerator
 {
     private readonly CFileGenerator visitor;
     private readonly C99ClsEnumInterface cls;
+    StyleSettings styleSettings;
+    protected string NL => styleSettings.newLine;
+    protected string Indent => styleSettings.indent;
+
     private readonly List<IMethodSymbol> methods = new();
 
-    public InterfaceGenerator(C99ClsEnumInterface cls)
+    public InterfaceGenerator(C99ClsEnumInterface cls, StyleSettings styleSettings)
     {
         if (!cls.IsInterface)
             throw new InvalidOperationException("Object has to be an interface for this code.");
 
-        visitor = new CFileGenerator(cls);
+        visitor = new CFileGenerator(cls, styleSettings);
         this.cls = cls;
 
         methods = GetAllInterfaceMethods(cls.symbol).ToList();
+        this.styleSettings = styleSettings;
     }
 
     public static IEnumerable<IMethodSymbol> GetAllInterfaceMethods(INamedTypeSymbol interfaceSymbol)
@@ -55,27 +60,27 @@ public class InterfaceGenerator
     {
         visitor.UseHFile();
         visitor.renderingPrototypes = true;
-        var sb = cls.hFile.mainCode;
+        var sb = cls.hFile.mainCodeSb;
 
         var interfaceName = GetInterfaceStructName();
 
         // generate forward declarations
-        sb.AppendLine($"typedef struct {interfaceName} {interfaceName};");
-        sb.AppendLine($"typedef struct {interfaceName}_vtable {interfaceName}_vtable;");
-        sb.AppendLine();
+        sb.Append($"typedef struct {interfaceName} {interfaceName};{NL}");
+        sb.Append($"typedef struct {interfaceName}_vtable {interfaceName}_vtable;{NL}");
+        sb.Append($"{NL}");
 
-        sb.AppendLine($"struct {interfaceName}");
-        sb.AppendLine("{");
-        sb.AppendLine($"    /** Pointer to implementing object's vtable for this interface */");
-        sb.AppendLine($"    {interfaceName}_vtable const * const obj_vtable;");
-        sb.AppendLine();
-        sb.AppendLine("    /** The actual object that implements this interface */");
-        sb.AppendLine("    void * const obj;");
-        sb.AppendLine("};");
-        sb.AppendLine();
+        sb.Append($"struct {interfaceName}{NL}");
+        sb.Append($"{{{NL}");
+        sb.Append($"{Indent}/** Pointer to implementing object's vtable for this interface */{NL}");
+        sb.Append($"{Indent}{interfaceName}_vtable const * const obj_vtable;{NL}");
+        sb.Append($"{NL}");
+        sb.Append($"{Indent}/** The actual object that implements this interface */{NL}");
+        sb.Append($"{Indent}void * const obj;{NL}");
+        sb.Append($"}};{NL}");
+        sb.Append(NL);
 
-        sb.AppendLine($"struct {interfaceName}_vtable");
-        sb.AppendLine("{");
+        sb.Append($"struct {interfaceName}_vtable{NL}");
+        sb.Append($"{{{NL}");
 
 
         foreach (var methodSymbol in methods)
@@ -85,12 +90,12 @@ public class InterfaceGenerator
 
             sb.Append($"(*{methodSymbol.Name})");
             visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: methodSymbol, selfTypeName: "void");
-            sb.AppendLine(";");
+            sb.Append($";{NL}");
 
             HeaderGenerator.TrackMethodDependencies(cls, methodSymbol);
         }
 
-        sb.AppendLine("};\n");
+        sb.Append($"}};{NL}{NL}");
     }
 
     private string GetInterfaceStructName()
@@ -101,13 +106,13 @@ public class InterfaceGenerator
     public void GeneratePrototypes()
     {
         visitor.UseHFile();
-        var sb = cls.hFile.mainCode;
+        var sb = cls.hFile.mainCodeSb;
         visitor.renderingPrototypes = true;
 
         foreach (var methodSymbol in methods)
         {
             GenerateMethodSignatureDeIndented(sb, methodSymbol);
-            sb.AppendLine(";\n");
+            sb.Append($";{NL}{NL}");
         }
     }
 
@@ -115,21 +120,21 @@ public class InterfaceGenerator
     {
         visitor.UseCFile();
         visitor.renderingPrototypes = false;
-        var sb = cls.cFile.mainCode;
+        var sb = cls.cFile.mainCodeSb;
 
         foreach (var methodSymbol in methods)
         {
             var returnCode = methodSymbol.ReturnsVoid ? "" : "return ";
             GenerateMethodSignatureDeIndented(sb, methodSymbol);
-            sb.AppendLine("\n{");
-            sb.Append($"    {returnCode}self->obj_vtable->{methodSymbol.Name}(self->obj");
+            sb.Append($"{NL}{{{NL}");
+            sb.Append($"{Indent}{returnCode}self->obj_vtable->{methodSymbol.Name}(self->obj");
             foreach (var parameter in methodSymbol.Parameters)
             {
                 sb.Append($", {parameter.Name}");
             }
-            sb.Append($");\n");
+            sb.Append($");{NL}");
 
-            sb.AppendLine("}\n");
+            sb.Append($"}}{NL}{NL}");
         }
     }
 
@@ -168,9 +173,9 @@ public class InterfaceGenerator
         visitor.UseHFile();
         visitor.renderingPrototypes = false;
         OutputFile codeFile = cls.hFile;
-        var sb = codeFile.mainCode;
-        codeFile.includes.Add($"<stddef.h>");
-        codeFile.includes.Add($"<assert.h>");
+        var sb = codeFile.mainCodeSb;
+        codeFile.includesSet.Add($"<stddef.h>");
+        codeFile.includesSet.Add($"<assert.h>");
 
         var superInterfaceTypes = GetSuperInterfaceTypes(cls.symbol);
 
@@ -186,17 +191,17 @@ public class InterfaceGenerator
             var superTypeName = Namer.GetCName(superInterface);
             var superVtableTypeName = GetInterfaceVtableStructName(superTypeName);
 
-            sb.AppendLine($"\n// Up conversion from {myTypeName} interface to {superTypeName} interface");
-            sb.AppendLine($"// `self_arg` should be of type `{myTypeName} *`");
+            sb.Append($"{NL}// Up conversion from {myTypeName} interface to {superTypeName} interface{NL}");
+            sb.Append($"// `self_arg` should be of type `{myTypeName} *`{NL}");
             string conversionFunctionName = GetConversionFunctionName(myTypeName, superTypeName);
-            sb.AppendLine($"#define {conversionFunctionName}(self_arg)    ({superTypeName}){{ .obj = self_arg->obj, .obj_vtable = (const {superVtableTypeName}*)(&self_arg->obj_vtable->{firstMethodName}) }}");
-            sb.AppendLine($"// assert that vtable layouts are compatible");
-            sb.AppendLine($"static_assert(offsetof({superVtableTypeName}, {firstMethodName}) == 0, \"Unexpected vtable function start\");");
+            sb.Append($"#define {conversionFunctionName}(self_arg)    ({superTypeName}){{ .obj = self_arg->obj, .obj_vtable = (const {superVtableTypeName}*)(&self_arg->obj_vtable->{firstMethodName}) }}{NL}");
+            sb.Append($"// assert that vtable layouts are compatible{NL}");
+            sb.Append($"static_assert(offsetof({superVtableTypeName}, {firstMethodName}) == 0, \"Unexpected vtable function start\");{NL}");
 
             foreach (var methodSymbol in superMethods)
             {
                 // static_assert(offsetof(hal_IDigIn_vtable, read_state) == offsetof(hal_IDigInOut_vtable, read_state) - offsetof(hal_IDigInOut_vtable, read_state), "Incompatible vtable layout");
-                sb.AppendLine($"static_assert(offsetof({superVtableTypeName}, {methodSymbol.Name}) == offsetof({myVtableTypeName}, {methodSymbol.Name}) - offsetof({myVtableTypeName}, {firstMethodName}), \"Incompatible vtable layout\");");
+                sb.Append($"static_assert(offsetof({superVtableTypeName}, {methodSymbol.Name}) == offsetof({myVtableTypeName}, {methodSymbol.Name}) - offsetof({myVtableTypeName}, {firstMethodName}), \"Incompatible vtable layout\");{NL}");
             }
         }
     }

@@ -1,18 +1,23 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Options;
 using System.Text;
 
 namespace finlang.Transpiler;
 
 public class HeaderGenerator
 {
-    public HeaderGenerator()
+    StyleSettings styleSettings;
+    protected string NL => styleSettings.newLine;
+
+    public HeaderGenerator(StyleSettings styleSettings)
     {
+        this.styleSettings = styleSettings;
     }
 
     public void GenerateEnum(C99ClsEnumInterface cls)
     {
-        CFileGenerator visitor = new(cls);
+        CFileGenerator visitor = new(cls, styleSettings);
         visitor.UseHFile();
         visitor.renderingPrototypes = true;
 
@@ -27,29 +32,29 @@ public class HeaderGenerator
     public void GenerateStructures(C99ClsEnumInterface cls)
     {
         var structName = cls.GetCName();
-        CFileGenerator visitor = new(cls);
+        CFileGenerator visitor = new(cls, styleSettings);
         visitor.UseHFile();
         visitor.renderingPrototypes = true;
-        var sb = cls.hFile.mainCode;
+        var sb = cls.hFile.mainCodeSb;
 
         // don't generate a struct for FFI classes
         if (cls.IsFFIClass)
         {
-            sb.AppendLine($"// Class is a Foreign Function Interface. No struct generated.");
+            sb.Append($"// Class is a Foreign Function Interface. No struct generated.{NL}");
             return;
         }
 
         if (cls.IsStaticClass)
         {
-            sb.AppendLine($"// Class has no fields. No struct generated.");
+            sb.Append($"// Class has no fields. No struct generated.{NL}");
             return;
         }
 
         ClassDeclarationSyntax clsDeclSyntax = (ClassDeclarationSyntax)cls.syntaxNode;
         visitor.VisitLeadingTrivia(clsDeclSyntax);
-        sb.AppendLine($"typedef struct {structName} {structName};");
-        sb.AppendLine($"struct {structName}");
-        sb.AppendLine("{");
+        sb.Append($"typedef struct {structName} {structName};{NL}");
+        sb.Append($"struct {structName}{NL}");
+        sb.Append($"{{{NL}");
 
         foreach (var field in cls.syntaxNode.ChildNodes().OfType<FieldDeclarationSyntax>())
         {
@@ -62,8 +67,8 @@ public class HeaderGenerator
             cls.AddHeaderFqnDependency(field.Type);
         }
 
-        sb.AppendLine("};");
-        sb.AppendLine();
+        sb.Append($"}};{NL}");
+        sb.Append(NL);
     }
 
     public void GenerateCDefines(C99ClsEnumInterface cls, StringBuilder sb)
@@ -73,7 +78,7 @@ public class HeaderGenerator
         if (!defineFields.Any())
             return;
         
-        sb.AppendLine("// Defines");
+        sb.Append($"// Defines{NL}");
 
         foreach (var f in defineFields)
         {
@@ -93,15 +98,15 @@ public class HeaderGenerator
                 value = initializer.Value;
             }
 
-            sb.AppendLine($"#define {name}    {value}");
+            sb.Append($"#define {name}    {value}{NL}");
         }
 
-        sb.AppendLine();
+        sb.Append(NL);
     }
 
     public void GenerateFunctionPrototypes(C99ClsEnumInterface cls)
     {
-        CFileGenerator visitor = new(cls);
+        CFileGenerator visitor = new(cls, styleSettings);
         var sb = new StringBuilder();
         visitor.SetSb(sb);
         visitor.renderingPrototypes = true;
@@ -124,7 +129,7 @@ public class HeaderGenerator
                     sb.Length--;
                 }
 
-                sb.Append(";\n");
+                sb.Append($";{NL}");
 
                 var symbol = cls.model.GetDeclaredSymbol(bmds).ThrowIfNull();
                 TrackMethodDependencies(cls, (IMethodSymbol)symbol);
@@ -132,7 +137,7 @@ public class HeaderGenerator
         }
 
         var result = StringUtils.DeIndent(sb.ToString());
-        cls.hFile.mainCode.Append(result);
+        cls.hFile.mainCodeSb.Append(result);
     }
 
     public static void TrackMethodDependencies(C99ClsEnumInterface cls, IMethodSymbol method)

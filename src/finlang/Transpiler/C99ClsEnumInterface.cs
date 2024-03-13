@@ -35,7 +35,7 @@ public class C99ClsEnumInterface
         foreach (var attribute in inludeAttributes)
         {
             var include = (string)attribute.ConstructorArguments[0].Value.ThrowIfNull();
-            hFile.includes.Add(include);
+            hFile.includesSet.Add(include);
         }
     }
 

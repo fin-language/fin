@@ -25,14 +25,14 @@ public class C99TranspilerTest
 
         {
             var cls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.CArrayDependencyTest");
-            string structCode = cls.hFile.mainCode.ToString();
+            string structCode = cls.hFile.mainCodeSb.ToString();
             structCode.Should().Contain("  uint8_t * _data;");
             cls.hFile.fqnDependencies.Should().BeEquivalentTo("finlang.u8", "finlang.c_array");
         }
 
         {
             var ledCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.Led");
-            string ledStructCode = ledCls.hFile.mainCode.ToString();
+            string ledStructCode = ledCls.hFile.mainCodeSb.ToString();
             ledStructCode.Should().Contain("typedef struct hal_Led hal_Led;");
             ledStructCode.Should().Contain("  hal_IDigInOut * _dig_io;");
             ledCls.hFile.fqnDependencies.Should().Contain("hal.IDigInOut", "finlang.u8");
@@ -40,7 +40,7 @@ public class C99TranspilerTest
 
         {
             var mainAppCls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "app.Main");
-            string mainAppStructCode = mainAppCls.hFile.mainCode.ToString();
+            string mainAppStructCode = mainAppCls.hFile.mainCodeSb.ToString();
             mainAppStructCode.Should().Contain("typedef struct app_Main app_Main;");
             mainAppStructCode.Should().Contain("  uint16_t period_ms;");
             mainAppStructCode.Should().Contain("  uint32_t _toggle_at_ms;");
@@ -50,7 +50,7 @@ public class C99TranspilerTest
 
         {
             var cls = transpiler.c99ClassesEnums.Single(c => c.GetFqn() == "hal.IDigIn");
-            string structCode = cls.hFile.mainCode.ToString();
+            string structCode = cls.hFile.mainCodeSb.ToString();
             //structCode.Should().Contain("  uint8_t * _data;");
             //cls.hFile.fqnDependencies.Should().BeEquivalentTo("finlang.u8");
         }
