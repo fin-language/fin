@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
-    <Version>0.3.0-alpha</Version>
+    <Version>0.3.1-alpha</Version>
     <Authors>Adam Fraser-Kruck</Authors>
     <Copyright>Adam Fraser-Kruck</Copyright>
     <PackageProjectUrl>https://github.com/fin-language/fin</PackageProjectUrl>

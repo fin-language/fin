@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [0.3.?]
+## [0.3.1]
 ### Added
 - Transpiler - support constant fields for numbers
 	- https://github.com/fin-language/fin/issues/51
