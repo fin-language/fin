@@ -12,7 +12,7 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public string selectClassWhenDebugging = "SizeOfEx";
+    public string selectClassWhenDebugging = "VtableReturnsObjPointerEx";
 
     public TranspilerOptions Options = new();
 
