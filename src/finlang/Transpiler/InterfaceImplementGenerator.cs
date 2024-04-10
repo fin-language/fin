@@ -51,7 +51,7 @@ public class InterfaceImplementGenerator
                 sb.Append($"{Indent}.{impMethod.Name} = ");
 
                 // need to cast to use 'void*' self parameter. Ex: (bool (*)(void *))
-                sb.Append($"({Namer.GetCName(impMethod.ReturnType)} (*)");
+                sb.Append($"({visitor.GetCTypeDeclaration(impMethod.ReturnType)} (*)");
                 visitor.VisitParameterListCustom(mDecl.ParameterList, symbol: impMethod, selfTypeName: "void");
                 StringUtils.EraseTrailingWhitespace(sb);
 

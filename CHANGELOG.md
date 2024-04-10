@@ -24,6 +24,13 @@ Test/interim releases are not documented here.
 
 ---
 
+## WIP
+### Fixed
+- Transpiler - fix #58 incorrect vtable method return type for pointer to object
+    - https://github.com/fin-language/fin/issues/58
+
+---
+
 ## [0.3.1]
 ### Added
 - Transpiler - support constant fields for numbers

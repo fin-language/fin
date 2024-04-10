@@ -1256,7 +1256,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             default:
                 {
                     SymbolInfo symbol = model.GetSymbolInfo(node);
-                    
+
                     // support field accesses
                     if (symbol.Symbol is IFieldSymbol fs)
                     {
@@ -1281,11 +1281,7 @@ public class CFileGenerator : CSharpSyntaxWalker
                         }
                     }
 
-                    result = Namer.GetCName(symbol.Symbol.ThrowIfNull());
-
-                    if (symbol.Symbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsReferenceType && !nextTypeIsNotPointer)
-                        result += " *";
-
+                    result = GetCTypeDeclaration(symbol.Symbol.ThrowIfNull());
                     break;
                 }
         }
@@ -1297,6 +1293,20 @@ public class CFileGenerator : CSharpSyntaxWalker
         sb.Append(result);
         sb.Append(post);
         VisitTrailingTrivia(node);
+    }
+
+    /// <summary>
+    /// Returns the C type declaration for a given symbol. Includes pointer if the symbol is a reference type.
+    /// </summary>
+    /// <param name="symbol"></param>
+    /// <returns></returns>
+    public string GetCTypeDeclaration(ISymbol symbol)
+    {
+        var temp = Namer.GetCName(symbol.ThrowIfNull());
+
+        if (symbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsReferenceType && !nextTypeIsNotPointer)
+            temp += " *";
+        return temp;
     }
 
     public override void VisitTrivia(SyntaxTrivia trivia)
