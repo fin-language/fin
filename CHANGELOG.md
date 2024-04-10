@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## WIP
+## [0.3.2]
 ### Fixed
 - Transpiler - fix #58 incorrect vtable method return type for pointer to object
     - https://github.com/fin-language/fin/issues/58
