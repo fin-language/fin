@@ -5,6 +5,7 @@
 #pragma once
 
 #include "issue58_Bike.h"
+#include "issue58_IBikeProvider.h"
 
 
 

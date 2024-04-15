@@ -24,6 +24,13 @@ Test/interim releases are not documented here.
 
 ---
 
+## WIP
+### Changed
+- Transpiler - only transpile interfaces that have IFinObj as an ancestor
+    - https://github.com/fin-language/fin/issues/63
+
+---
+
 ## [0.3.2]
 ### Fixed
 - Transpiler - fix #58 incorrect vtable method return type for pointer to object

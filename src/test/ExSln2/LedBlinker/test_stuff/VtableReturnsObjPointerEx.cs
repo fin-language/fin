@@ -11,7 +11,7 @@ public class Bike : FinObj
 
 // needs a method that returns a pointer to an object to test the issue
 // https://github.com/fin-language/fin/issues/58
-public interface IBikeProvider
+public interface IBikeProvider : IFinObj
 {
     Bike get_bike();
 }

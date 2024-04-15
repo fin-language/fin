@@ -70,7 +70,13 @@ public class InterfaceImplementGenerator
 
     private IEnumerable<INamedTypeSymbol> GetDirectInterfaces()
     {
-        return cls.symbol.Interfaces.Where(i => i.Name != nameof(IFinObj));
+        // Get all interfaces that are not IFinObj
+        var result = cls.symbol.Interfaces.Where(i => i.Name != nameof(IFinObj));
+
+        // Filter out interfaces that are not part of IFinObj
+        // https://github.com/fin-language/fin/issues/63
+        result = result.Where(i => i.AllInterfaces.Any(ii => ii.Name == nameof(IFinObj)));
+        return result;
     }
 
     internal void GenerateInterfaceConversions()
