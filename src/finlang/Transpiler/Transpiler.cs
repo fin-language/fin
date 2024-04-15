@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -12,7 +13,10 @@ public class Transpiler
     private string solutionPath;
     private string projectName;
 
-    public string selectClassWhenDebugging = "VtableReturnsObjPointerEx";
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/62
+    /// </summary>
+    public string? selectClassWhenDebugging = null;
 
     public TranspilerOptions Options = new();
 
@@ -27,6 +31,8 @@ public class Transpiler
         this.destinationDirPath = destinationDirPath;
         this.solutionPath = solutionPath;
         this.projectName = projectName;
+
+        selectClassWhenDebugging ??= Environment.GetEnvironmentVariable("FINLANG_TRANSPILER_DEBUG_TYPE");
     }
 
     public void SetFileNamer(Func<string, string> fileNamer)
@@ -127,6 +133,9 @@ public class Transpiler
 
     private bool IsIgnoredDuringDebugging(INamedTypeSymbol symbol)
     {
+        if (selectClassWhenDebugging == null || selectClassWhenDebugging == "null")
+            return false;
+
         return System.Diagnostics.Debugger.IsAttached && symbol.Name != selectClassWhenDebugging;
     }
 
@@ -136,15 +145,15 @@ public class Transpiler
 
         foreach (var declNode in allInterfaces)
         {
-            INamedTypeSymbol symbol = model.GetDeclaredSymbol(declNode).ThrowIfNull();
+            INamedTypeSymbol interfaceSymbol = model.GetDeclaredSymbol(declNode).ThrowIfNull();
 
-            if (IsIgnoredDuringDebugging(symbol))
+            if (IsIgnoredDuringDebugging(interfaceSymbol))
                 continue;
 
             // could also check for [simonly] attribute
-            if (symbol.AllInterfaces.Any(iface => iface.Name == nameof(IFinObj)))
+            if (interfaceSymbol.AllInterfaces.Any(iface => iface.Name == nameof(IFinObj)))
             {
-                var c99Decl = new C99ClsEnumInterface(model, declNode, symbol);
+                var c99Decl = new C99ClsEnumInterface(model, declNode, interfaceSymbol);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }

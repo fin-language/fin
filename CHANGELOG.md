@@ -28,6 +28,9 @@ Test/interim releases are not documented here.
 ### Changed
 - Transpiler - only transpile interfaces that have IFinObj as an ancestor
     - https://github.com/fin-language/fin/issues/63
+### Added
+- Transpiler - allow environment variables to specify which type transpiler should focus on
+    - https://github.com/fin-language/fin/issues/62
 
 ---
 
