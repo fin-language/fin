@@ -16,6 +16,7 @@ Console.WriteLine("Transpiling " + projectName + " fin/C# project...");
 Transpiler transpiler = new(destinationDirPath: outDir, solutionPath: slnDir + slnName, projectName: projectName);
 
 transpiler.Options.OutputTimestamp = false;
+transpiler.Options.OutputVersionInfo = false;
 //transpiler.Options.StyleSettings.newLine = "\n";
 
 //transpiler.SetFileNamer((string originalPath) =>
