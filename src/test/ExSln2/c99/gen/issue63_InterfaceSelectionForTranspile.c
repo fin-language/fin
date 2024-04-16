@@ -13,7 +13,7 @@ uint8_t issue63_InterfaceSelectionForTranspile_GetNumber(issue63_InterfaceSelect
 }
 
 // virtual table implementation for INumberProvider. Note that this is extern'd.
-const issue63_INumberProvider_vtable issue63_INumberProvider_vtable_imp = {
+const issue63_INumberProvider_vtable issue63_InterfaceSelectionForTranspile__issue63_INumberProvider_vtable_imp = {
     .GetNumber = (uint8_t (*)(void * self))issue63_InterfaceSelectionForTranspile_GetNumber,
 };
 

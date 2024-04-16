@@ -24,6 +24,13 @@ Test/interim releases are not documented here.
 
 ---
 
+## [0.3.?]
+### Fixed
+- Transpiler - fix #57 Generated vtable variable name should be different per file generated
+    - https://github.com/fin-language/fin/issues/57
+
+---
+
 ## [0.3.3]
 ### Changed
 - Transpiler - only transpile interfaces that have IFinObj as an ancestor

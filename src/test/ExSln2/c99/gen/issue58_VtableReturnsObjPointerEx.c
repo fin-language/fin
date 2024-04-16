@@ -13,7 +13,7 @@ issue58_Bike * issue58_VtableReturnsObjPointerEx_get_bike(issue58_VtableReturnsO
 }
 
 // virtual table implementation for IBikeProvider. Note that this is extern'd.
-const issue58_IBikeProvider_vtable issue58_IBikeProvider_vtable_imp = {
+const issue58_IBikeProvider_vtable issue58_VtableReturnsObjPointerEx__issue58_IBikeProvider_vtable_imp = {
     .get_bike = (issue58_Bike * (*)(void * self))issue58_VtableReturnsObjPointerEx_get_bike,
 };
 

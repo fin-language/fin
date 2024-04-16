@@ -63,9 +63,10 @@ public class InterfaceImplementGenerator
         }
     }
 
-    private static string GetVtableInstanceName(string vtableStructName)
+    private string GetVtableInstanceName(string vtableStructName)
     {
-        return vtableStructName + "_imp";
+        // https://github.com/fin-language/fin/issues/57
+        return $"{cls.GetCName()}__{vtableStructName}_imp";
     }
 
     private IEnumerable<INamedTypeSymbol> GetDirectInterfaces()

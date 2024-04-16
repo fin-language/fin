@@ -32,7 +32,7 @@ void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self)
 }
 
 // virtual table implementation for IDigInOut. Note that this is extern'd.
-const hal_IDigInOut_vtable hal_IDigInOut_vtable_imp = {
+const hal_IDigInOut_vtable hal_GpioDigInOut__hal_IDigInOut_vtable_imp = {
     .read_state = (bool (*)(void * self))hal_GpioDigInOut_read_state,
     .set_state = (void (*)(void * self, bool state))hal_GpioDigInOut_set_state,
     .toggle = (void (*)(void * self))hal_GpioDigInOut_toggle,

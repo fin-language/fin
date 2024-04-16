@@ -16,7 +16,7 @@ void mcu_stm32_Stm32Gpio_ctor(mcu_stm32_Stm32Gpio * self, GPIO_TypeDef * port, u
 }
 
 // virtual table implementation for IGpio. Note that this is extern'd.
-const hal_IGpio_vtable hal_IGpio_vtable_imp = {
+const hal_IGpio_vtable mcu_stm32_Stm32Gpio__hal_IGpio_vtable_imp = {
     .read_state = (bool (*)(void * self))mcu_stm32_Stm32Gpio_read_state,
     .set_state = (void (*)(void * self, bool state))mcu_stm32_Stm32Gpio_set_state,
     .toggle = (void (*)(void * self))mcu_stm32_Stm32Gpio_toggle,

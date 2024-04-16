@@ -20,7 +20,7 @@ struct issue58_VtableReturnsObjPointerEx
 issue58_Bike * issue58_VtableReturnsObjPointerEx_get_bike(issue58_VtableReturnsObjPointerEx * self);
 
 // vtable is extern to allow const initializations
-extern const issue58_IBikeProvider_vtable issue58_IBikeProvider_vtable_imp;
+extern const issue58_IBikeProvider_vtable issue58_VtableReturnsObjPointerEx__issue58_IBikeProvider_vtable_imp;
 
 // Up conversion from issue58_VtableReturnsObjPointerEx to issue58_IBikeProvider interface
-#define M_issue58_VtableReturnsObjPointerEx__to__issue58_IBikeProvider(self_arg)    (issue58_IBikeProvider){ .obj = self_arg, .obj_vtable = (const issue58_IBikeProvider_vtable*)(&issue58_IBikeProvider_vtable_imp.get_bike) }
+#define M_issue58_VtableReturnsObjPointerEx__to__issue58_IBikeProvider(self_arg)    (issue58_IBikeProvider){ .obj = self_arg, .obj_vtable = (const issue58_IBikeProvider_vtable*)(&issue58_VtableReturnsObjPointerEx__issue58_IBikeProvider_vtable_imp.get_bike) }
