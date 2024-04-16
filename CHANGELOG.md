@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [0.3.?]
+## [0.3.4]
 ### Fixed
 - Transpiler - fix #57 Generated vtable variable name should be different per file generated
     - https://github.com/fin-language/fin/issues/57
