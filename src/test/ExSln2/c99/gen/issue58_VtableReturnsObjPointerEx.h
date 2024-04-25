@@ -23,4 +23,7 @@ issue58_Bike * issue58_VtableReturnsObjPointerEx_get_bike(issue58_VtableReturnsO
 extern const issue58_IBikeProvider_vtable issue58_VtableReturnsObjPointerEx__issue58_IBikeProvider_vtable_imp;
 
 // Up conversion from issue58_VtableReturnsObjPointerEx to issue58_IBikeProvider interface
-#define M_issue58_VtableReturnsObjPointerEx__to__issue58_IBikeProvider(self_arg)    (issue58_IBikeProvider){ .obj = self_arg, .obj_vtable = (const issue58_IBikeProvider_vtable*)(&issue58_VtableReturnsObjPointerEx__issue58_IBikeProvider_vtable_imp.get_bike) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_issue58_VtableReturnsObjPointerEx__to__issue58_IBikeProvider(self_arg)    { .obj = self_arg, .obj_vtable = (const issue58_IBikeProvider_vtable*)(&issue58_VtableReturnsObjPointerEx__issue58_IBikeProvider_vtable_imp.get_bike) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_issue58_VtableReturnsObjPointerEx__to__issue58_IBikeProvider(self_arg)    (issue58_IBikeProvider){ .obj = self_arg, .obj_vtable = (const issue58_IBikeProvider_vtable*)(&issue58_VtableReturnsObjPointerEx__issue58_IBikeProvider_vtable_imp.get_bike) }

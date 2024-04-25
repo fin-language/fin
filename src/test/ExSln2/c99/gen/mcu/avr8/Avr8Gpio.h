@@ -24,13 +24,25 @@ void mcu_avr8_Avr8Gpio_toggle(mcu_avr8_Avr8Gpio * self);
 extern const hal_IGpio_vtable mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp;
 
 // Up conversion from mcu_avr8_Avr8Gpio to hal_IGpio interface
-#define M_mcu_avr8_Avr8Gpio__to__hal_IGpio(self_arg)    (hal_IGpio){ .obj = self_arg, .obj_vtable = (const hal_IGpio_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_mcu_avr8_Avr8Gpio__to__hal_IGpio(self_arg)    { .obj = self_arg, .obj_vtable = (const hal_IGpio_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_mcu_avr8_Avr8Gpio__to__hal_IGpio(self_arg)    (hal_IGpio){ .obj = self_arg, .obj_vtable = (const hal_IGpio_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
 
 // Up conversion from mcu_avr8_Avr8Gpio to hal_IDigInOut interface
-#define M_mcu_avr8_Avr8Gpio__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg, .obj_vtable = (const hal_IDigInOut_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_mcu_avr8_Avr8Gpio__to__hal_IDigInOut(self_arg)    { .obj = self_arg, .obj_vtable = (const hal_IDigInOut_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_mcu_avr8_Avr8Gpio__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg, .obj_vtable = (const hal_IDigInOut_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
 
 // Up conversion from mcu_avr8_Avr8Gpio to hal_IDigIn interface
-#define M_mcu_avr8_Avr8Gpio__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg, .obj_vtable = (const hal_IDigIn_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_mcu_avr8_Avr8Gpio__to__hal_IDigIn(self_arg)    { .obj = self_arg, .obj_vtable = (const hal_IDigIn_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_mcu_avr8_Avr8Gpio__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg, .obj_vtable = (const hal_IDigIn_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.read_state) }
 
 // Up conversion from mcu_avr8_Avr8Gpio to hal_IDigOut interface
-#define M_mcu_avr8_Avr8Gpio__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg, .obj_vtable = (const hal_IDigOut_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.set_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_mcu_avr8_Avr8Gpio__to__hal_IDigOut(self_arg)    { .obj = self_arg, .obj_vtable = (const hal_IDigOut_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.set_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_mcu_avr8_Avr8Gpio__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg, .obj_vtable = (const hal_IDigOut_vtable*)(&mcu_avr8_Avr8Gpio__hal_IGpio_vtable_imp.set_state) }

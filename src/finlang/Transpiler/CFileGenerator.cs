@@ -565,7 +565,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
                 if (toName != fromName)
                 {
-                    var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
+                    var funcName = InterfaceGenerator.GetMclConversionFunctionName(fromName, toName);
                     sb.Append($"&{funcName}(");
                     base.VisitArgument(node);
                     sb.Append(')');
@@ -1164,7 +1164,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
                 if (fromName != toName)
                 {
-                    var funcName = InterfaceGenerator.GetConversionFunctionName(fromName, toName);
+                    var funcName = InterfaceGenerator.GetMclConversionFunctionName(fromName, toName);
                     VisitToken(node.EqualsToken);
 
                     sb.Append($"&{funcName}(");

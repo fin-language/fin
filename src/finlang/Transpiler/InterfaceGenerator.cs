@@ -163,9 +163,22 @@ public class InterfaceGenerator
         return structName + "_vtable";
     }
 
-    public static string GetConversionFunctionName(string fromInterfaceName, string toInterfaceName)
+    /// <summary>
+    /// MCL means Macro Compound Literal
+    /// https://github.com/fin-language/fin/issues/60
+    /// </summary>
+    public static string GetMclConversionFunctionName(string fromInterfaceName, string toInterfaceName)
     {
-        return $"M_{fromInterfaceName}__to__{toInterfaceName}";
+        return $"MCL_{fromInterfaceName}__to__{toInterfaceName}";
+    }
+
+    /// <summary>
+    /// MAA means Macro Aggregate Assignment
+    /// https://github.com/fin-language/fin/issues/60
+    /// </summary>
+    public static string GetMaaConversionFunctionName(string fromInterfaceName, string toInterfaceName)
+    {
+        return $"MAA_{fromInterfaceName}__to__{toInterfaceName}";
     }
 
     public void GenerateConversionFunctions()
@@ -193,8 +206,14 @@ public class InterfaceGenerator
 
             sb.Append($"{NL}// Up conversion from {myTypeName} interface to {superTypeName} interface{NL}");
             sb.Append($"// `self_arg` should be of type `{myTypeName} *`{NL}");
-            string conversionFunctionName = GetConversionFunctionName(myTypeName, superTypeName);
-            sb.Append($"#define {conversionFunctionName}(self_arg)    ({superTypeName}){{ .obj = self_arg->obj, .obj_vtable = (const {superVtableTypeName}*)(&self_arg->obj_vtable->{firstMethodName}) }}{NL}");
+
+            string conversionBody = $"{{ .obj = self_arg->obj, .obj_vtable = (const {superVtableTypeName}*)(&self_arg->obj_vtable->{firstMethodName}) }}";
+
+            sb.Append($"// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 {NL}");
+            sb.Append($"#define {GetMaaConversionFunctionName(myTypeName, superTypeName)}(self_arg)    {conversionBody}{NL}");
+            sb.Append($"// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 {NL}");
+            sb.Append($"#define {GetMclConversionFunctionName(myTypeName, superTypeName)}(self_arg)    ({superTypeName}){conversionBody}{NL}");
+
             sb.Append($"// assert that vtable layouts are compatible{NL}");
             sb.Append($"static_assert(offsetof({superVtableTypeName}, {firstMethodName}) == 0, \"Unexpected vtable function start\");{NL}");
 

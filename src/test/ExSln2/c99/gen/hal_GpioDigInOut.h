@@ -29,10 +29,19 @@ void hal_GpioDigInOut_toggle(hal_GpioDigInOut * self);
 extern const hal_IDigInOut_vtable hal_GpioDigInOut__hal_IDigInOut_vtable_imp;
 
 // Up conversion from hal_GpioDigInOut to hal_IDigInOut interface
-#define M_hal_GpioDigInOut__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg, .obj_vtable = (const hal_IDigInOut_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.read_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_hal_GpioDigInOut__to__hal_IDigInOut(self_arg)    { .obj = self_arg, .obj_vtable = (const hal_IDigInOut_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.read_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_hal_GpioDigInOut__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg, .obj_vtable = (const hal_IDigInOut_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.read_state) }
 
 // Up conversion from hal_GpioDigInOut to hal_IDigIn interface
-#define M_hal_GpioDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg, .obj_vtable = (const hal_IDigIn_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.read_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_hal_GpioDigInOut__to__hal_IDigIn(self_arg)    { .obj = self_arg, .obj_vtable = (const hal_IDigIn_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.read_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_hal_GpioDigInOut__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg, .obj_vtable = (const hal_IDigIn_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.read_state) }
 
 // Up conversion from hal_GpioDigInOut to hal_IDigOut interface
-#define M_hal_GpioDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg, .obj_vtable = (const hal_IDigOut_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.set_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_hal_GpioDigInOut__to__hal_IDigOut(self_arg)    { .obj = self_arg, .obj_vtable = (const hal_IDigOut_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.set_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_hal_GpioDigInOut__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg, .obj_vtable = (const hal_IDigOut_vtable*)(&hal_GpioDigInOut__hal_IDigInOut_vtable_imp.set_state) }

@@ -115,8 +115,12 @@ public class InterfaceImplementGenerator
 
         var superMethods = InterfaceGenerator.GetAllInterfaceMethods(directInterface);
         string firstMethodName = superMethods.First().Name;
-        string conversionFunctionName = InterfaceGenerator.GetConversionFunctionName(myTypeName, superTypeName);
         sb.Append($"{NL}// Up conversion from {myTypeName} to {superTypeName} interface{NL}");
-        sb.Append($"#define {conversionFunctionName}(self_arg)    ({superTypeName}){{ .obj = self_arg, .obj_vtable = (const {superVtableTypeName}*)(&{vtableInstanceName}.{firstMethodName}) }}{NL}");
+        string conversionBody = $"{{ .obj = self_arg, .obj_vtable = (const {superVtableTypeName}*)(&{vtableInstanceName}.{firstMethodName}) }}";
+
+        sb.Append($"// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 {NL}");
+        sb.Append($"#define {InterfaceGenerator.GetMaaConversionFunctionName(myTypeName, superTypeName)}(self_arg)    {conversionBody}{NL}");
+        sb.Append($"// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 {NL}");
+        sb.Append($"#define {InterfaceGenerator.GetMclConversionFunctionName(myTypeName, superTypeName)}(self_arg)    ({superTypeName}){conversionBody}{NL}");
     }
 }

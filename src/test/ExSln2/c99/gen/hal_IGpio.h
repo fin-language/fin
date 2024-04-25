@@ -62,7 +62,10 @@ bool hal_IGpio_enable_pulldown(hal_IGpio * self);
 
 // Up conversion from hal_IGpio interface to hal_IDigInOut interface
 // `self_arg` should be of type `hal_IGpio *`
-#define M_hal_IGpio__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigInOut_vtable*)(&self_arg->obj_vtable->read_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_hal_IGpio__to__hal_IDigInOut(self_arg)    { .obj = self_arg->obj, .obj_vtable = (const hal_IDigInOut_vtable*)(&self_arg->obj_vtable->read_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_hal_IGpio__to__hal_IDigInOut(self_arg)    (hal_IDigInOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigInOut_vtable*)(&self_arg->obj_vtable->read_state) }
 // assert that vtable layouts are compatible
 static_assert(offsetof(hal_IDigInOut_vtable, read_state) == 0, "Unexpected vtable function start");
 static_assert(offsetof(hal_IDigInOut_vtable, read_state) == offsetof(hal_IGpio_vtable, read_state) - offsetof(hal_IGpio_vtable, read_state), "Incompatible vtable layout");
@@ -71,14 +74,20 @@ static_assert(offsetof(hal_IDigInOut_vtable, toggle) == offsetof(hal_IGpio_vtabl
 
 // Up conversion from hal_IGpio interface to hal_IDigIn interface
 // `self_arg` should be of type `hal_IGpio *`
-#define M_hal_IGpio__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigIn_vtable*)(&self_arg->obj_vtable->read_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_hal_IGpio__to__hal_IDigIn(self_arg)    { .obj = self_arg->obj, .obj_vtable = (const hal_IDigIn_vtable*)(&self_arg->obj_vtable->read_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_hal_IGpio__to__hal_IDigIn(self_arg)    (hal_IDigIn){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigIn_vtable*)(&self_arg->obj_vtable->read_state) }
 // assert that vtable layouts are compatible
 static_assert(offsetof(hal_IDigIn_vtable, read_state) == 0, "Unexpected vtable function start");
 static_assert(offsetof(hal_IDigIn_vtable, read_state) == offsetof(hal_IGpio_vtable, read_state) - offsetof(hal_IGpio_vtable, read_state), "Incompatible vtable layout");
 
 // Up conversion from hal_IGpio interface to hal_IDigOut interface
 // `self_arg` should be of type `hal_IGpio *`
-#define M_hal_IGpio__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigOut_vtable*)(&self_arg->obj_vtable->set_state) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_hal_IGpio__to__hal_IDigOut(self_arg)    { .obj = self_arg->obj, .obj_vtable = (const hal_IDigOut_vtable*)(&self_arg->obj_vtable->set_state) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_hal_IGpio__to__hal_IDigOut(self_arg)    (hal_IDigOut){ .obj = self_arg->obj, .obj_vtable = (const hal_IDigOut_vtable*)(&self_arg->obj_vtable->set_state) }
 // assert that vtable layouts are compatible
 static_assert(offsetof(hal_IDigOut_vtable, set_state) == 0, "Unexpected vtable function start");
 static_assert(offsetof(hal_IDigOut_vtable, set_state) == offsetof(hal_IGpio_vtable, set_state) - offsetof(hal_IGpio_vtable, set_state), "Incompatible vtable layout");

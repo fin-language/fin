@@ -26,6 +26,8 @@ Test/interim releases are not documented here.
 
 ## WIP
 ### Changed
+- Transpiler - Interface conversion functions change: MCL and MAA macros.
+    - https://github.com/fin-language/fin/issues/60
 - Transpiler - option to specify FFI port implementation header file
     - It also defaults to `_ffi.h` isntead of `_port_implementation.h`
     - https://github.com/fin-language/fin/issues/69

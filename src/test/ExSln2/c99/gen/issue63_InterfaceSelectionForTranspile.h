@@ -22,4 +22,7 @@ uint8_t issue63_InterfaceSelectionForTranspile_GetNumber(issue63_InterfaceSelect
 extern const issue63_INumberProvider_vtable issue63_InterfaceSelectionForTranspile__issue63_INumberProvider_vtable_imp;
 
 // Up conversion from issue63_InterfaceSelectionForTranspile to issue63_INumberProvider interface
-#define M_issue63_InterfaceSelectionForTranspile__to__issue63_INumberProvider(self_arg)    (issue63_INumberProvider){ .obj = self_arg, .obj_vtable = (const issue63_INumberProvider_vtable*)(&issue63_InterfaceSelectionForTranspile__issue63_INumberProvider_vtable_imp.GetNumber) }
+// MAA stands for Macro Aggregate Assignment. See https://github.com/fin-language/fin/issues/60 
+#define MAA_issue63_InterfaceSelectionForTranspile__to__issue63_INumberProvider(self_arg)    { .obj = self_arg, .obj_vtable = (const issue63_INumberProvider_vtable*)(&issue63_InterfaceSelectionForTranspile__issue63_INumberProvider_vtable_imp.GetNumber) }
+// MCL stands for Macro Compound Literal. See https://github.com/fin-language/fin/issues/60 
+#define MCL_issue63_InterfaceSelectionForTranspile__to__issue63_INumberProvider(self_arg)    (issue63_INumberProvider){ .obj = self_arg, .obj_vtable = (const issue63_INumberProvider_vtable*)(&issue63_InterfaceSelectionForTranspile__issue63_INumberProvider_vtable_imp.GetNumber) }
