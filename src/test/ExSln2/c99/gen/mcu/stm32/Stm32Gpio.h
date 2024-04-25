@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "mcu_stm32_Stm32Gpio_port_implementation.h" // You need to provide this
+#include "mcu_stm32_Stm32Gpio_ffi.h" // You need to provide this
 #include <stdbool.h>
 #include "hal_IGpio.h"
 

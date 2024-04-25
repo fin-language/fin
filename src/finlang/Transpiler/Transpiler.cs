@@ -268,7 +268,7 @@ public class Transpiler
         {
             if (cls.IsFFIClass || cls.HasFFIMethod)
             {
-                cls.hFile.includesSb.Append($"#include \"{cls.GetCName()}_port_implementation.h\" // You need to provide this{NL}");
+                cls.hFile.includesSb.Append($"#include \"{cls.GetCName()}{Options.FfiHeaderNamePostfix}\" // You need to provide this{NL}");
             }
 
             if (cls.HasCFile())
