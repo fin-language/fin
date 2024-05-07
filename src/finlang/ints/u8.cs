@@ -12,6 +12,11 @@ public struct u8: IHasU8
     public const byte MIN = 0;
 
     /// <summary>
+    /// Size of this type in bytes. Equivalent to `sizeof(uint8_t)` in C.
+    /// </summary>
+    public static readonly u8 SIZE = 1;
+
+    /// <summary>
     /// C# backing value.
     /// </summary>
     internal byte _csValue;
@@ -145,14 +150,6 @@ public struct u8: IHasU8
     // narrowing conversions
     //################################################################
     
-    /// <summary>
-    /// Same as `narrow_to_i8`.
-    /// Narrowing conversion from u8 to i8 when you don't expect data loss.
-    /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
-    /// or an exception will be thrown during simulation (if math mode is unsafe).
-    /// </summary>
-    public static explicit operator i8(u8 num) => num.narrow_to_i8();
-
     /// <summary>
     /// Narrowing conversion from u8 to i8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
@@ -369,11 +366,6 @@ public struct u8: IHasU8
         return unchecked((byte)value);
     }
 
-
-    //################################################################
-    // wrapping conversions (only for unsigned)
-    //################################################################
-    
     /// <summary>
     /// Narrowing conversion from i8 to u8 when you don't expect data loss.
     /// If the value won't fit in the destination type, either an error will be set (if math mode is `user provided err`)
@@ -471,6 +463,13 @@ public struct u8: IHasU8
     ///// or an exception will be thrown during simulation (if math mode is unsafe).
     ///// </summary>
     public static explicit operator u8(ulong num) => u8.narrow_from(num);
+
+
+    //################################################################
+    // wrapping conversions (only for unsigned)
+    //################################################################
+    
+    
 
     //################################################################
     // comparisons

@@ -14,5 +14,5 @@ public class slice8<T>
     [simonly]
     public u8 _size;
 
-    public c_array<T> _elements;
+    //public c_array<T> _elements;
 }

@@ -7,7 +7,7 @@ public class UnitTest1
     [Fact]
     public void simonly_run_Test()
     {
-        simonly.run(() =>
+        SimOnly.Run(() =>
         {
             int a = 1 << 22;
             a.Should().Be(4194304);

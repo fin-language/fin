@@ -1,0 +1,21 @@
+{
+    "cSpell.words": [
+        "dout",
+        "finlang",
+        "gpio"
+    ],
+    "files.associations": {
+        "hal_gpio.h": "c",
+        "hal_ledarray.h": "c",
+        "hal_led.h": "c",
+        "hal_idiginout.h": "c",
+        "hal_implicitinterfaceconversions.h": "c",
+        "hal_igpio.h": "c",
+        "hal_gpiopinstate.h": "c",
+        "hal_gpio_port_implementation.h": "c",
+        "mcu_stm32_stm32gpio_port_implementation.h": "c",
+        "stdbool.h": "c",
+        "board_tang_tangrev1.h": "c",
+        "board_tang_tangrev1_port_implementation.h": "c"
+    }
+}
