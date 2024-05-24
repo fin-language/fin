@@ -458,8 +458,10 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (ims.ContainingType.TypeKind == TypeKind.Interface)
         {
             // we need to call the method on the interface type being accessed and not the interface that contains the method (incase of interface inheritance)
-            var objInterfaceType = model.GetTypeInfo(memberAccessNode.Expression).ConvertedType.ThrowIfNull();
-            sb.Append(Namer.GetMethodNamePrefixForPrivate(ims) + Namer.GetCName(objInterfaceType) + "_" + ims.Name);
+            ExpressionSyntax expression = memberAccessNode.Expression;
+            var objInterfaceType = model.GetTypeInfo(expression).ConvertedType.ThrowIfNull();
+            string functionName = Namer.GetCName(objInterfaceType) + "_" + ims.Name;
+            sb.Append(functionName);
         }
         else
         {

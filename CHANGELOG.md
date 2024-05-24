@@ -23,6 +23,11 @@ You can easily find changes by searching for `"### Changed"` in the in this mark
 Test/interim releases are not documented here.
 
 ---
+## [WIP]
+### Changed (BREAKING-CHANGES)
+- Renamed `finlang.Transpiler.Transpiler` to `finlang.Transpiler.CTranspiler` to avoid name conflicts between namespace and class.
+
+---
 
 ## [0.4.0]
 ### Changed (BREAKING-CHANGES)

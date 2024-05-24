@@ -19,7 +19,7 @@ void hal_LedArray_ctor(hal_LedArray * self, hal_Led * * leds, uint8_t leds_lengt
 /// <summary>
 /// This is actually a private method
 /// </summary>
-hal_Led * PRIVATE_hal_LedArray__get_led(hal_LedArray * self, uint8_t index)
+hal_Led * _get_led(hal_LedArray * self, uint8_t index)
 {
     return self->_leds[index];
 }
@@ -28,7 +28,7 @@ hal_Led * hal_LedArray_maybe_get_led(hal_LedArray * self, uint8_t index)
 {
     if (index < self->_leds_length)
     {
-        return PRIVATE_hal_LedArray__get_led(self, index);
+        return _get_led(self, index);
     }
     return NULL;
 }

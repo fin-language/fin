@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace finlang.Transpiler;
 
-public class Transpiler
+public class CTranspiler
 {
     private string destinationDirPath;
     private string solutionPath;
@@ -26,7 +26,7 @@ public class Transpiler
 
     protected string NL => Options.StyleSettings.newLine;
 
-    public Transpiler(string destinationDirPath, string solutionPath, string projectName)
+    public CTranspiler(string destinationDirPath, string solutionPath, string projectName)
     {
         this.destinationDirPath = destinationDirPath;
         this.solutionPath = solutionPath;
