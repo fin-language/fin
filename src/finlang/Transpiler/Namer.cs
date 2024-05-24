@@ -139,7 +139,7 @@ public class Namer
     public static string GetMethodNamePrefixForPrivate(IMethodSymbol methodSymbol)
     {
         string prefix = "";
-        if (methodSymbol.Name.StartsWith("_") || methodSymbol.DeclaredAccessibility != Accessibility.Public)
+        if (methodSymbol.IsFinNonPublic())
         {
             prefix = "PRIVATE_";
         }
