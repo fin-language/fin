@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using finlang.Output;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
@@ -9,22 +10,22 @@ namespace finlang.Transpiler;
 
 public class CTranspiler
 {
-    private string destinationDirPath;
-    private string solutionPath;
-    private string projectName;
-
     /// <summary>
     /// https://github.com/fin-language/fin/issues/62
     /// </summary>
     public string? selectClassWhenDebugging = null;
-
     public TranspilerOptions Options = new();
-
     public List<C99ClsEnumInterface> c99ClassesEnums = new();
     public Dictionary<string, C99ClsEnumInterface> fqnToC99Class = new();
-    private Func<string, string> fileNamer = (string s) => s;
 
     protected string NL => Options.StyleSettings.newLine;
+
+    internal ICodeFileWriter codeFileWriter = new CodeFileWriter();
+
+    private string destinationDirPath;
+    private string solutionPath;
+    private string projectName;
+    private Func<string, string> fileNamer = (string s) => s;
 
     public CTranspiler(string destinationDirPath, string solutionPath, string projectName)
     {

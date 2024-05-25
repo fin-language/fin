@@ -28,7 +28,7 @@ public class InterfaceMethodInvocation
             }
             """;
 
-        Transpiler transpiler = new Transpiler(code);
+        CTranspiler transpiler = new CTranspiler(code);
 
     }
 }
