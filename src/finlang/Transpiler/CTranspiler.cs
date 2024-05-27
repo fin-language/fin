@@ -20,7 +20,7 @@ public class CTranspiler
 
     protected string NL => Options.StyleSettings.newLine;
 
-    internal ICodeFileWriter codeFileWriter = new CodeFileWriter();
+    public ITextWriterFactory textWriterFactory = new SimpleTextWriterFactory();
 
     private string destinationDirPath;
     private string solutionPath;
@@ -104,7 +104,7 @@ public class CTranspiler
             
             // could check for [simonly] attribute
             {
-                var c99Decl = new C99ClsEnumInterface(model, enumDeclNode, symbol);
+                var c99Decl = new C99ClsEnumInterface(model, enumDeclNode, symbol, textWriterFactory);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }
@@ -125,7 +125,7 @@ public class CTranspiler
 
             if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)) && !symbol.IsSimOnly())
             {
-                var c99Decl = new C99ClsEnumInterface(model, classDeclNode, symbol);
+                var c99Decl = new C99ClsEnumInterface(model, classDeclNode, symbol, textWriterFactory);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }
@@ -154,7 +154,7 @@ public class CTranspiler
             // could also check for [simonly] attribute
             if (interfaceSymbol.AllInterfaces.Any(iface => iface.Name == nameof(IFinObj)))
             {
-                var c99Decl = new C99ClsEnumInterface(model, declNode, interfaceSymbol);
+                var c99Decl = new C99ClsEnumInterface(model, declNode, interfaceSymbol, textWriterFactory);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }

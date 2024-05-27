@@ -1,14 +1,21 @@
-﻿namespace finlang.Transpiler;
+﻿using finlang.Output;
 
+namespace finlang.Transpiler;
+
+/// <summary>
+/// Ensures that the file ends with a newline of the specified type.
+/// https://github.com/fin-language/fin/issues/55
+/// https://github.com/fin-language/fin/issues/52
+/// </summary>
 public class EndLineTrackingWriter : IDisposable
 {
     protected bool endedWithNewLine = false;
-    private StreamWriter writer;
+    private ITextWriter writer;
     private string lineEnding;
 
-    public EndLineTrackingWriter(string path, string lineEnding)
+    public EndLineTrackingWriter(string path, string lineEnding, ITextWriterFactory textWriterFactory)
     {
-        writer = new StreamWriter(path);
+        writer = textWriterFactory.Create(path);
         this.lineEnding = lineEnding;
     }
 

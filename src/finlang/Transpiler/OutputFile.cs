@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using finlang.Output;
+using Microsoft.CodeAnalysis;
 using System.Text;
 
 namespace finlang.Transpiler;
@@ -11,9 +12,11 @@ public class OutputFile
     public HashSet<string> includesSet = new();
     public StringBuilder includesSb = new();
     public StringBuilder mainCodeSb = new();
+    public ITextWriterFactory writerFactory;
 
-    public OutputFile()
+    public OutputFile(ITextWriterFactory writerFactory)
     {
+        this.writerFactory = writerFactory;
     }
 
     public void WriteToFile(string destinationDirPath, string newLine)
@@ -29,7 +32,7 @@ public class OutputFile
         string path = Path.Combine(destinationDirPath, relativeFilePath);
         EnsureDirectoryExists(path);
 
-        using EndLineTrackingWriter writer = new(path, newLine);
+        using EndLineTrackingWriter writer = new(path, newLine, writerFactory);
         writer.Write(preIncludesSb.ToString());
         writer.Write(newLine);
         writer.Write(includesSb.ToString());
