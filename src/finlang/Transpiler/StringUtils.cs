@@ -238,6 +238,13 @@ public partial class StringUtils
         return newName;
     }
 
+    public static void DeIndentInPlace(StringBuilder sb)
+    {
+        var deIndented = StringUtils.DeIndent(sb.ToString());
+        sb.Clear();
+        sb.Append(deIndented);
+    }
+
     public static void EraseTrailingWhitespace(StringBuilder sb)
     {
         while (char.IsWhiteSpace(sb[^1]))

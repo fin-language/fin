@@ -212,10 +212,9 @@ public class CTranspiler
                 CFileGenerator cFileGenerator = new(cls, Options.StyleSettings);
                 cFileGenerator.Generate();
 
-                // de indent c file
-                var deIndented = StringUtils.DeIndent(cls.cFile.mainCodeSb.ToString());
-                cls.cFile.mainCodeSb.Clear();
-                cls.cFile.mainCodeSb.Append(deIndented);
+                // de indent main code and prototypes
+                StringUtils.DeIndentInPlace(cls.cFile.mainCodeSb);
+                StringUtils.DeIndentInPlace(cls.cFile.prototypesSb);
 
                 var iImplGen = new InterfaceImplementGenerator(cls, Options.StyleSettings);
                 iImplGen.GenerateVtables();

@@ -125,9 +125,7 @@ public class HeaderGenerator
 
                 visitor.Visit(node);
 
-                // remove last characters from string buffer until we find ')'
-                // this is needed because the closing parenthesis often has a newline/whitespace after it.
-                StringUtils.RemoveEndCharsUntilX(sb, toFindAndKeep: ')');
+                StringUtils.EraseTrailingWhitespace(sb); // this is needed because the closing parenthesis often has a newline/whitespace after it.
 
                 sb.Append($";{NL}");
 
