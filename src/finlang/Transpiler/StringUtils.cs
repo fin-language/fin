@@ -65,6 +65,19 @@ public partial class StringUtils
         }
     }
 
+    /// <summary>
+    /// Will fail if match not found.
+    /// </summary>
+    /// <param name="sb"></param>
+    /// <param name="toFindAndKeep"></param>
+    public static void RemoveEndCharsUntilX(StringBuilder sb, char toFindAndKeep)
+    {
+        while (sb[sb.Length - 1] != toFindAndKeep)
+        {
+            sb.Length--;
+        }
+    }
+
     internal static bool MatchesAtOffset(string a, string toFind, int aOffset)
     {
         if (aOffset < 0 || aOffset >= a.Length)

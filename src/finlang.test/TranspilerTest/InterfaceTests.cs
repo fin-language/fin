@@ -3,9 +3,6 @@ using finlang.Transpiler;
 
 namespace finlang.test.TranspilerTest;
 
-/// <summary>
-/// 
-/// </summary>
 public class InterfaceTests : IClassFixture<InterfaceTests.CompilationFixture>
 {
     CompilationFixture compilationFixture;
@@ -20,7 +17,6 @@ public class InterfaceTests : IClassFixture<InterfaceTests.CompilationFixture>
     {
         string cCode = compilationFixture.GetFileCode("MyClass.c");
 
-        //cCode.Should().MatchRegex(@"(?mx) \s+ IBike_pedal\(bike\); \s+");
         cCode.Should().Contain(" IBike_pedal(bike);");
         cCode.Should().Contain(" IBike_get_id(bike);"); // note that this is an inherited interface method. get_id() is defined in IVehicle.
         cCode.Should().Contain(" IVehicle_get_id(vehicle);");

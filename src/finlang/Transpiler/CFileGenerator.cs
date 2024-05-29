@@ -247,7 +247,40 @@ public class CFileGenerator : CSharpSyntaxWalker
         //    VisitToken(variable.Identifier);
         //    VisitTrailingTrivia(variable);
         //}
+    }
 
+    public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+    {
+        // Render prototype if this is private
+        if (node.IsFinNonPublic())
+        {
+            var oldSb = sb;
+            sb = outputFile.prototypesSb;
+            renderingPrototypes = true;
+            VisitMethod(node);
+
+            // remove last characters from string buffer until we find ')'
+            // this is needed because the closing parenthesis often has a newline/whitespace after it.
+            StringUtils.RemoveEndCharsUntilX(sb, toFindAndKeep: ')');
+
+            sb.Append($";{NL}");
+            renderingPrototypes = false;
+            sb = oldSb;
+        }
+
+        // we only visit leading trivi when not rendering prototypes
+        VisitLeadingTrivia(node);
+        VisitMethod(node);
+
+        void VisitMethod(MethodDeclarationSyntax node)
+        {
+            skipNextLeadingTrivia = true;
+
+            if (node.IsFinNonPublic())
+                sb.Append("static ");
+
+            base.VisitMethodDeclaration(node);
+        }
     }
 
     public override void VisitBlock(BlockSyntax node)

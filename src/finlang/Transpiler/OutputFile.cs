@@ -11,6 +11,11 @@ public class OutputFile
     public StringBuilder preIncludesSb = new();
     public HashSet<string> includesSet = new();
     public StringBuilder includesSb = new();
+
+    /// <summary>
+    /// not always used
+    /// </summary>
+    public StringBuilder prototypesSb = new();
     public StringBuilder mainCodeSb = new();
     public ITextWriterFactory writerFactory;
 
@@ -37,6 +42,13 @@ public class OutputFile
         writer.Write(newLine);
         writer.Write(includesSb.ToString());
         writer.Write($"{newLine}{newLine}");
+
+        if (prototypesSb.Length > 0)
+        {
+            writer.Write(prototypesSb.ToString());
+            writer.Write($"{newLine}{newLine}");
+        }
+
         writer.Write(mainCodeSb.ToString());
     }
 

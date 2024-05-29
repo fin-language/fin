@@ -187,16 +187,16 @@ public class CTranspiler
     {
         foreach (var cls in c99ClassesEnums)
         {
-            HeaderGenerator gen = new(Options.StyleSettings);
+            HeaderGenerator headerGen = new(Options.StyleSettings);
 
             if (cls.IsEnum)
             {
-                gen.GenerateEnum(cls);
+                headerGen.GenerateEnum(cls);
             }
             else if (cls.IsInterface)
             {
                 var iGen = new InterfaceGenerator(cls, Options.StyleSettings);
-                gen.GenerateCDefines(cls, cls.hFile.mainCodeSb);
+                headerGen.GenerateCDefines(cls, cls.hFile.mainCodeSb);
                 iGen.GenerateInterfaceStructs();
                 iGen.GeneratePrototypes();
                 iGen.GenerateFunctions();
@@ -205,9 +205,9 @@ public class CTranspiler
             else
             {
                 // this is a class
-                gen.GenerateCDefines(cls, cls.hFile.mainCodeSb);
-                gen.GenerateStructures(cls);
-                gen.GenerateFunctionPrototypes(cls);
+                headerGen.GenerateCDefines(cls, cls.hFile.mainCodeSb);
+                headerGen.GenerateStructures(cls);
+                headerGen.GenerateFunctionPrototypes(cls);
 
                 CFileGenerator cFileGenerator = new(cls, Options.StyleSettings);
                 cFileGenerator.Generate();

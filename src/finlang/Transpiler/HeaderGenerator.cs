@@ -120,14 +120,14 @@ public class HeaderGenerator
                 if (bmds.IsSimOnly())
                     continue;
 
+                if (bmds.IsFinNonPublic())
+                    continue;
+
                 visitor.Visit(node);
 
                 // remove last characters from string buffer until we find ')'
                 // this is needed because the closing parenthesis often has a newline/whitespace after it.
-                while (sb[sb.Length - 1] != ')')
-                {
-                    sb.Length--;
-                }
+                StringUtils.RemoveEndCharsUntilX(sb, toFindAndKeep: ')');
 
                 sb.Append($";{NL}");
 

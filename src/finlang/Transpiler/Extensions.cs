@@ -75,7 +75,7 @@ public static class Extensions
         return symbol.GetAttributes().Any(a => a.AttributeClass?.Name == nameof(simonlyAttribute));
     }
 
-    public static bool IsCSharpPublic(this MethodDeclarationSyntax node)
+    public static bool IsCSharpPublic(this BaseMethodDeclarationSyntax node)
     {
         return node.Modifiers.Any(d => (SyntaxKind)d.RawKind == SyntaxKind.PublicKeyword);
     }
@@ -83,13 +83,31 @@ public static class Extensions
     /// <summary>
     /// ISymbol will often be an IFieldSymbol or IMethodSymbol.
     /// </summary>
-    /// <param name="fieldSymbol"></param>
+    /// <param name="symbol"></param>
     /// <returns></returns>
-    public static bool IsFinNonPublic(this ISymbol fieldSymbol)
+    public static bool IsFinNonPublic(this ISymbol symbol)
     {
         // Public methods that start with _ are considered non-public in transpiled code.
         // This allows for easier testing in C# code.
-        return fieldSymbol.Name.StartsWith("_") || fieldSymbol.DeclaredAccessibility != Accessibility.Public;
+        return symbol.Name.StartsWith("_") || symbol.DeclaredAccessibility != Accessibility.Public;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="symbol"></param>
+    /// <returns></returns>
+    public static bool IsFinNonPublic(this BaseMethodDeclarationSyntax node)
+    {
+        // Public methods that start with _ are considered non-public in transpiled code.
+        // This allows for easier testing in C# code.
+        if (node.IsCSharpPublic() == false)
+            return true;
+
+        if (node is MethodDeclarationSyntax method)
+            return method.Identifier.Text.StartsWith("_");
+
+        return false;
     }
 
     public static void AppendTokenAndTrivia(this StringBuilder sb, SyntaxToken token, string? overrideTokenText = null)
