@@ -11,7 +11,7 @@ string projectName = "LedBlinker";
 
 Console.WriteLine("Transpiling " + projectName + " fin/C# project...");
 
-Transpiler transpiler = new(destinationDirPath: outDir, solutionPath: slnDir + slnName, projectName: projectName);
+CTranspiler transpiler = new(destinationDirPath: outDir);
 
 // disable output of info that adds git noise
 transpiler.Options.OutputTimestamp = false;
@@ -25,7 +25,7 @@ transpiler.SetFileNamer((string originalPath) =>
     return originalPath;
 });
 
-transpiler.GenerateAndWrite();
+transpiler.GenerateAndWrite(solutionPath: slnDir + slnName, projectName: projectName);
 var fileNames = transpiler.GetListOfAllGeneratedFiles();
 
 Console.WriteLine("Generated files:");

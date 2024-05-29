@@ -5,6 +5,11 @@ public class HashList<K, V> where K : notnull
 {
     private Dictionary<K, List<V>> dictionary = new();
 
+    public IEnumerable<IReadOnlyList<V>> GetValues()
+    {
+        return dictionary.Values;
+    }
+
     public List<V> GetValues(K key)
     {
         return dictionary[key];

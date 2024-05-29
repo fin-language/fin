@@ -9,18 +9,25 @@ namespace finlang.test.TranspilerTest;
 /// </summary>
 public class AdhocCodeHelper
 {
-    public Project CreateProjectForCode(string code)
+    public static Project CreateProjectForCode(string code)
     {
         AdhocWorkspace workspace = new();
         ProjectInfo projectInfo = ProjectInfo.Create(
-            ProjectId.CreateNewId(),
-            VersionStamp.Create(),
-            "NewProject",
-            "NewProject",
-            LanguageNames.CSharp
+            id: ProjectId.CreateNewId(),
+            version: VersionStamp.Create(),
+            name: "NewProject",
+            assemblyName: "NewProject",
+            language: LanguageNames.CSharp,
+            documents: new[] {
+                DocumentInfo.Create(
+                id: DocumentId.CreateNewId(ProjectId.CreateNewId()),
+                name: "NewFile.cs",
+                loader: TextLoader.From(TextAndVersion.Create(SourceText.From(code), VersionStamp.Create())),
+                filePath: "NewFile.cs")
+            }
         );
         Project project = workspace.AddProject(projectInfo);
-        var document = workspace.AddDocument(project.Id, "NewFile.cs", SourceText.From(code));
+        project = CTranspiler.AdjustProjectForTranspilation(project);
         return project;
     }
 

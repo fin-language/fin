@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -23,16 +22,11 @@ public class CTranspiler
     public ITextWriterFactory textWriterFactory = new SimpleTextWriterFactory();
 
     private string destinationDirPath;
-    private string solutionPath;
-    private string projectName;
     private Func<string, string> fileNamer = (string s) => s;
 
-    public CTranspiler(string destinationDirPath, string solutionPath, string projectName)
+    public CTranspiler(string destinationDirPath)
     {
         this.destinationDirPath = destinationDirPath;
-        this.solutionPath = solutionPath;
-        this.projectName = projectName;
-
         selectClassWhenDebugging ??= Environment.GetEnvironmentVariable("FINLANG_TRANSPILER_DEBUG_TYPE");
     }
 
@@ -81,7 +75,7 @@ public class CTranspiler
         }
     }
 
-    private static Project AdjustProjectForTranspilation(Project project)
+    public static Project AdjustProjectForTranspilation(Project project)
     {
         // remove finlang.csproj reference for test projects otherwise we get errors while running our tests
         var toRemove = project.ProjectReferences.Where(pr => pr.ProjectId.ToString().Contains("finlang.csproj")).ToList();
@@ -182,7 +176,7 @@ public class CTranspiler
         }
     }
 
-    public void GatherSolutionDeclarations()
+    public void GatherSolutionDeclarations(string solutionPath, string projectName)
     {
         Solution sln = WorkspaceLoader.LoadSolution(solutionPath);
         var project = sln.Projects.Where(p => p.Name == projectName).Single();
@@ -294,7 +288,7 @@ public class CTranspiler
         }
     }
 
-    public void SetupFileHeaders()
+    public void SetupFileHeaders(string solutionPath)
     {
         foreach (var cls in c99ClassesEnums)
         {
@@ -368,6 +362,11 @@ public class CTranspiler
 
         Directory.CreateDirectory(destinationDirPath);
 
+        WriteFilesWithoutDirectoryWipeCreate();
+    }
+
+    public void WriteFilesWithoutDirectoryWipeCreate()
+    {
         foreach (var cls in c99ClassesEnums)
         {
             cls.hFile.WriteToFile(destinationDirPath, NL);
@@ -393,11 +392,11 @@ public class CTranspiler
         return result;
     }
 
-    public void GenerateAndWrite()
+    public void GenerateAndWrite(string solutionPath, string projectName)
     {
-        GatherSolutionDeclarations();
+        GatherSolutionDeclarations(solutionPath: solutionPath, projectName: projectName);
         Generate();
-        SetupFileHeaders();
+        SetupFileHeaders(solutionPath: solutionPath);
         SetFilePaths();
         ResolveDependencies();
         WriteFiles();
