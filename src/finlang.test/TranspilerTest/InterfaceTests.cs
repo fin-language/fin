@@ -1,4 +1,5 @@
 ﻿using finlang.test.Output;
+using finlang.Transpiler;
 
 namespace finlang.test.TranspilerTest;
 
@@ -29,8 +30,14 @@ public class InterfaceTests : IClassFixture<InterfaceTests.CompilationFixture>
     public void InterfaceMethodDeclaration()
     {
         string cCode = compilationFixture.GetFileCode("IBike.h");
+        string strippedCode = StringUtils.RemoveAllHorizontalSpaceChars(cCode); // to not be sensitive to future whitespace changes
 
         // match: uint8_t (*get_id)(void * self);
+        strippedCode.Should().Contain("\n" + "uint8_t(*get_id)(void*self);");
+        // match: void (*pedal)(void * self);
+        strippedCode.Should().Contain("\n" + "void(*pedal)(void*self);");
+
+        // regex version of matching is a lot more work to maintain
         cCode.Should().MatchRegex(@"(?xm)
             ^          \s*
             uint8_t    \s* 

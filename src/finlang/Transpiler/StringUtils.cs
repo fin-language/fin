@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis.CSharp;
-using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -20,6 +18,13 @@ public partial class StringUtils
         var r = new Regex("^" + indent, RegexOptions.Multiline);
         var output = r.Replace(str, "");
 
+        return output;
+    }
+
+    public static string RemoveAllHorizontalSpaceChars(string str)
+    {
+        var r = HorizontalWhiteSpace();
+        var output = r.Replace(str, "");
         return output;
     }
 
@@ -262,4 +267,6 @@ public partial class StringUtils
     private static partial Regex SnakeCaseToCamelCaseRegex();
     [GeneratedRegex("(?x)\n        ( ^ \\s* | _ ) # either start of input or underscore\n        (?<letterToUpperCase> [a-zA-Z] ) ")]
     private static partial Regex SnakeCaseToPascalCaseRegex();
+    [GeneratedRegex("[ \\t]+")]
+    private static partial Regex HorizontalWhiteSpace();
 }
