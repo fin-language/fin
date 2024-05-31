@@ -247,7 +247,35 @@ public class CFileGenerator : CSharpSyntaxWalker
         //    VisitToken(variable.Identifier);
         //    VisitTrailingTrivia(variable);
         //}
+    }
 
+    public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+    {
+        // Render prototype if this is private
+        if (node.IsFinNonPublic())
+        {
+            var oldSb = sb;
+            sb = outputFile.prototypesSb;
+            renderingPrototypes = true;
+            VisitMethod(node);
+            StringUtils.EraseTrailingWhitespace(sb); // this is needed because the closing parenthesis often has a newline/whitespace after it.
+            sb.Append($";{NL}");
+            renderingPrototypes = false;
+            sb = oldSb;
+        }
+
+        VisitMethod(node);
+
+        void VisitMethod(MethodDeclarationSyntax node)
+        {
+            VisitLeadingTrivia(node);
+            skipNextLeadingTrivia = true;
+
+            if (node.IsFinNonPublic())
+                sb.Append("static ");
+
+            base.VisitMethodDeclaration(node);
+        }
     }
 
     public override void VisitBlock(BlockSyntax node)
@@ -458,8 +486,10 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (ims.ContainingType.TypeKind == TypeKind.Interface)
         {
             // we need to call the method on the interface type being accessed and not the interface that contains the method (incase of interface inheritance)
-            var objInterfaceType = model.GetTypeInfo(memberAccessNode.Expression).ConvertedType.ThrowIfNull();
-            sb.Append(Namer.GetMethodNamePrefixForPrivate(ims) + Namer.GetCName(objInterfaceType) + "_" + ims.Name);
+            ExpressionSyntax expression = memberAccessNode.Expression;
+            var objInterfaceType = model.GetTypeInfo(expression).ConvertedType.ThrowIfNull();
+            string functionName = Namer.GetCName(objInterfaceType) + "_" + ims.Name;
+            sb.Append(functionName);
         }
         else
         {

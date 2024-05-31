@@ -9,17 +9,17 @@ public class C99TranspilerTest
 {
     string slnPath = ExSln2Fixture.GetSlnPath();
     string destDirPath = ExSln2Fixture.GetSlnDir() + "/c99/gen/";
-    Transpiler.Transpiler transpiler;
+    Transpiler.CTranspiler transpiler;
 
     public C99TranspilerTest()
     {
-        transpiler = new(solutionPath: slnPath, destinationDirPath: destDirPath, projectName: "LedBlinker");
+        transpiler = new(destinationDirPath: destDirPath);
     }
 
     [Fact]
     public void GenStruct()
     {
-        transpiler.GatherSolutionDeclarations();
+        transpiler.GatherSolutionDeclarations(solutionPath: slnPath, projectName: "LedBlinker");
 
         transpiler.Generate();
 
@@ -71,7 +71,7 @@ public class C99TranspilerTest
             return originalPath;
         });
 
-        transpiler.GenerateAndWrite();
+        transpiler.GenerateAndWrite(solutionPath: slnPath, projectName: "LedBlinker");
 
         //transpiler.GetListOfAllGeneratedFiles().Should().Contain(
         //    "app_Main.h",

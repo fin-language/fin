@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using finlang.Output;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 
@@ -7,11 +8,12 @@ namespace finlang.Transpiler;
 public class C99ClsEnumInterface
 {
     readonly public INamedTypeSymbol symbol;
+    private readonly ITextWriterFactory textWriterFactory;
     readonly public SyntaxNode syntaxNode;
     readonly public SemanticModel model;
 
-    readonly public OutputFile hFile = new();
-    readonly public OutputFile cFile = new();
+    readonly public OutputFile hFile;
+    readonly public OutputFile cFile;
 
     private bool hasVTable = false;
     public bool HasVTable => hasVTable;
@@ -22,12 +24,15 @@ public class C99ClsEnumInterface
 
     public bool IsStaticClass { get; init; }
 
-    public C99ClsEnumInterface(SemanticModel model, SyntaxNode syntaxNode, INamedTypeSymbol symbol)
+    public C99ClsEnumInterface(SemanticModel model, SyntaxNode syntaxNode, INamedTypeSymbol symbol, ITextWriterFactory textWriterFactory)
     {
         this.IsFFIClass = symbol.IsFFI();
         this.syntaxNode = syntaxNode;
         this.symbol = symbol;
+        this.textWriterFactory = textWriterFactory;
         this.model = model;
+        hFile = new(textWriterFactory);
+        cFile = new(textWriterFactory);
 
         this.IsStaticClass = GetInstanceFields().Any() == false;
 

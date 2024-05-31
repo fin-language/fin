@@ -1,37 +1,32 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using finlang.Output;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
 using System.Reflection;
 using System.Security.Cryptography;
 
 namespace finlang.Transpiler;
 
-public class Transpiler
+public class CTranspiler
 {
-    private string destinationDirPath;
-    private string solutionPath;
-    private string projectName;
-
     /// <summary>
     /// https://github.com/fin-language/fin/issues/62
     /// </summary>
     public string? selectClassWhenDebugging = null;
-
     public TranspilerOptions Options = new();
-
     public List<C99ClsEnumInterface> c99ClassesEnums = new();
     public Dictionary<string, C99ClsEnumInterface> fqnToC99Class = new();
-    private Func<string, string> fileNamer = (string s) => s;
 
     protected string NL => Options.StyleSettings.newLine;
 
-    public Transpiler(string destinationDirPath, string solutionPath, string projectName)
+    public ITextWriterFactory textWriterFactory = new SimpleTextWriterFactory();
+
+    private string destinationDirPath;
+    private Func<string, string> fileNamer = (string s) => s;
+
+    public CTranspiler(string destinationDirPath)
     {
         this.destinationDirPath = destinationDirPath;
-        this.solutionPath = solutionPath;
-        this.projectName = projectName;
-
         selectClassWhenDebugging ??= Environment.GetEnvironmentVariable("FINLANG_TRANSPILER_DEBUG_TYPE");
     }
 
@@ -80,7 +75,7 @@ public class Transpiler
         }
     }
 
-    private static Project AdjustProjectForTranspilation(Project project)
+    public static Project AdjustProjectForTranspilation(Project project)
     {
         // remove finlang.csproj reference for test projects otherwise we get errors while running our tests
         var toRemove = project.ProjectReferences.Where(pr => pr.ProjectId.ToString().Contains("finlang.csproj")).ToList();
@@ -103,7 +98,7 @@ public class Transpiler
             
             // could check for [simonly] attribute
             {
-                var c99Decl = new C99ClsEnumInterface(model, enumDeclNode, symbol);
+                var c99Decl = new C99ClsEnumInterface(model, enumDeclNode, symbol, textWriterFactory);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }
@@ -124,7 +119,7 @@ public class Transpiler
 
             if (SymbolHelper.IsDerivedFrom(symbol, nameof(FinObj)) && !symbol.IsSimOnly())
             {
-                var c99Decl = new C99ClsEnumInterface(model, classDeclNode, symbol);
+                var c99Decl = new C99ClsEnumInterface(model, classDeclNode, symbol, textWriterFactory);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }
@@ -153,7 +148,7 @@ public class Transpiler
             // could also check for [simonly] attribute
             if (interfaceSymbol.AllInterfaces.Any(iface => iface.Name == nameof(IFinObj)))
             {
-                var c99Decl = new C99ClsEnumInterface(model, declNode, interfaceSymbol);
+                var c99Decl = new C99ClsEnumInterface(model, declNode, interfaceSymbol, textWriterFactory);
                 c99ClassesEnums.Add(c99Decl);
                 fqnToC99Class.Add(c99Decl.GetFqn(), c99Decl);
             }
@@ -181,7 +176,7 @@ public class Transpiler
         }
     }
 
-    public void GatherSolutionDeclarations()
+    public void GatherSolutionDeclarations(string solutionPath, string projectName)
     {
         Solution sln = WorkspaceLoader.LoadSolution(solutionPath);
         var project = sln.Projects.Where(p => p.Name == projectName).Single();
@@ -192,16 +187,16 @@ public class Transpiler
     {
         foreach (var cls in c99ClassesEnums)
         {
-            HeaderGenerator gen = new(Options.StyleSettings);
+            HeaderGenerator headerGen = new(Options.StyleSettings);
 
             if (cls.IsEnum)
             {
-                gen.GenerateEnum(cls);
+                headerGen.GenerateEnum(cls);
             }
             else if (cls.IsInterface)
             {
                 var iGen = new InterfaceGenerator(cls, Options.StyleSettings);
-                gen.GenerateCDefines(cls, cls.hFile.mainCodeSb);
+                headerGen.GenerateCDefines(cls, cls.hFile.mainCodeSb);
                 iGen.GenerateInterfaceStructs();
                 iGen.GeneratePrototypes();
                 iGen.GenerateFunctions();
@@ -210,17 +205,16 @@ public class Transpiler
             else
             {
                 // this is a class
-                gen.GenerateCDefines(cls, cls.hFile.mainCodeSb);
-                gen.GenerateStructures(cls);
-                gen.GenerateFunctionPrototypes(cls);
+                headerGen.GenerateCDefines(cls, cls.hFile.mainCodeSb);
+                headerGen.GenerateStructures(cls);
+                headerGen.GenerateFunctionPrototypes(cls);
 
                 CFileGenerator cFileGenerator = new(cls, Options.StyleSettings);
                 cFileGenerator.Generate();
 
-                // de indent c file
-                var deIndented = StringUtils.DeIndent(cls.cFile.mainCodeSb.ToString());
-                cls.cFile.mainCodeSb.Clear();
-                cls.cFile.mainCodeSb.Append(deIndented);
+                // de indent main code and prototypes
+                StringUtils.DeIndentInPlace(cls.cFile.mainCodeSb);
+                StringUtils.DeIndentInPlace(cls.cFile.prototypesSb);
 
                 var iImplGen = new InterfaceImplementGenerator(cls, Options.StyleSettings);
                 iImplGen.GenerateVtables();
@@ -293,7 +287,7 @@ public class Transpiler
         }
     }
 
-    public void SetupFileHeaders()
+    public void SetupFileHeaders(string solutionPath)
     {
         foreach (var cls in c99ClassesEnums)
         {
@@ -367,6 +361,11 @@ public class Transpiler
 
         Directory.CreateDirectory(destinationDirPath);
 
+        WriteFilesWithoutDirectoryWipeCreate();
+    }
+
+    public void WriteFilesWithoutDirectoryWipeCreate()
+    {
         foreach (var cls in c99ClassesEnums)
         {
             cls.hFile.WriteToFile(destinationDirPath, NL);
@@ -392,11 +391,11 @@ public class Transpiler
         return result;
     }
 
-    public void GenerateAndWrite()
+    public void GenerateAndWrite(string solutionPath, string projectName)
     {
-        GatherSolutionDeclarations();
+        GatherSolutionDeclarations(solutionPath: solutionPath, projectName: projectName);
         Generate();
-        SetupFileHeaders();
+        SetupFileHeaders(solutionPath: solutionPath);
         SetFilePaths();
         ResolveDependencies();
         WriteFiles();

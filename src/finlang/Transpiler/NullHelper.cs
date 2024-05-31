@@ -1,9 +1,4 @@
-﻿#nullable enable
-
-
-// spell-checker: ignore customizer
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace finlang.Transpiler;
 

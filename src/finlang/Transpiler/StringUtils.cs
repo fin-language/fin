@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis.CSharp;
-using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -20,6 +18,13 @@ public partial class StringUtils
         var r = new Regex("^" + indent, RegexOptions.Multiline);
         var output = r.Replace(str, "");
 
+        return output;
+    }
+
+    public static string RemoveAllHorizontalSpaceChars(string str)
+    {
+        var r = HorizontalWhiteSpace();
+        var output = r.Replace(str, "");
         return output;
     }
 
@@ -57,6 +62,19 @@ public partial class StringUtils
 
             if (append)
                 sb.Append(c);
+        }
+    }
+
+    /// <summary>
+    /// Will fail if match not found.
+    /// </summary>
+    /// <param name="sb"></param>
+    /// <param name="toFindAndKeep"></param>
+    public static void RemoveEndCharsUntilX(StringBuilder sb, char toFindAndKeep)
+    {
+        while (sb[sb.Length - 1] != toFindAndKeep)
+        {
+            sb.Length--;
         }
     }
 
@@ -220,6 +238,13 @@ public partial class StringUtils
         return newName;
     }
 
+    public static void DeIndentInPlace(StringBuilder sb)
+    {
+        var deIndented = StringUtils.DeIndent(sb.ToString());
+        sb.Clear();
+        sb.Append(deIndented);
+    }
+
     public static void EraseTrailingWhitespace(StringBuilder sb)
     {
         while (char.IsWhiteSpace(sb[^1]))
@@ -262,4 +287,6 @@ public partial class StringUtils
     private static partial Regex SnakeCaseToCamelCaseRegex();
     [GeneratedRegex("(?x)\n        ( ^ \\s* | _ ) # either start of input or underscore\n        (?<letterToUpperCase> [a-zA-Z] ) ")]
     private static partial Regex SnakeCaseToPascalCaseRegex();
+    [GeneratedRegex("[ \\t]+")]
+    private static partial Regex HorizontalWhiteSpace();
 }
