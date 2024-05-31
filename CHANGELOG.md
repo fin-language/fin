@@ -23,9 +23,11 @@ You can easily find changes by searching for `"### Changed"` in the in this mark
 Test/interim releases are not documented here.
 
 ---
-## [WIP]
+## [0.5.0]
 ### Changed (BREAKING-CHANGES)
 - Renamed `finlang.Transpiler.Transpiler` to `finlang.Transpiler.CTranspiler` to avoid name conflicts between namespace and class.
+- change private methods to be `static` without module prefix
+    - https://github.com/fin-language/fin/issues/72
 
 ---
 
