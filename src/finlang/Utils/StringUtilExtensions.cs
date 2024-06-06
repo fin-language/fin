@@ -1,7 +1,7 @@
 ﻿// From StateSmith project
-namespace finlang.gen;
+namespace finlang.Utils.StringUtilExtensions;
 
-public static class StringUtilExtensions
+public static class StringUtilExtensionsClass
 {
     public static string DeIndent(this string str)
     {

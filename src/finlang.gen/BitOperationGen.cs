@@ -1,4 +1,5 @@
-﻿namespace finlang.gen;
+﻿using finlang.Utils.StringUtilExtensions;
+namespace finlang.gen;
 
 public class BitOperationGen
 {

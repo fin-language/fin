@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace finlang.Transpiler;
+namespace finlang.Utils;
 
 public partial class StringUtils
 {
@@ -21,16 +21,39 @@ public partial class StringUtils
         return output;
     }
 
-    public static string RemoveAllHorizontalSpaceChars(string str)
+    public static string Indent(string str, string indent)
     {
-        var r = HorizontalWhiteSpace();
-        var output = r.Replace(str, "");
+        var result = LineStartRegex();
+        var output = result.Replace(str, indent);
         return output;
+    }
+
+    public static string Indent(string str, string indent, int count)
+    {
+        string indentStr = "";
+        for (int i = 0; i < count; i++)
+        {
+            indentStr += indent;
+        }
+
+        return Indent(str, indentStr);
+    }
+
+    public static string IndentNewLines(string str, string indent)
+    {
+        return str.ReplaceLineEndings("\n" + indent);
     }
 
     public static string RemoveAnyIndent(string str)
     {
         var r = RemoveAnyIndent();
+        var output = r.Replace(str, "");
+        return output;
+    }
+
+    public static string RemoveAllHorizontalSpaceChars(string str)
+    {
+        var r = HorizontalWhiteSpace();
         var output = r.Replace(str, "");
         return output;
     }
@@ -289,4 +312,6 @@ public partial class StringUtils
     private static partial Regex SnakeCaseToPascalCaseRegex();
     [GeneratedRegex("[ \\t]+")]
     private static partial Regex HorizontalWhiteSpace();
+    [GeneratedRegex("^", RegexOptions.Multiline)]
+    private static partial Regex LineStartRegex();
 }
