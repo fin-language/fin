@@ -23,7 +23,7 @@ You can easily find changes by searching for `"### Changed"` in the in this mark
 Test/interim releases are not documented here.
 
 
-## [wip]
+## [0.5.2]
 ### Added
 - Add more StringUtils indent functions
 
