@@ -1,5 +1,5 @@
 ﻿using finlang.Utils;
-using finlang.Utils.StringUtilExtensions;
+using finlang.Utils.StringUtilsExtensions;
 
 namespace finlang.test.Utils;
 

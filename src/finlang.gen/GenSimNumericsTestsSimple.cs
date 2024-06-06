@@ -1,4 +1,4 @@
-﻿using finlang.Utils.StringUtilExtensions;
+﻿using finlang.Utils.StringUtilsExtensions;
 using Xunit;
 
 namespace finlang.gen;

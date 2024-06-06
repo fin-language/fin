@@ -1,5 +1,5 @@
 ﻿// From StateSmith project
-namespace finlang.Utils.StringUtilExtensions;
+namespace finlang.Utils.StringUtilsExtensions;
 
 public static class StringUtilExtensionsClass
 {
