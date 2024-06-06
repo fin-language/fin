@@ -21,27 +21,38 @@ public partial class StringUtils
         return output;
     }
 
-    public static string Indent(string str, string indent)
+    public static string Indent(string str, string indent, int count = 1)
     {
-        var result = LineStartRegex();
-        var output = result.Replace(str, indent);
+        string effectiveIndent = MultiplyString(indent, count);
+        var regex = LineStartRegex();
+        var output = regex.Replace(str, effectiveIndent);
         return output;
     }
 
-    public static string Indent(string str, string indent, int count)
+    public static string IndentNewLines(string str, string indent, int count = 1)
     {
-        string indentStr = "";
-        for (int i = 0; i < count; i++)
-        {
-            indentStr += indent;
-        }
-
-        return Indent(str, indentStr);
+        string effectiveIndent = MultiplyString(indent, count);
+        var regex = CapturedNewLineSeqRegex();
+        return regex.Replace(str, "$1" + effectiveIndent);
     }
 
-    public static string IndentNewLines(string str, string indent)
+    public static string MultiplyString(string indent, int count)
     {
-        return str.ReplaceLineEndings("\n" + indent);
+        string effectiveIndent;
+        
+        if (count == 0)
+        {
+            return "";
+        }
+
+        effectiveIndent = indent;
+
+        for (int i = 1; i < count; i++)
+        {
+            effectiveIndent += indent;
+        }
+
+        return effectiveIndent;
     }
 
     public static string RemoveAnyIndent(string str)
@@ -314,4 +325,6 @@ public partial class StringUtils
     private static partial Regex HorizontalWhiteSpace();
     [GeneratedRegex("^", RegexOptions.Multiline)]
     private static partial Regex LineStartRegex();
+    [GeneratedRegex("(\\r\\n|\\r|\\n)")]
+    private static partial Regex CapturedNewLineSeqRegex();
 }

@@ -13,21 +13,14 @@ public static class StringUtilExtensionsClass
         return StringUtils.RemoveAnyIndent(str);
     }
 
-    public static string Indent(this string str, string indent)
+    public static string Indent(this string str, string indent, int count = 1)
     {
-        return StringUtils.Indent(str, indent);
+        return StringUtils.Indent(str, indent, count);
     }
 
-    public static string IndentNewLines(this string str, string indent, int indentCount = 1)
+    public static string IndentNewLines(this string str, string indent, int count = 1)
     {
-        var effectiveIndent = indent;
-
-        for (int i = 1; i < indentCount; i++)
-        {
-            effectiveIndent += indent;
-        }
-
-        return StringUtils.IndentNewLines(str, effectiveIndent);
+        return StringUtils.IndentNewLines(str, indent: indent, count: count);
     }
 
     public static string[] SplitIntoLinesOrEmpty(this string str)
