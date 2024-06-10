@@ -22,6 +22,6 @@ public class TranspilerTest1
         transpiler.Options.DeleteOutputDirBeforeTranspile = false;  // we don't want to wipe out real generated files for this test
         transpiler.GenerateAndWrite(solutionPath: slnDir + slnName, projectName: projectName);
 
-        transpiler.GetCTypeNameFromFinType<Led>().Should().Be("hal_Led");
+        transpiler.GetMangledNameProvider().FromFinType<Led>().Should().Be("hal_Led");
     }
 }

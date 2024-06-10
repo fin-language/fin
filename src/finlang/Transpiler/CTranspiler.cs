@@ -405,19 +405,8 @@ public class CTranspiler
         WriteFiles();
     }
 
-    public string GetCTypeNameFromFinType<T>() where T : class
+    public IMangledNameProvider GetMangledNameProvider()
     {
-        string fqn = typeof(T).FullName.ThrowIfNull();
-        return GetCTypeNameFromFinType(fqn);
-    }
-
-    /// <summary>
-    /// FQN stands for fully qualified name. It is the name of the type in C# that includes the namespace.
-    /// </summary>
-    /// <param name="finTypeFqn"></param>
-    /// <returns></returns>
-    public string GetCTypeNameFromFinType(string finTypeFqn)
-    {
-        return fqnToC99Class[finTypeFqn].GetCName();
+        return new MangledNameProvider(fqnToC99Class);
     }
 }

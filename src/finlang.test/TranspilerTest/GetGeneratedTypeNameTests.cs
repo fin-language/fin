@@ -80,16 +80,18 @@ public class GetGeneratedTypeNameTests
 
         (CTranspiler transpiler, _) = TranspilerTestHelper.Transpile([main, fileNoNamespace, fileNamespace, fileComplex]);
 
-        transpiler.GetCTypeNameFromFinType("IVehicle").Should().Be("IVehicle");
-        transpiler.GetCTypeNameFromFinType("Bike").Should().Be("Bike");
-        transpiler.GetCTypeNameFromFinType("TireType").Should().Be("TireType");
+        var mangledNameProvider = transpiler.GetMangledNameProvider();
+
+        mangledNameProvider.FromFinType("IVehicle").Should().Be("IVehicle");
+        mangledNameProvider.FromFinType("Bike").Should().Be("Bike");
+        mangledNameProvider.FromFinType("TireType").Should().Be("TireType");
         //
-        transpiler.GetCTypeNameFromFinType("rocket.IBooster").Should().Be("rocket_IBooster");
-        transpiler.GetCTypeNameFromFinType("rocket.Rocket").Should().Be("rocket_Rocket");
-        transpiler.GetCTypeNameFromFinType("rocket.FuelType").Should().Be("rocket_FuelType");
+        mangledNameProvider.FromFinType("rocket.IBooster").Should().Be("rocket_IBooster");
+        mangledNameProvider.FromFinType("rocket.Rocket").Should().Be("rocket_Rocket");
+        mangledNameProvider.FromFinType("rocket.FuelType").Should().Be("rocket_FuelType");
         //
-        transpiler.GetCTypeNameFromFinType("food.oven.IOven").Should().Be("food_oven_IOven");
-        transpiler.GetCTypeNameFromFinType("food.oven.Grill").Should().Be("food_oven_Grill");
-        transpiler.GetCTypeNameFromFinType("food.oven.Grill.GrillDrawer").Should().Be("food_oven_Grill_GrillDrawer");
+        mangledNameProvider.FromFinType("food.oven.IOven").Should().Be("food_oven_IOven");
+        mangledNameProvider.FromFinType("food.oven.Grill").Should().Be("food_oven_Grill");
+        mangledNameProvider.FromFinType("food.oven.Grill.GrillDrawer").Should().Be("food_oven_Grill_GrillDrawer");
     }
 }
