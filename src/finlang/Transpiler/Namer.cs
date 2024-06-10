@@ -12,6 +12,37 @@ public class Namer
         this.model = model;
     }
 
+    public string GetCName(ClassDeclarationSyntax node)
+    {
+        INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
+        return GetCName(symbol);
+    }
+
+    public string GetCName(TypeSyntax node)
+    {
+        var symbol = model.GetSymbolInfo(node).ThrowIfNull();
+        return GetCName(symbol);
+    }
+
+    public string GetCName(SymbolInfo symbolInfo)
+    {
+        return GetCName(symbolInfo.Symbol.ThrowIfNull());
+    }
+
+    public string GetCName(StructDeclarationSyntax node)
+    {
+        INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
+        return GetCName(symbol);
+    }
+
+    public string GetCName(EnumDeclarationSyntax node)
+    {
+        INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
+        return GetCName(symbol);
+    }
+
+    //--------------------------- STATIC ---------------------------
+
     public static string MangleTypeSymbolName(string fullyQualifiedName)
     {
         string textName = fullyQualifiedName.Replace(oldChar: '.', newChar: '_');
@@ -61,31 +92,7 @@ public class Namer
         return parts;
     }
 
-    public string GetCName(ClassDeclarationSyntax node)
-    {
-        INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
-        return GetCName(symbol);
-    }
-
-    public string GetCName(TypeSyntax node)
-    {
-        var symbol = model.GetSymbolInfo(node).ThrowIfNull();
-        return GetCName(symbol);
-    }
-
     public static string GetCName(SemanticModel model, ClassDeclarationSyntax node)
-    {
-        INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
-        return GetCName(symbol);
-    }
-
-    public string GetCName(StructDeclarationSyntax node)
-    {
-        INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
-        return GetCName(symbol);
-    }
-
-    public string GetCName(EnumDeclarationSyntax node)
     {
         INamedTypeSymbol symbol = (INamedTypeSymbol)model.GetDeclaredSymbol(node).ThrowIfNull();
         return GetCName(symbol);
@@ -145,8 +152,4 @@ public class Namer
         return MangleTypeSymbolName(fqn);
     }
 
-    public string GetCName(SymbolInfo symbolInfo)
-    {
-        return GetCName(symbolInfo.Symbol.ThrowIfNull());
-    }
 }

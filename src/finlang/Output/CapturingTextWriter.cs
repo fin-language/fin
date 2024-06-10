@@ -1,7 +1,6 @@
-﻿using finlang.Output;
-using System.Text;
+﻿using System.Text;
 
-namespace finlang.test.Output;
+namespace finlang.Output;
 
 public class CapturingTextWriter : ITextWriter
 {

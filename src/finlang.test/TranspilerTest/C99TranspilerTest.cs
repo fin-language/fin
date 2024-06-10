@@ -87,13 +87,3 @@ public class C99TranspilerTest
         //);
     }
 }
-
-/*
-
-Want to see the following files:
-c99/
-    App_Main.c/h
-    Hal_Led.c/h
-
-It should NOT generate a Hal_Gpio.c/h because that's an FFI class.
-*/

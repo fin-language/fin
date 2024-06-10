@@ -33,4 +33,8 @@
     <ProjectReference Include="..\finlang\finlang.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Output\" />
+  </ItemGroup>
+
 </Project>

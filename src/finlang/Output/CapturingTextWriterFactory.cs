@@ -1,6 +1,6 @@
-using finlang.Output;
+using finlang.Utils;
 
-namespace finlang.test.Output;
+namespace finlang.Output;
 
 public class CapturingTextWriterFactory : ITextWriterFactory
 {

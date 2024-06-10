@@ -1,4 +1,4 @@
-﻿using finlang.test.Output;
+﻿using finlang.Output;
 using finlang.Utils;
 
 namespace finlang.test.TranspilerTest;

@@ -1,4 +1,4 @@
-﻿using finlang.test.Output;
+﻿using finlang.Output;
 using finlang.Transpiler;
 namespace finlang.test.TranspilerTest;
 
@@ -11,15 +11,21 @@ public class TranspilerTestHelper
         return cCode;
     }
 
-    public static CapturingTextWriterFactory TranspileFinToCFiles(string code)
+    public static CapturingTextWriterFactory TranspileFinToCFiles(params string[] sourceFilesContents)
+    {
+        (_, CapturingTextWriterFactory writer) = Transpile(sourceFilesContents);
+        return writer;
+    }
+
+    public static (CTranspiler, CapturingTextWriterFactory) Transpile(params string[] sourceFilesContents)
     {
         CTranspiler transpiler = new(destinationDirPath: ".");
         CapturingTextWriterFactory capturingTextWriterFactory = new();
         transpiler.textWriterFactory = capturingTextWriterFactory;
-        transpiler.GatherDeclarationsForProject(AdhocCodeHelper.CreateProjectForCode(code));
+        transpiler.GatherDeclarationsForProject(AdhocCodeHelper.CreateProjectForCode(sourceFilesContents));
         transpiler.Generate();
         transpiler.SetFilePaths();
         transpiler.WriteFilesWithoutDirectoryWipeCreate();
-        return capturingTextWriterFactory;
+        return (transpiler, capturingTextWriterFactory);
     }
 }

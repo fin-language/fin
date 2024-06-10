@@ -356,9 +356,12 @@ public class CTranspiler
 
     public void WriteFiles()
     {
-        // delete all files in the destination directory
-        if (Directory.Exists(destinationDirPath))
-            Directory.Delete(destinationDirPath, recursive: true);
+        if (Options.DeleteOutputDirBeforeTranspile)
+        {
+            // delete all files in the destination directory
+            if (Directory.Exists(destinationDirPath))
+                Directory.Delete(destinationDirPath, recursive: true);
+        }
 
         Directory.CreateDirectory(destinationDirPath);
 
@@ -400,5 +403,21 @@ public class CTranspiler
         SetFilePaths();
         ResolveDependencies();
         WriteFiles();
+    }
+
+    public string GetCTypeNameFromFinType<T>() where T : class
+    {
+        string fqn = typeof(T).FullName.ThrowIfNull();
+        return GetCTypeNameFromFinType(fqn);
+    }
+
+    /// <summary>
+    /// FQN stands for fully qualified name. It is the name of the type in C# that includes the namespace.
+    /// </summary>
+    /// <param name="finTypeFqn"></param>
+    /// <returns></returns>
+    public string GetCTypeNameFromFinType(string finTypeFqn)
+    {
+        return fqnToC99Class[finTypeFqn].GetCName();
     }
 }

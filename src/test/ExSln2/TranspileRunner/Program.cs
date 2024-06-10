@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 string thisDir = PathHelpers.GetThisDir();
 
-string slnDir = PathHelpers.GetThisDir() + "/../";
+string slnDir = thisDir + "/../";
 string slnName = "ExSln2.sln";
 string outDir = slnDir + "/c99/gen";
 string projectName = "LedBlinker";

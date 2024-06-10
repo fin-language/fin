@@ -1,5 +1,5 @@
 // from StateSmith project
-namespace finlang.test;
+namespace finlang.Utils;
 
 public class HashList<K, V> where K : notnull
 {
