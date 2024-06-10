@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## [wip]
+## [0.5.4]
 ### Added
 - Add `IMangledNameProvider`
     - Useful for additional user template based code generation
