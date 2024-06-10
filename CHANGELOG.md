@@ -22,6 +22,15 @@ You can easily find changes by searching for `"### Changed"` in the in this mark
 # Releases
 Test/interim releases are not documented here.
 
+---
+
+## [wip]
+### Added
+- Add `IMangledNameProvider`
+    - Useful for additional user template based code generation
+
+---
+
 ## [0.5.3]
 ### Added
 - Add StringUtils indent functions
