@@ -24,6 +24,12 @@ Test/interim releases are not documented here.
 
 ---
 
+## [0.5.6]
+### Changed (minor)
+- Relaxed type requirements on `IMangledNameProvider.FromFinType<T>`
+
+---
+
 ## [0.5.5]
 ### Changed (minor)
 - Moved `MangledNameProvider.FromFinType<T>` into `IMangledNameProvider` interface
