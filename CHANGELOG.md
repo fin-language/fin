@@ -21,6 +21,8 @@ You can easily find changes by searching for `"### Changed"` in the in this mark
 
 # Releases
 Test/interim releases are not documented here.
+### Changed (minor)
+- Moved `MangledNameProvider.FromFinType<T>` into `IMangledNameProvider` interface
 
 ---
 

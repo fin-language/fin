@@ -10,13 +10,6 @@ public class MangledNameProvider : IMangledNameProvider
     }
 
     /// <inheritdoc />
-    public string FromFinType<T>() where T : class
-    {
-        string fqn = typeof(T).FullName.ThrowIfNull();
-        return FromFinType(fqn);
-    }
-
-    /// <inheritdoc />
     public string FromFinType(string finTypeFqn)
     {
         return fqnToC99Class[finTypeFqn].GetCName();

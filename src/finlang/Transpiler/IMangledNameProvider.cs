@@ -7,7 +7,11 @@ public interface IMangledNameProvider
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    string FromFinType<T>() where T : class;
+    public string FromFinType<T>() where T : class
+    {
+        string fqn = typeof(T).FullName.ThrowIfNull();
+        return FromFinType(fqn);
+    }
 
     /// <summary>
     /// Returns the mangled C99 type name for the given Fin type.
