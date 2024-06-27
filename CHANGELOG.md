@@ -22,7 +22,7 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
-## wip
+## [0.5.7]
 ### Changed (minor)
 - skip creating blank .c files for Plain Old Data (POD) type structures
     - https://github.com/fin-language/fin/issues/75
