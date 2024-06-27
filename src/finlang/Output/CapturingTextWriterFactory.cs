@@ -13,6 +13,11 @@ public class CapturingTextWriterFactory : ITextWriterFactory
         return writer;
     }
 
+    public bool HasFileName(string fileName)
+    {
+        return writers.GetKeys().Any(x => Path.GetFileName(x) == fileName);
+    }
+
     public string GetSingleWriterTextByFileName(string fileName)
     {
         var key = writers.GetKeys().Single(x => Path.GetFileName(x) == fileName);

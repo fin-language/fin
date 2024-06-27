@@ -59,7 +59,7 @@ public class C99ClsEnumInterface
         if (IsFFIClass && !hasVTable)
             return false;
 
-        return !IsEnum && !IsEnum;
+        return !IsEnum;
     }
 
     public bool IsEnum

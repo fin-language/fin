@@ -24,9 +24,12 @@ public class OutputFile
         this.writerFactory = writerFactory;
     }
 
-    public void WriteToFile(string destinationDirPath, string newLine)
+    public void WriteToFile(string destinationDirPath, string newLine, bool skipIfMainCodeEmpty = false)
     {
         relativeFilePath.ThrowIfNull();
+
+        if (skipIfMainCodeEmpty && mainCodeSb.Length == 0)
+            return;
 
         foreach (var include in includesSet)
         {

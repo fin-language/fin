@@ -6,7 +6,7 @@ Fin is very experimental right now! I wouldn't recommend using it for anything o
 
 We will occasionally make changes to `fin` that may affect your projects.
 
-You can easily find changes by searching for `"### Changed"` in the in this markdown file.
+You can easily find changes by searching for `"### Change"` in this markdown file.
 
 # Release Template
 
@@ -21,6 +21,11 @@ You can easily find changes by searching for `"### Changed"` in the in this mark
 
 # Releases
 Test/interim releases are not documented here.
+
+## wip
+### Changed (minor)
+- skip creating blank .c files for Plain Old Data (POD) type structures
+    - https://github.com/fin-language/fin/issues/75
 
 ---
 

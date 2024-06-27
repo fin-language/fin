@@ -373,11 +373,7 @@ public class CTranspiler
         foreach (var cls in c99ClassesEnums)
         {
             cls.hFile.WriteToFile(destinationDirPath, NL);
-
-            if (cls.HasCFile())
-            {
-                cls.cFile.WriteToFile(destinationDirPath, NL);
-            }
+            cls.cFile.WriteToFile(destinationDirPath, NL, skipIfMainCodeEmpty: true);
         }
     }
 
