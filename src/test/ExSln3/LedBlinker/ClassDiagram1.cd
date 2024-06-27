@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="app.Main" Collapsed="true">
+    <Position X="11.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgIAAAAAAAAAAgAAA=</HashCode>
+      <FileName>app\Main.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hal.DigInArray" Collapsed="true">
+    <Position X="11.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAQAAAAAAAABAAAACAAAAAAAA=</HashCode>
+      <FileName>hal\DigInArray.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hal.DigInInverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>hal\DigInInverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="hal.DigOutArray" Collapsed="true">
+    <Position X="14.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAARAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>hal\DigOutArray.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hal.DigOutInverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAACAAABAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>hal\DigOutInverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="hal.ShiftRegDigIn" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>hal\ShiftRegDigIn.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="hal.ShiftInRegManager">
+    <Position X="12.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAEgAAAAABgAAAAAAAAgEAAAAQ=</HashCode>
+      <FileName>hal\ShiftRegDigIn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="hal.Spi" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgACAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>hal\Spi.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="hal.SpinDelay" Collapsed="true">
+    <Position X="11.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>hal\SpinDelay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="mcu.avr8.Avr8Gpio" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAAAAAAAACAAQAAAAAAAAAAAEAAAQAAAAAAA=</HashCode>
+      <FileName>mcu\avr8\Avr8Gpio.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="mcu.stm32.Stm32Gpio" BaseTypeListCollapsed="true">
+    <Position X="4" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAAAAAAAACAAQAAAAAAAAAAAEAAAQAAAAAAA=</HashCode>
+      <FileName>mcu\stm32\Stm32Gpio.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="board.IGeneralBoard" Collapsed="true">
+    <Position X="9" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAEAAAAAAAAQACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>board\IGeneralBoard.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="hal.IDigIn" Collapsed="true">
+    <Position X="4" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>hal\IDigIn.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="hal.IDigInOut" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>hal\IDigInOut.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="hal.IDigOut" Collapsed="true">
+    <Position X="7" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>hal\IDigOut.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="hal.IGpio" Collapsed="true">
+    <Position X="4" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>hal\IGpio.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="hal.ISpi" Collapsed="true">
+    <Position X="9" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgACAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>hal\ISpi.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,18 @@
+{
+    "cSpell.words": [
+        "dout",
+        "finlang",
+        "gpio"
+    ],
+    "files.associations": {
+        "hal_gpio.h": "c",
+        "hal_ledarray.h": "c",
+        "hal_led.h": "c",
+        "hal_idiginout.h": "c",
+        "hal_implicitinterfaceconversions.h": "c",
+        "hal_igpio.h": "c",
+        "hal_gpiopinstate.h": "c",
+        "hal_gpio_port_implementation.h": "c",
+        "stm32gpio.h": "c"
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TranspileRunner": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "FINLANG_TRANSPILER_DEBUG_TYPE": "null"
+      }
+    }
+  }
+}
