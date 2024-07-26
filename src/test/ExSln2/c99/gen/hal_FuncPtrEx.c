@@ -12,7 +12,7 @@ void hal_FuncPtrEx_ctor(hal_FuncPtrEx * self)
 {
     memset(self, 0, sizeof(*self));
     hal_FuncIntIntInt_ctor(&self->func, hal_FuncPtrEx_Add);
-    
+    // empty constructor required for finlang right now
 }
 
 int32_t hal_FuncPtrEx_Add(int32_t a, int32_t b)

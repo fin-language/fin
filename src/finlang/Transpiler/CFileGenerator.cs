@@ -735,21 +735,33 @@ public class CFileGenerator : CSharpSyntaxWalker
 
         // Handle an object calling its own method without `this` like `toggle()`
         // We have to check some Fin invocations here as well because of `using static ...`.
-        // Allows `ignore_unused()` isntead of `FinC.ignore_unused()`
+        // Allows `ignore_unused()` instead of `FinC.ignore_unused()`
         if (ies.Expression is IdentifierNameSyntax ins)
         {
-            var methodNameSymbol = (IMethodSymbol)model.GetSymbolInfo(ins).Symbol.ThrowIfNull();
+            ISymbol symbol = model.GetSymbolInfo(ins).Symbol.ThrowIfNull();
 
-            if (methodNameSymbol.IsInFinlangNamespace())
+            if (symbol is IMethodSymbol methodNameSymbol)
             {
-                if (TryFinGlobalInvocations(ies, methodNameSymbol))
-                    return;
+                if (methodNameSymbol.IsInFinlangNamespace())
+                {
+                    if (TryFinGlobalInvocations(ies, methodNameSymbol))
+                        return;
+                }
+
+                if (methodNameSymbol.IsStatic == false && methodNameSymbol.ContainingType.Name == cls.symbol.Name)
+                {
+                    firstArgsSb.Append("self");
+                }
+            }
+            else
+            {
+                // we allow delegates
+                if (model.GetTypeInfo(ins).Type.ThrowIfNull().TypeKind != TypeKind.Delegate)
+                {
+                    throw new Exception("Don't know how to handle this: " + ies.GetLocationAndCodeErrorString());
+                }
             }
 
-            if (methodNameSymbol.IsStatic == false && methodNameSymbol.ContainingType.Name == cls.symbol.Name)
-            {
-                firstArgsSb.Append("self");
-            }
         }
 
         base.VisitInvocationExpression(ies);

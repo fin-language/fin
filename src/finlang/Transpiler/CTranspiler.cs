@@ -11,6 +11,11 @@ namespace finlang.Transpiler;
 public class CTranspiler
 {
     /// <summary>
+    /// Doesn't need to include FQN right now
+    /// </summary>
+    public const string ENV_VAR_TRANSPILER_DEBUG_TYPE = "FINLANG_TRANSPILER_DEBUG_TYPE";
+
+    /// <summary>
     /// https://github.com/fin-language/fin/issues/62
     /// </summary>
     public string? selectClassWhenDebugging = null;
@@ -28,7 +33,7 @@ public class CTranspiler
     public CTranspiler(string destinationDirPath)
     {
         this.destinationDirPath = destinationDirPath;
-        selectClassWhenDebugging ??= Environment.GetEnvironmentVariable("FINLANG_TRANSPILER_DEBUG_TYPE");
+        selectClassWhenDebugging ??= Environment.GetEnvironmentVariable(ENV_VAR_TRANSPILER_DEBUG_TYPE);
     }
 
     public void SetFileNamer(Func<string, string> fileNamer)
