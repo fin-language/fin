@@ -1335,8 +1335,9 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         var temp = Namer.GetCName(symbol.ThrowIfNull());
 
-        if (symbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsReferenceType && !nextTypeIsNotPointer)
+        if (symbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.IsReferenceType && namedTypeSymbol.TypeKind != TypeKind.Delegate && !nextTypeIsNotPointer)
             temp += " *";
+
         return temp;
     }
 

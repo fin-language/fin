@@ -13,6 +13,8 @@
         "hal_igpio.h": "c",
         "hal_gpiopinstate.h": "c",
         "hal_gpio_port_implementation.h": "c",
-        "stm32gpio.h": "c"
+        "stm32gpio.h": "c",
+        "hal_funcintintint_ffi.h": "c",
+        "hal_funcintintint.h": "c"
     }
 }
