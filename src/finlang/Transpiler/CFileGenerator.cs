@@ -755,7 +755,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             }
             else
             {
-                // we allow delegates
+                // throw if not a delegate so that we can figure out what to do
                 if (model.GetTypeInfo(ins).Type.ThrowIfNull().TypeKind != TypeKind.Delegate)
                 {
                     throw new Exception("Don't know how to handle this: " + ies.GetLocationAndCodeErrorString());

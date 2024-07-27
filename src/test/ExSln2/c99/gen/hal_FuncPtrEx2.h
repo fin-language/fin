@@ -7,6 +7,7 @@
 #include <stdint.h>
 
 
+typedef int32_t (*hal_FuncPtrEx2_FuncPtr)(int32_t a, int32_t b);
 
 typedef struct hal_FuncPtrEx2 hal_FuncPtrEx2;
 struct hal_FuncPtrEx2
@@ -18,8 +19,12 @@ struct hal_FuncPtrEx2
 
 void hal_FuncPtrEx2_ctor(hal_FuncPtrEx2 * self);
 
-int32_t hal_FuncPtrEx2_Add(int32_t a, int32_t b);
+int32_t hal_FuncPtrEx2_add(int32_t a, int32_t b);
 
-int32_t hal_FuncPtrEx2_Sub(int32_t a, int32_t b);
+int32_t hal_FuncPtrEx2_sub(int32_t a, int32_t b);
+
+void hal_FuncPtrEx2_use_sub(hal_FuncPtrEx2 * self);
+
+void hal_FuncPtrEx2_set(hal_FuncPtrEx2 * self, hal_FuncPtrEx2_FuncPtr f);
 
 int32_t hal_FuncPtrEx2_Run(hal_FuncPtrEx2 * self, int32_t a, int32_t b);

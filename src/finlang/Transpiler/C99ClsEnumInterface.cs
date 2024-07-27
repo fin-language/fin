@@ -91,6 +91,12 @@ public class C99ClsEnumInterface
         return GetMembers().OfType<IMethodSymbol>();
     }
 
+    // get delegates defined in the class
+    public IEnumerable<INamedTypeSymbol> GetDelegateDefinitions()
+    {
+        return GetMembers().OfType<INamedTypeSymbol>().Where(m => m.TypeKind == TypeKind.Delegate);
+    }
+
     public IEnumerable<ISymbol> GetMembers()
     {
         IEnumerable<ISymbol> members = symbol.GetMembers();

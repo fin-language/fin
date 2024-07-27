@@ -11,18 +11,28 @@
 void hal_FuncPtrEx2_ctor(hal_FuncPtrEx2 * self)
 {
     memset(self, 0, sizeof(*self));
-    self->func = hal_FuncPtrEx2_Add;
+    self->func = hal_FuncPtrEx2_add;
     // empty constructor required for finlang right now
 }
 
-int32_t hal_FuncPtrEx2_Add(int32_t a, int32_t b)
+int32_t hal_FuncPtrEx2_add(int32_t a, int32_t b)
 {
     return a + b;
 }
 
-int32_t hal_FuncPtrEx2_Sub(int32_t a, int32_t b)
+int32_t hal_FuncPtrEx2_sub(int32_t a, int32_t b)
 {
     return a - b;
+}
+
+void hal_FuncPtrEx2_use_sub(hal_FuncPtrEx2 * self)
+{
+    self->func = hal_FuncPtrEx2_sub;
+}
+
+void hal_FuncPtrEx2_set(hal_FuncPtrEx2 * self, hal_FuncPtrEx2_FuncPtr f)
+{
+    self->func = f;
 }
 
 int32_t hal_FuncPtrEx2_Run(hal_FuncPtrEx2 * self, int32_t a, int32_t b)
