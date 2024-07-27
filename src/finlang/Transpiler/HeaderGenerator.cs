@@ -51,6 +51,25 @@ public class HeaderGenerator
             return;
         }
 
+        // output any typedefs for delegates
+        foreach (var delegateType in cls.GetDelegateDefinitions())
+        {
+            // get delegate type
+            IMethodSymbol methodSymbol = delegateType.DelegateInvokeMethod.ThrowIfNull();
+            var returnType = methodSymbol.ReturnType;
+
+            sb.Append($"typedef {Namer.GetCName(returnType)} (*{Namer.GetCName(delegateType)})(");
+
+            var sep = "";
+            foreach (var param in methodSymbol.Parameters)
+            {
+                sb.Append($"{sep}{Namer.GetCName(param.Type)} {param.Name}");
+                sep = ", ";
+            }
+            sb.Append($");{NL}");
+        }
+
+
         ClassDeclarationSyntax clsDeclSyntax = (ClassDeclarationSyntax)cls.syntaxNode;
         visitor.VisitLeadingTrivia(clsDeclSyntax);
         sb.Append($"typedef struct {structName} {structName};{NL}");

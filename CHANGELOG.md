@@ -19,6 +19,14 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 ### Changed (BREAKING-CHANGES, minor, ...)
 ```
 
+## WIP
+### Added
+- Add initial support for delegates
+    - for now, delegates must be defined inside a fin class
+    - https://github.com/fin-language/fin/issues/77
+
+---
+
 # Releases
 Test/interim releases are not documented here.
 

@@ -1,5 +1,6 @@
 using finlang;
 using finlang.Transpiler;
+using hal;
 using System.Text.RegularExpressions;
 
 string thisDir = PathHelpers.GetThisDir();
@@ -8,6 +9,8 @@ string slnDir = thisDir + "/../";
 string slnName = "ExSln2.sln";
 string outDir = slnDir + "/c99/gen";
 string projectName = "LedBlinker";
+
+Environment.SetEnvironmentVariable(CTranspiler.ENV_VAR_TRANSPILER_DEBUG_TYPE, nameof(FuncPtrEx2));
 
 Console.WriteLine("Transpiling " + projectName + " fin/C# project...");
 
