@@ -15,6 +15,8 @@
         "hal_gpio_port_implementation.h": "c",
         "stm32gpio.h": "c",
         "hal_funcintintint_ffi.h": "c",
-        "hal_funcintintint.h": "c"
+        "hal_funcintintint.h": "c",
+        "hal_funcptrex2.h": "c",
+        "issue58_vtablereturnsobjpointerex.h": "c"
     }
 }

@@ -7,6 +7,11 @@ namespace issue58;
 public class Bike : FinObj
 {
     public u8 _speed = 0;
+
+    public Bike()
+    {
+        // needed for now
+    }
 }
 
 // needs a method that returns a pointer to an object to test the issue

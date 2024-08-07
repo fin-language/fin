@@ -3,9 +3,11 @@
 #include "hal_Led.h"
 #include <stdio.h>
 #include "hal_GpioDigInOut.h"
+#include "hal_FuncPtrEx2.h"
 #include <assert.h>
 
 void test_interface_conversions(hal_GpioDigInOut * gpio_dio);
+void test_func_pointers(void);
 
 int main(void)
 {
@@ -31,9 +33,30 @@ int main(void)
 
     test_interface_conversions(&gpio_dio);
 
+    test_func_pointers();
+
     printf("Done!\n");
 
     return 0;
+}
+
+void test_func_pointers(void)
+{
+    printf("\n######## Testing function pointers #######\n");
+
+    hal_FuncPtrEx2 obj;
+    hal_FuncPtrEx2_ctor(&obj);
+
+    int32_t result = hal_FuncPtrEx2_Run(&obj, 10, 5);
+    printf("Should be 15: %d\n", result);
+    assert(result == 15);
+
+    hal_FuncPtrEx2_use_sub(&obj);
+    result = hal_FuncPtrEx2_Run(&obj, 10, 5);
+    printf("Should be 5: %d\n", result);
+    assert(result == 5);
+
+    printf("\n\n");
 }
 
 void test_interface_conversions(hal_GpioDigInOut * gpio_dio)
@@ -74,5 +97,7 @@ void test_interface_conversions(hal_GpioDigInOut * gpio_dio)
     printf("Should toggle twice (IDigInOut)\n");
     hal_IDigInOut_toggle(dio);
     hal_IDigInOut_toggle(dio);
+
+    printf("\n\n");
 }
 
