@@ -4,12 +4,38 @@
 
 
 #include "issue58_VtableReturnsObjPointerEx.h"
+#include <string.h>
 
 
 
+void issue58_VtableReturnsObjPointerEx_ctor(issue58_VtableReturnsObjPointerEx * self)
+{
+    memset(self, 0, sizeof(*self));
+    issue58_Bike_ctor(&self->_bike);
+    self->_bike._speed = 10;
+    self->_bike_ptr = &self->_bike;
+}
+
+// https://github.com/fin-language/fin/issues/79
 issue58_Bike * issue58_VtableReturnsObjPointerEx_get_bike(issue58_VtableReturnsObjPointerEx * self)
 {
-    return self->_bike;
+    return &self->_bike;
+}
+
+// https://github.com/fin-language/fin/issues/79
+uint8_t issue58_VtableReturnsObjPointerEx_get_speed(issue58_VtableReturnsObjPointerEx * self)
+{
+    return self->_bike._speed;
+}
+
+// https://github.com/fin-language/fin/issues/79
+uint8_t issue58_VtableReturnsObjPointerEx_calc_bike_stuff(issue58_VtableReturnsObjPointerEx * self)
+{
+    // pointer to mem object
+    issue58_Bike * b = &self->_bike;
+    b = &self->_bike;
+    b = issue58_VtableReturnsObjPointerEx_get_bike(self);
+    return b->_speed;
 }
 
 // virtual table implementation for IBikeProvider. Note that this is extern'd.

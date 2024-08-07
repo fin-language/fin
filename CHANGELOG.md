@@ -19,16 +19,22 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 ### Changed (BREAKING-CHANGES, minor, ...)
 ```
 
+# Releases
+Test/interim releases are not documented here.
+
+---
+
 ## WIP
+### Fixed
+- mem - return pointer to mem object; get pointer of mem object on assignment
+    - https://github.com/fin-language/fin/issues/79
+
 ### Added
 - Add initial support for delegates
     - for now, delegates must be defined inside a fin class
     - https://github.com/fin-language/fin/issues/77
 
 ---
-
-# Releases
-Test/interim releases are not documented here.
 
 ## [0.5.7]
 ### Changed (minor)

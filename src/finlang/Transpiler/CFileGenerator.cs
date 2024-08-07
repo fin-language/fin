@@ -29,7 +29,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     TranspilerHelper transpilerHelper;
     private bool nextTypeIsNotPointer;
     private bool skipEqualsValueClauseForFieldDeclaration;
-    private string? nextTypeOverride;
+    private string? nextIdentifierOverride;
 
 
     public CFileGenerator(C99ClsEnumInterface cls, StyleSettings styleSettings) : base(SyntaxWalkerDepth.StructuredTrivia)
@@ -339,7 +339,7 @@ public class CFileGenerator : CSharpSyntaxWalker
                 if (les == null || !les.IsKind(SyntaxKind.StringLiteralExpression))
                     throw new TranspilerException("Override attribute must have a string literal argument", overrideType);
 
-                nextTypeOverride = les.Token.ValueText;
+                nextIdentifierOverride = les.Token.ValueText;
 
                 if (StringUtils.EndsWithNewLineOptSpace(sb))
                     StringUtils.EraseTrailingWhitespace(sb);
@@ -1118,7 +1118,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitPredefinedType(PredefinedTypeSyntax node)
     {
-        if (HandleNextTypeOverride(node))
+        if (HandleNextIdentifierOverride(node))
             return;
 
         string result = node.Keyword.Text switch
@@ -1144,14 +1144,14 @@ public class CFileGenerator : CSharpSyntaxWalker
         VisitTrailingTrivia(node);
     }
 
-    private bool HandleNextTypeOverride(SyntaxNode node)
+    private bool HandleNextIdentifierOverride(SyntaxNode node)
     {
-        if (nextTypeOverride == null)
+        if (nextIdentifierOverride == null)
             return false;
 
         VisitLeadingTrivia(node);
-        sb.Append(nextTypeOverride);
-        nextTypeOverride = null;
+        sb.Append(nextIdentifierOverride);
+        nextIdentifierOverride = null;
         VisitTrailingTrivia(node);
 
         return true;
@@ -1164,19 +1164,39 @@ public class CFileGenerator : CSharpSyntaxWalker
         VisitTrailingTrivia(node);
     }
 
+    public override void VisitReturnStatement(ReturnStatementSyntax node)
+    {
+        if (node.Expression != null && model.GetSymbolInfo(node.Expression).Symbol is IFieldSymbol ifs2 && ifs2.HasMemAttr())
+        {
+            var list = new WalkableChildSyntaxList(this, node.ChildNodesAndTokens());
+            list.VisitUpTo(node.Expression);
+            sb.Append('&');
+            list.VisitRest();
+            return;
+        }
+
+        base.VisitReturnStatement(node);
+    }
+
     public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
-        bool done = false;
-
         var leftSymbol = model.GetSymbolInfo(node.Left).Symbol;
         if (leftSymbol is IFieldSymbol ifs && leftSymbol.HasMemAttr())
         {
             HandleMemInit(ifs, node, node.Right);
-            done = true;
+            return;
         }
 
-        if (!done)
-            base.VisitAssignmentExpression(node);
+        if (model.GetSymbolInfo(node.Right).Symbol is IFieldSymbol ifs2 && ifs2.HasMemAttr())
+        {
+            var list = new WalkableChildSyntaxList(this, node.ChildNodesAndTokens());
+            list.VisitUpTo(node.Right);
+            sb.Append('&');
+            list.VisitRest();
+            return;
+        }
+
+        base.VisitAssignmentExpression(node);
     }
 
     public override void VisitEqualsValueClause(EqualsValueClauseSyntax node)
@@ -1185,9 +1205,21 @@ public class CFileGenerator : CSharpSyntaxWalker
             return;
 
         bool done = HandleAssignmentInterfaceConversion(node);
+        if (done)
+            return;
 
-        if (!done)
-            base.VisitEqualsValueClause(node);
+        // https://github.com/fin-language/fin/issues/79
+        // if assigning to a struct pointer from a [mem] field, we need to take the address of the field
+        // ex: `Bike b = _bike;` where `_bike` is a [mem] field
+        if (model.GetSymbolInfo(node.Value).Symbol is IFieldSymbol ifs && ifs.HasMemAttr())
+        {
+            VisitToken(node.EqualsToken);
+            sb.Append('&');
+            Visit(node.Value);
+            return;
+        }
+
+        base.VisitEqualsValueClause(node);
     }
 
     private bool HandleAssignmentInterfaceConversion(EqualsValueClauseSyntax node)
@@ -1275,7 +1307,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
-        if (HandleNextTypeOverride(node))
+        if (HandleNextIdentifierOverride(node))
             return;
 
         var result = node.Identifier.Text;

@@ -5,19 +5,31 @@
 #pragma once
 
 #include "issue58_Bike.h"
+#include <stdint.h>
 #include "issue58_IBikeProvider.h"
 
 
 
+// https://github.com/fin-language/fin/issues/79
 // https://github.com/fin-language/fin/issues/58
 typedef struct issue58_VtableReturnsObjPointerEx issue58_VtableReturnsObjPointerEx;
 struct issue58_VtableReturnsObjPointerEx
 {
     issue58_Bike _bike ;
+    issue58_Bike * _bike_ptr; // C# won't allow `public Bike _bike_ptr = this._bike;`. It must be done in the constructor which is good for us.
 };
 
 
+void issue58_VtableReturnsObjPointerEx_ctor(issue58_VtableReturnsObjPointerEx * self);
+
+// https://github.com/fin-language/fin/issues/79
 issue58_Bike * issue58_VtableReturnsObjPointerEx_get_bike(issue58_VtableReturnsObjPointerEx * self);
+
+// https://github.com/fin-language/fin/issues/79
+uint8_t issue58_VtableReturnsObjPointerEx_get_speed(issue58_VtableReturnsObjPointerEx * self);
+
+// https://github.com/fin-language/fin/issues/79
+uint8_t issue58_VtableReturnsObjPointerEx_calc_bike_stuff(issue58_VtableReturnsObjPointerEx * self);
 
 // vtable is extern to allow const initializations
 extern const issue58_IBikeProvider_vtable issue58_VtableReturnsObjPointerEx__issue58_IBikeProvider_vtable_imp;
