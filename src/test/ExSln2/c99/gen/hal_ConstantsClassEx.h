@@ -19,6 +19,7 @@ struct hal_ConstantsClassEx
     uint32_t my_div ;
 };
 
+void hal_ConstantsClassEx_ctor(hal_ConstantsClassEx * self);
 
 uint32_t hal_ConstantsClassEx_calc_as_instance(hal_ConstantsClassEx * self, uint32_t cycles);
 

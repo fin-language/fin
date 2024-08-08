@@ -4,8 +4,14 @@
 
 
 #include "issue63_InterfaceSelectionForTranspile.h"
+#include <string.h>
 
 
+void issue63_InterfaceSelectionForTranspile_ctor(issue63_InterfaceSelectionForTranspile * self)
+{
+    memset(self, 0, sizeof(*self));
+    self->my_number = 42;
+}
 
 uint8_t issue63_InterfaceSelectionForTranspile_GetNumber(issue63_InterfaceSelectionForTranspile * self)
 {

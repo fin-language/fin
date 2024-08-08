@@ -131,6 +131,12 @@ public class HeaderGenerator
         visitor.SetSb(sb);
         visitor.renderingPrototypes = true;
 
+        if (cls.NeedsDefaultConstructor())
+        {
+            visitor.RenderDefaultConstructorPrototype();
+            sb.Append($";{NL}");
+        }
+
         foreach (var node in cls.syntaxNode.ChildNodes())
         {
             if (node is MethodDeclarationSyntax || node is ConstructorDeclarationSyntax)

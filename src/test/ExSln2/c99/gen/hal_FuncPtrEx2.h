@@ -16,7 +16,6 @@ struct hal_FuncPtrEx2
     hal_FuncPtrEx2_FuncPtr func ;
 };
 
-
 void hal_FuncPtrEx2_ctor(hal_FuncPtrEx2 * self);
 
 int32_t hal_FuncPtrEx2_add(int32_t a, int32_t b);

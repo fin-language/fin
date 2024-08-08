@@ -8,12 +8,6 @@ public class FuncPtrEx2 : FinObj
 
     public FuncPtr func = add;
 
-    public FuncPtrEx2()
-    {
-        // empty constructor required for finlang right now
-        // see https://github.com/fin-language/fin/issues/32
-    }
-
     public static i32 add(i32 a, i32 b)
     {
         return a + b;

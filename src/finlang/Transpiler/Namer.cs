@@ -5,6 +5,8 @@ namespace finlang.Transpiler;
 
 public class Namer
 {
+    public const string ConstructorMethodName = "ctor";
+
     SemanticModel model;
 
     public Namer(SemanticModel model)
@@ -53,7 +55,7 @@ public class Namer
     {
         if (symbol is IMethodSymbol methodSymbol && methodSymbol.MethodKind == MethodKind.Constructor)
         {
-            return "ctor";
+            return ConstructorMethodName;
         }
         return symbol.Name;
     }

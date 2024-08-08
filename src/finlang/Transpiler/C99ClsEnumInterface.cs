@@ -112,6 +112,16 @@ public class C99ClsEnumInterface
         return GetMethods().Where(m => m.MethodKind != MethodKind.Constructor);
     }
 
+    public bool HasUserDeclaredConstructor()
+    {
+        return syntaxNode.ChildNodes().OfType<ConstructorDeclarationSyntax>().Any(); // we don't use descendants because we don't want to include constructors of nested classes
+    }
+
+    public bool NeedsDefaultConstructor()
+    {
+        return !IsFFIClass && !HasUserDeclaredConstructor() && !IsStaticClass;
+    }
+
     public IEnumerable<IFieldSymbol> GetInstanceFields()
     {
         return GetMembers().OfType<IFieldSymbol>().Where(f => !f.IsConst && !f.IsStatic);

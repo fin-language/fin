@@ -33,6 +33,8 @@ Test/interim releases are not documented here.
 - Add initial support for delegates
     - for now, delegates must be defined inside a fin class
     - https://github.com/fin-language/fin/issues/77
+- Add default constructor if missing
+    - https://github.com/fin-language/fin/issues/32
 
 ---
 

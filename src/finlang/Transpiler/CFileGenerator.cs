@@ -3,12 +3,14 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.Extensions.Primitives;
 using System.Text;
 
 namespace finlang.Transpiler;
 
 public class CFileGenerator : CSharpSyntaxWalker
 {
+    public const string SelfVarName = "self";
     C99ClsEnumInterface cls;
     public SemanticModel model;
     StringBuilder sb;
@@ -73,6 +75,12 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
         else
         {
+            // if implicit constructor is needed, generate it
+            if (cls.NeedsDefaultConstructor())
+            {
+                GenerateDefaultConstructor();
+            }
+
             foreach (var member in cls.GetMethods())
             {
                 if (member.IsFFI())
@@ -126,11 +134,36 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (renderingPrototypes)
             return;
 
-        cls.cFile.includesSet.Add("<string.h>"); // for memset
-
         var body = node.Body.ThrowIfNull();
         VisitToken(body.OpenBraceToken);
-        sb.Append($"{Indent}{Indent}memset(self, 0, sizeof(*self));{NL}");
+
+        RenderConstructor();
+
+        body.VisitChildrenNodesWithWalker(this);
+        VisitToken(body.CloseBraceToken);
+    }
+
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/32
+    /// </summary>
+    private void GenerateDefaultConstructor()
+    {
+        RenderDefaultConstructorPrototype();
+        sb.Append($"{NL}{Indent}{{{NL}");
+        RenderConstructor();
+        sb.Append($"{Indent}}}{NL}");
+    }
+
+    public void RenderDefaultConstructorPrototype()
+    {
+        var typeName = Namer.GetCName(cls.symbol);
+        sb.Append($"{Indent}void {typeName}_{Namer.ConstructorMethodName}({typeName} * {SelfVarName})");
+    }
+
+    private void RenderConstructor()
+    {
+        cls.cFile.includesSet.Add("<string.h>"); // for memset
+        sb.Append($"{Indent}{Indent}memset({SelfVarName}, 0, sizeof(*{SelfVarName}));{NL}");
 
         // loop over fields with initializers and set them
         foreach (var field in cls.GetInstanceFields())
@@ -155,14 +188,11 @@ public class CFileGenerator : CSharpSyntaxWalker
             }
             else
             {
-                sb.Append($"{Indent}{Indent}self->");
+                sb.Append($"{Indent}{Indent}{SelfVarName}->");
                 Visit(variableDeclartor);
                 sb.Append($";{NL}");
             }
         }
-
-        body.VisitChildrenNodesWithWalker(this);
-        VisitToken(body.CloseBraceToken);
     }
 
     private void HandleMemInit(IFieldSymbol field, SyntaxNode nodeForError, ExpressionSyntax value)
@@ -176,9 +206,9 @@ public class CFileGenerator : CSharpSyntaxWalker
             throw new TranspilerException("mem.init() must be used with a new expression", nodeForError);
 
         // pass field to constructor
-        firstArgsSb.Append($"&self->{field.Name}");
+        firstArgsSb.Append($"&{SelfVarName}->{field.Name}");
         sb.Append($"{Indent}{Indent}");
-        sb.Append($"{namer.GetCName(oces.Type)}_ctor");
+        sb.Append($"{namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
         Visit(oces.ArgumentList);
     }
 
@@ -380,7 +410,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         {
             list.VisitUpTo(node.OpenParenToken, including: true);
             selfTypeName ??= Namer.GetCName(symbol.ContainingType);
-            sb.Append(selfTypeName + " * self");
+            sb.Append(selfTypeName + $" * {SelfVarName}");
             if (node.Parameters.Count > 0)
             {
                 sb.Append(", ");
@@ -444,7 +474,7 @@ public class CFileGenerator : CSharpSyntaxWalker
             return false;
 
         VisitLeadingTrivia(node);
-        firstArgsSb.Append("self");
+        firstArgsSb.Append(SelfVarName);
         Visit(node.Name);
         return true;
     }
@@ -750,7 +780,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
                 if (methodNameSymbol.IsStatic == false && methodNameSymbol.ContainingType.Name == cls.symbol.Name)
                 {
-                    firstArgsSb.Append("self");
+                    firstArgsSb.Append(SelfVarName);
                 }
             }
             else
@@ -1160,7 +1190,7 @@ public class CFileGenerator : CSharpSyntaxWalker
     public override void VisitThisExpression(ThisExpressionSyntax node)
     {
         VisitLeadingTrivia(node);
-        sb.Append("self");
+        sb.Append(SelfVarName);
         VisitTrailingTrivia(node);
     }
 
@@ -1341,7 +1371,7 @@ public class CFileGenerator : CSharpSyntaxWalker
                             if (fs.ContainingSymbol.Name == cls.symbol.Name)
                             {
                                 // if the field is in the same class, it's a member access.
-                                result = "self->" + Namer.GetCName(fs);
+                                result = $"{SelfVarName}->" + Namer.GetCName(fs);
                                 break;
                             }
                         }
@@ -1474,7 +1504,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
         //else if (token.IsKind(SyntaxKind.ThisKeyword))
         //{
-        //    sb.Append("self");
+        //    sb.Append("{SelfVarName}");
         //}
         else
         {

@@ -16,5 +16,4 @@ struct issue58_Bike
     uint8_t _speed ;
 };
 
-
 void issue58_Bike_ctor(issue58_Bike * self);

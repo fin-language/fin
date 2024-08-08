@@ -2,15 +2,12 @@
 // finlang generated this file for C# `hal.LedArray.LedInfo` type.
 // Source file: `LedBlinker/hal/LedArray.cs` (relative to C# solution).
 
-#pragma once
 
-#include <stdint.h>
+#include "hal_LedArray_LedInfo.h"
+#include <string.h>
 
 
-    typedef struct hal_LedArray_LedInfo hal_LedArray_LedInfo;
-struct hal_LedArray_LedInfo
+void hal_LedArray_LedInfo_ctor(hal_LedArray_LedInfo * self)
 {
-        uint8_t something;
-};
-
-void hal_LedArray_LedInfo_ctor(hal_LedArray_LedInfo * self);
+    memset(self, 0, sizeof(*self));
+}

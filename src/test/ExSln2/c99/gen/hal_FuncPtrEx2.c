@@ -7,12 +7,10 @@
 #include <string.h>
 
 
-
 void hal_FuncPtrEx2_ctor(hal_FuncPtrEx2 * self)
 {
     memset(self, 0, sizeof(*self));
     self->func = hal_FuncPtrEx2_add;
-    // empty constructor required for finlang right now
 }
 
 int32_t hal_FuncPtrEx2_add(int32_t a, int32_t b)
