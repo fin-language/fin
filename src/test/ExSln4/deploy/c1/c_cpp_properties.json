@@ -1,0 +1,14 @@
+{
+    "env": {
+      "myIncludePath": ["${workspaceFolder}/c99/gen"]
+    //   "myDefines": ["DEBUG", "MY_FEATURE=1"]
+    },
+    "configurations": [
+        {
+          "name": "Linux",
+          "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c99"
+        }
+    ],
+    "version": 4
+}  
