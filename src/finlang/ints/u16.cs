@@ -1182,6 +1182,47 @@ public struct u16: IHasU16
 
 
     //################################################################
+    // wrapping numeric methods (unsigned only for now)
+    //################################################################
+    
+    
+    /// <summary>
+    /// Equivalent to `(uint16_t)(this value + number value)`.
+    /// No error possible.
+    /// </summary>
+    public u16 wrap_add(u16 number)
+    {
+        var result = unchecked((ushort)(this._csReadValue + number._csReadValue));
+        return result;
+    }
+
+
+    
+    /// <summary>
+    /// Equivalent to `(uint16_t)(this value - number value)`.
+    /// No error possible.
+    /// </summary>
+    public u16 wrap_sub(u16 number)
+    {
+        var result = unchecked((ushort)(this._csReadValue - number._csReadValue));
+        return result;
+    }
+
+
+    
+    /// <summary>
+    /// Equivalent to `(uint16_t)(this value * number value)`.
+    /// No error possible.
+    /// </summary>
+    public u16 wrap_mul(u16 number)
+    {
+        var result = unchecked((ushort)(this._csReadValue * number._csReadValue));
+        return result;
+    }
+
+
+            
+    //################################################################
     // shift methods (unsigned only for now)
     //################################################################
     

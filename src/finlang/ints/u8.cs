@@ -1186,6 +1186,47 @@ public struct u8: IHasU8
 
 
     //################################################################
+    // wrapping numeric methods (unsigned only for now)
+    //################################################################
+    
+    
+    /// <summary>
+    /// Equivalent to `(uint8_t)(this value + number value)`.
+    /// No error possible.
+    /// </summary>
+    public u8 wrap_add(u8 number)
+    {
+        var result = unchecked((byte)(this._csReadValue + number._csReadValue));
+        return result;
+    }
+
+
+    
+    /// <summary>
+    /// Equivalent to `(uint8_t)(this value - number value)`.
+    /// No error possible.
+    /// </summary>
+    public u8 wrap_sub(u8 number)
+    {
+        var result = unchecked((byte)(this._csReadValue - number._csReadValue));
+        return result;
+    }
+
+
+    
+    /// <summary>
+    /// Equivalent to `(uint8_t)(this value * number value)`.
+    /// No error possible.
+    /// </summary>
+    public u8 wrap_mul(u8 number)
+    {
+        var result = unchecked((byte)(this._csReadValue * number._csReadValue));
+        return result;
+    }
+
+
+            
+    //################################################################
     // shift methods (unsigned only for now)
     //################################################################
     

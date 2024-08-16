@@ -279,6 +279,40 @@ public class GenSimNumerics
     }
 
     /// <summary>
+    /// Stuff like `wrap_add()`
+    /// https://github.com/fin-language/fin/issues/30
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="methodName">A string like 'wrap_add'</param>
+    /// <param name="op">A string like '+' or '*'</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    private static string GenWrappingNumericMethod(TypeInfo type, string methodName, string op)
+    {
+        if (type.is_signed)
+        {
+            return "";
+        }
+
+        string fin_name = type.fin_name;
+        var template = $$"""
+
+            /// <summary>
+            /// Equivalent to `({{type.GetC99BackingTypeName()}})(this value {{op}} number value)`.
+            /// No error possible.
+            /// </summary>
+            public {{fin_name}} {{methodName}}({{fin_name}} number)
+            {
+                var result = unchecked(({{type.GetBackingTypeName()}})(this._csReadValue {{op}} number._csReadValue));
+                return result;
+            }
+
+        """;
+
+        return template;
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="classFinType"></param>
@@ -553,7 +587,12 @@ public class GenSimNumerics
                 {{GenOverflowingOperators(typeInfo, "+") + "\n"}}
                 {{GenOverflowingOperators(typeInfo, "-") + "\n"}}
                 {{GenOverflowingOperators(typeInfo, "*") + "\n"}}
-            
+
+                {{header("wrapping numeric methods (unsigned only for now)")}}
+                {{GenWrappingNumericMethod(typeInfo, "wrap_add", "+") + "\n"}}
+                {{GenWrappingNumericMethod(typeInfo, "wrap_sub", "-") + "\n"}}
+                {{GenWrappingNumericMethod(typeInfo, "wrap_mul", "*") + "\n"}}
+                        
                 {{header("shift methods (unsigned only for now)")}}
                 {{GenWrapShiftMethods(typeInfo) + "\n"}}
                 

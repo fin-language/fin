@@ -963,4 +963,120 @@ public class IntegerTest
         b = a.u8_;
         b.Should().Be(10);
     }
+
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/30
+    /// </summary>
+    [Fact]
+    public void WrappingNumericMethods_u8_30()
+    {
+        u8 my_u8;
+        my_u8 = 254;
+        my_u8.wrap_add(0).Should().Be(254);
+        my_u8.wrap_add(1).Should().Be(255);
+        my_u8.wrap_add(2).Should().Be(0);
+        my_u8.wrap_add(3).Should().Be(1);
+        my_u8.wrap_add(255).Should().Be(253);
+
+        my_u8 = 1;
+        my_u8.wrap_sub(0).Should().Be(1);
+        my_u8.wrap_sub(1).Should().Be(0);
+        my_u8.wrap_sub(2).Should().Be(255);
+        my_u8.wrap_sub(3).Should().Be(254);
+        my_u8.wrap_sub(255).Should().Be(2);
+
+        my_u8 = 16;
+        my_u8.wrap_mul(0).Should().Be(0);
+        my_u8.wrap_mul(1).Should().Be(16);
+        my_u8.wrap_mul(15).Should().Be(240);
+        my_u8.wrap_mul(16).Should().Be(0);
+        my_u8 = 0b1111_0101;
+        my_u8.wrap_mul(16).Should().Be(0b0101_0000);
+    }
+
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/30
+    /// </summary>
+    [Fact]
+    public void WrappingNumericMethods_u16_30()
+    {
+        u16 my_u16;
+        my_u16 = 65534;
+        my_u16.wrap_add(0).Should().Be(65534);
+        my_u16.wrap_add(1).Should().Be(65535);
+        my_u16.wrap_add(2).Should().Be(0);
+        my_u16.wrap_add(3).Should().Be(1);
+        my_u16.wrap_add(65535).Should().Be(65533);
+
+        my_u16 = 1;
+        my_u16.wrap_sub(0).Should().Be(1);
+        my_u16.wrap_sub(1).Should().Be(0);
+        my_u16.wrap_sub(2).Should().Be(65535);
+        my_u16.wrap_sub(3).Should().Be(65534);
+        my_u16.wrap_sub(65535).Should().Be(2);
+
+        my_u16 = 256;
+        my_u16.wrap_mul(0).Should().Be(0);
+        my_u16.wrap_mul(1).Should().Be(256);
+        my_u16.wrap_mul(15).Should().Be(3840);
+        my_u16.wrap_mul(255).Should().Be(256*255);
+        my_u16.wrap_mul(256).Should().Be(0);
+    }
+
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/30
+    /// </summary>
+    [Fact]
+    public void WrappingNumericMethods_u32_30()
+    {
+        u32 my_u32;
+        my_u32 = uint.MaxValue - 1; //4294967294;
+        my_u32.wrap_add(0).Should().Be(4294967294);
+        my_u32.wrap_add(1).Should().Be(4294967295);
+        my_u32.wrap_add(2).Should().Be(0);
+        my_u32.wrap_add(3).Should().Be(1);
+        my_u32.wrap_add(4294967295).Should().Be(4294967293);
+
+        my_u32 = 1;
+        my_u32.wrap_sub(0).Should().Be(1);
+        my_u32.wrap_sub(1).Should().Be(0);
+        my_u32.wrap_sub(2).Should().Be(4294967295);
+        my_u32.wrap_sub(3).Should().Be(4294967294);
+        my_u32.wrap_sub(4294967295).Should().Be(2);
+
+        my_u32 = ushort.MaxValue + 1; // 2^16
+        my_u32.wrap_mul(0).Should().Be(0);
+        my_u32.wrap_mul(1).Should().Be(ushort.MaxValue + 1);
+        my_u32.wrap_mul(15).Should().Be((ushort.MaxValue + 1) * 15);
+        my_u32.wrap_mul(ushort.MaxValue + 1).Should().Be(0);
+    }
+
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/30
+    /// </summary>
+    [Fact]
+    public void WrappingNumericMethods_u64_30()
+    {
+        u64 my_u64;
+        my_u64 = ulong.MaxValue - 1;
+
+        my_u64.wrap_add(0).Should().Be(ulong.MaxValue - 1);
+        my_u64.wrap_add(1).Should().Be(ulong.MaxValue);
+        my_u64.wrap_add(2).Should().Be(0);
+        my_u64.wrap_add(3).Should().Be(1);
+        my_u64.wrap_add(ulong.MaxValue).Should().Be(ulong.MaxValue - 2);
+
+        my_u64 = 1;
+        my_u64.wrap_sub(0).Should().Be(1);
+        my_u64.wrap_sub(1).Should().Be(0);
+        my_u64.wrap_sub(2).Should().Be(ulong.MaxValue);
+        my_u64.wrap_sub(3).Should().Be(ulong.MaxValue - 1);
+        my_u64.wrap_sub(ulong.MaxValue).Should().Be(2);
+
+        my_u64 = uint.MaxValue + 1L;
+        my_u64.wrap_mul(0).Should().Be(0);
+        my_u64.wrap_mul(1).Should().Be(uint.MaxValue + 1L);
+        my_u64.wrap_mul(15).Should().Be((uint.MaxValue + 1L) * 15);
+        my_u64.wrap_mul(uint.MaxValue + 1L).Should().Be(0);
+    }
 }

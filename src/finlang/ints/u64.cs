@@ -628,6 +628,47 @@ public struct u64: IHasU64
 
 
     //################################################################
+    // wrapping numeric methods (unsigned only for now)
+    //################################################################
+    
+    
+    /// <summary>
+    /// Equivalent to `(uint64_t)(this value + number value)`.
+    /// No error possible.
+    /// </summary>
+    public u64 wrap_add(u64 number)
+    {
+        var result = unchecked((ulong)(this._csReadValue + number._csReadValue));
+        return result;
+    }
+
+
+    
+    /// <summary>
+    /// Equivalent to `(uint64_t)(this value - number value)`.
+    /// No error possible.
+    /// </summary>
+    public u64 wrap_sub(u64 number)
+    {
+        var result = unchecked((ulong)(this._csReadValue - number._csReadValue));
+        return result;
+    }
+
+
+    
+    /// <summary>
+    /// Equivalent to `(uint64_t)(this value * number value)`.
+    /// No error possible.
+    /// </summary>
+    public u64 wrap_mul(u64 number)
+    {
+        var result = unchecked((ulong)(this._csReadValue * number._csReadValue));
+        return result;
+    }
+
+
+            
+    //################################################################
     // shift methods (unsigned only for now)
     //################################################################
     

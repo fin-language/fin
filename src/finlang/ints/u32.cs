@@ -1180,6 +1180,47 @@ public struct u32: IHasU32
 
 
     //################################################################
+    // wrapping numeric methods (unsigned only for now)
+    //################################################################
+    
+    
+    /// <summary>
+    /// Equivalent to `(uint32_t)(this value + number value)`.
+    /// No error possible.
+    /// </summary>
+    public u32 wrap_add(u32 number)
+    {
+        var result = unchecked((uint)(this._csReadValue + number._csReadValue));
+        return result;
+    }
+
+
+    
+    /// <summary>
+    /// Equivalent to `(uint32_t)(this value - number value)`.
+    /// No error possible.
+    /// </summary>
+    public u32 wrap_sub(u32 number)
+    {
+        var result = unchecked((uint)(this._csReadValue - number._csReadValue));
+        return result;
+    }
+
+
+    
+    /// <summary>
+    /// Equivalent to `(uint32_t)(this value * number value)`.
+    /// No error possible.
+    /// </summary>
+    public u32 wrap_mul(u32 number)
+    {
+        var result = unchecked((uint)(this._csReadValue * number._csReadValue));
+        return result;
+    }
+
+
+            
+    //################################################################
     // shift methods (unsigned only for now)
     //################################################################
     
