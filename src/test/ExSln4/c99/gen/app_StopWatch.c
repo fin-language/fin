@@ -16,8 +16,7 @@ void app_StopWatch_ctor(app_StopWatch * self, app_ITimeProvider * time_provider)
 
 uint32_t app_StopWatch_get_elapsed_ms(app_StopWatch * self)
 {
-    /* fin: math.unsafe_mode() */
-    return (uint32_t)app_ITimeProvider_get_time(self->_time_provider) - (uint32_t)self->_started_at_ms;  // todo - need wrapping subtraction
+    return (uint32_t)(app_ITimeProvider_get_time(self->_time_provider) - (self->_started_at_ms));
 }
 
 void app_StopWatch_reset(app_StopWatch * self)

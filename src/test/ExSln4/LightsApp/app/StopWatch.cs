@@ -13,8 +13,7 @@ public class StopWatch : FinObj
 
     public u32 get_elapsed_ms()
     {
-        math.unsafe_mode();
-        return (uint)_time_provider.get_time() - (uint)_started_at_ms;  // todo - need wrapping subtraction
+        return _time_provider.get_time().wrap_sub(_started_at_ms);
     }
 
     public void reset()

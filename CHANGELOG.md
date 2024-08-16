@@ -35,7 +35,9 @@ Test/interim releases are not documented here.
     - https://github.com/fin-language/fin/issues/77
 - Add default constructor if missing
     - https://github.com/fin-language/fin/issues/32
-
+- Add wrapping add/sub/mul methods
+    - https://github.com/fin-language/fin/issues/30
+        
 ---
 
 ## [0.5.7]

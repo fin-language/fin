@@ -11,6 +11,19 @@ public class TranspilerTestHelper
         return cCode;
     }
 
+    public static CapturingTextWriterFactory TranspileFinToCFilesWithDummyMain(params string[] sourceFilesContents)
+    {
+        sourceFilesContents[0] = sourceFilesContents[0] + """
+            // to satisfy the compiler
+            class DummyMain
+            {
+                static void Main(string[] args){}
+            }
+            """;
+        (_, CapturingTextWriterFactory writer) = Transpile(sourceFilesContents);
+        return writer;
+    }
+
     public static CapturingTextWriterFactory TranspileFinToCFiles(params string[] sourceFilesContents)
     {
         (_, CapturingTextWriterFactory writer) = Transpile(sourceFilesContents);

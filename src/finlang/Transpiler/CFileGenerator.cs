@@ -917,6 +917,44 @@ public class CFileGenerator : CSharpSyntaxWalker
                 done = true;
             }
         }
+        // https://github.com/fin-language/fin/issues/30
+        // handle `my_u8.wrap_add(1*5)` --> `(uint8_t)(my_u8 + (1*5))`
+        else if (methodNameSymbol.Name == nameof(u8.wrap_add))
+        {
+            done = TryHandleWrapAddSubMul(ies, maes, methodNameSymbol, "+");
+        }
+        // https://github.com/fin-language/fin/issues/30
+        // handle `my_u8.wrap_sub(1*5)` --> `(uint8_t)(my_u8 - (1*5))`
+        else if (methodNameSymbol.Name == nameof(u8.wrap_sub))
+        {
+            done = TryHandleWrapAddSubMul(ies, maes, methodNameSymbol, "-");
+        }
+        // https://github.com/fin-language/fin/issues/30
+        // handle `my_u8.wrap_mul(1*5)` --> `(uint8_t)(my_u8 * (1*5))`
+        else if (methodNameSymbol.Name == nameof(u8.wrap_mul))
+        {
+            done = TryHandleWrapAddSubMul(ies, maes, methodNameSymbol, "*");
+        }
+
+        return done;
+    }
+
+    private bool TryHandleWrapAddSubMul(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol, string op)
+    {
+        bool done = false;
+
+        var finType = methodNameSymbol.ContainingType.Name;
+        string? ctype = FinNumberTypeToCType(finType);
+        if (ctype != null)
+        {
+            VisitLeadingTrivia(ies);
+            sb.Append($"({ctype})(");
+            Visit(maes.Expression);
+            sb.Append($" {op} (");
+            Visit(ies.ArgumentList.Arguments.Single());
+            sb.Append("))");
+            done = true;
+        }
 
         return done;
     }
