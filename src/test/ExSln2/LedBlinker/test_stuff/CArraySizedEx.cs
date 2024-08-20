@@ -2,6 +2,7 @@
 
 namespace hal;
 
+
 public class CArraySizedEx : FinObj
 {
     // Some comment

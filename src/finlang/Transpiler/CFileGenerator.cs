@@ -1066,6 +1066,12 @@ public class CFileGenerator : CSharpSyntaxWalker
             if (TryFinNumberSizeConstant(node, memberNameSymbol))
                 return true;
 
+            if (TryFinNumberMinConstant(node, memberNameSymbol))
+                return true;
+
+            if (TryFinNumberMaxConstant(node, memberNameSymbol))
+                return true;
+
             if (TryFinWideningOrWrapping(node, memberNameSymbol))
                 return true;
 
@@ -1109,16 +1115,16 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         return finType switch
         {
-            "u8" => "uint8_t",
-            "u16" => "uint16_t",
-            "u32" => "uint32_t",
-            "u64" => "uint64_t",
-            "i8" => "int8_t",
-            "i16" => "int16_t",
-            "i32" => "int32_t",
-            "i64" => "int64_t",
-            "f32" => "float",
-            "f64" => "double",
+            nameof(u8) => "uint8_t",
+            nameof(u16) => "uint16_t",
+            nameof(u32) => "uint32_t",
+            nameof(u64) => "uint64_t",
+            nameof(i8) => "int8_t",
+            nameof(i16) => "int16_t",
+            nameof(i32) => "int32_t",
+            nameof(i64) => "int64_t",
+            //"f32" => "float",
+            //"f64" => "double",
             _ => null
         };
     }
@@ -1139,6 +1145,73 @@ public class CFileGenerator : CSharpSyntaxWalker
         VisitTrailingTrivia(node);
 
         return true;
+    }
+
+    /// <summary>
+    /// We already know that memberNameSymbol belongs to a Finlang integer type
+    /// https://github.com/fin-language/fin/issues/80
+    /// u8.MAX --> UINT8_MAX
+    /// </summary>
+    public bool TryFinNumberMaxConstant(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
+    {
+        if (memberNameSymbol.Name == nameof(u8.MAX))
+        {
+            VisitLeadingTrivia(node);
+
+            var constantName = (memberNameSymbol.ContainingType.Name).ThrowIfNull() switch
+            {
+                nameof(u8) => "UINT8_MAX",
+                nameof(u16) => "UINT16_MAX",
+                nameof(u32) => "UINT32_MAX",
+                nameof(u64) => "UINT64_MAX",
+                nameof(i8) => "INT8_MAX",
+                nameof(i16) => "INT16_MAX",
+                nameof(i32) => "INT32_MAX",
+                nameof(i64) => "INT64_MAX",
+                _ => throw new NotImplementedException()
+            };
+
+            sb.Append(constantName);
+            VisitTrailingTrivia(node);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// We already know that memberNameSymbol belongs to a Finlang integer type
+    /// https://github.com/fin-language/fin/issues/80
+    /// u8.MIN --> 0
+    /// i8.MIN --> INT8_MIN
+    /// </summary>
+    public bool TryFinNumberMinConstant(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)
+    {
+        if (memberNameSymbol.Name == nameof(u8.MIN))
+        {
+            VisitLeadingTrivia(node);
+
+            var constantName = (memberNameSymbol.ContainingType.Name).ThrowIfNull() switch
+            {
+                nameof(u8) => "0",
+                nameof(u16) => "0",
+                nameof(u32) => "0",
+                nameof(u64) => "0",
+                nameof(i8) => "INT8_MIN",
+                nameof(i16) => "INT16_MIN",
+                nameof(i32) => "INT32_MIN",
+                nameof(i64) => "INT64_MIN",
+                _ => throw new NotImplementedException()
+            };
+
+            sb.Append(constantName);
+            VisitTrailingTrivia(node);
+
+            return true;
+        }
+
+        return false;
     }
 
     public bool TryFinWideningOrWrapping(MemberAccessExpressionSyntax node, ISymbol memberNameSymbol)

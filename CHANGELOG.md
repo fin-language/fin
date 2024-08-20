@@ -37,7 +37,9 @@ Test/interim releases are not documented here.
     - https://github.com/fin-language/fin/issues/32
 - Add wrapping add/sub/mul methods
     - https://github.com/fin-language/fin/issues/30
-        
+- Add support for fin numerics MIN, MAX constants like u8.MAX
+    - https://github.com/fin-language/fin/issues/80
+
 ---
 
 ## [0.5.7]
