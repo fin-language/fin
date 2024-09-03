@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ---
 
-## WIP
+## [0.6.0]
 ### Fixed
 - mem - return pointer to mem object; get pointer of mem object on assignment
     - https://github.com/fin-language/fin/issues/79
