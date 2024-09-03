@@ -29,7 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LedBlinker\LedBlinker.csproj" />
       <ProjectReference Include="..\..\..\finlang\finlang.csproj" />
       <ProjectReference Include="..\LightsApp\LightsApp.csproj" />
     </ItemGroup>
