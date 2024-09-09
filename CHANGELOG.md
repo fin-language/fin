@@ -22,7 +22,7 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
-## [0.6.?]
+## [0.6.1]
 ### Added
 - Add `c_array_mem<T>`
     - https://github.com/fin-language/fin/issues/87
