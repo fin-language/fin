@@ -22,6 +22,11 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
+##
+### Changed (minor)
+- math mode defaults to `unsafe mode` for now.
+
+
 ---
 
 ## [0.6.0]

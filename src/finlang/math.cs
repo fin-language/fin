@@ -68,7 +68,8 @@ public class math
     [simonly]
     internal static void DefaultSettings()
     {
-        mode = Mode.NotSpecified;
+        mode = Mode.Unsafe;
+        //mode = Mode.NotSpecified;
         userProvidedErr = null;
     }
 
