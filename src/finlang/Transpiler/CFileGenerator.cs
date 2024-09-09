@@ -821,8 +821,36 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (TryFinCArrayInvocations(ies, maes, methodNameSymbol))
             return true;
 
+        if (TryFinCArrayMemInvocations(ies, maes, methodNameSymbol))
+            return true;
+
         return done;
     }
+
+    private bool TryFinCArrayMemInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol)
+    {
+        bool done = false;
+
+        if (methodNameSymbol.ContainingType.IsCArrayMem() == false)
+        {
+            return done;
+        }
+
+        // handle `my_c_array_mem.unsafe_get(index)` --> `(&my_c_array[index])`
+        if (methodNameSymbol.Name == nameof(c_array_mem<FinObj>.unsafe_get))
+        {
+            // we take address of so that we return a pointer to the object
+            sb.Append("(&");
+            Visit(maes.Expression); // `my_c_array_mem`
+            sb.Append('[');
+            Visit(ies.ArgumentList.Arguments.Single());
+            sb.Append("])");
+            done = true;
+        }
+
+        return done;
+    }
+
 
     private bool TryFinCArrayInvocations(InvocationExpressionSyntax ies, MemberAccessExpressionSyntax maes, IMethodSymbol methodNameSymbol)
     {
@@ -837,16 +865,16 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (methodNameSymbol.Name == nameof(c_array<u8>.unsafe_get))
         {
             Visit(maes.Expression); // `my_c_array`
-            sb.Append("[");
+            sb.Append('[');
             Visit(ies.ArgumentList.Arguments.Single());
-            sb.Append("]");
+            sb.Append(']');
             done = true;
         }
         // handle `my_c_array.unsafe_set(index, value)` --> `my_c_array[index] = value`
         else if (methodNameSymbol.Name == nameof(c_array<u8>.unsafe_set))
         {
             Visit(maes.Expression); // `my_c_array`
-            sb.Append("[");
+            sb.Append('[');
             Visit(ies.ArgumentList.Arguments[0]);
             sb.Append("] = ");
             Visit(ies.ArgumentList.Arguments[1]);
@@ -1396,7 +1424,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitGenericName(GenericNameSyntax node)
     {
-        if (node.Identifier.Text == "c_array")
+        if (node.Identifier.Text == nameof(c_array<u8>))
         {
             VisitLeadingTrivia(node);
             TypeSyntax arrayTypeSyntax = node.TypeArgumentList.Arguments.Single();
@@ -1404,6 +1432,15 @@ public class CFileGenerator : CSharpSyntaxWalker
             sb.Append(" * ");
             return;
         }
+
+        if (node.Identifier.Text == nameof(c_array_mem<FinObj>))
+        {
+            VisitLeadingTrivia(node);
+            TypeSyntax arrayTypeSyntax = node.TypeArgumentList.Arguments.Single();
+            base.Visit(arrayTypeSyntax);
+            return;
+        }
+
         base.VisitGenericName(node);
     }
 

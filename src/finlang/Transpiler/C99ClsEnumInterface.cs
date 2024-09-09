@@ -145,7 +145,7 @@ public class C99ClsEnumInterface
     internal void AddHeaderFqnDependency(ITypeSymbol type)
     {
         // if the type is a c_array, we need to add the dependency of the type it contains
-        if (type is INamedTypeSymbol namedType && namedType.IsCArray())
+        if (type is INamedTypeSymbol namedType && (namedType.IsCArray() || namedType.IsCArrayMem()))
         {
             type = namedType.TypeArguments.Single();
         }

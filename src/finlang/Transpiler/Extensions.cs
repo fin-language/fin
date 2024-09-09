@@ -234,6 +234,11 @@ public static class Extensions
         return typeSymbol.Name == nameof(c_array<u8>);
     }
 
+    public static bool IsCArrayMem(this ITypeSymbol typeSymbol)
+    {
+        return typeSymbol.Name == nameof(c_array_mem<FinObj>);
+    }
+
     // get syntax node parent
     public static SyntaxNode ParentNotNull(this SyntaxNode node)
     {
