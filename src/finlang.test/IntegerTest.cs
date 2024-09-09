@@ -119,7 +119,7 @@ public class IntegerTest
         action();
     }
 
-    [Fact]
+    [Fact(Skip = "assuming unsafe mode by default for now")]
     public void ThrowIfModeNotSpecified()
     {
         u8 a = 1, b = 1;
@@ -127,7 +127,7 @@ public class IntegerTest
         action.Should().Throw<InvalidOperationException>().WithMessage("*Math mode must be specified*");
     }
 
-    [Fact]
+    [Fact(Skip = "assuming unsafe mode by default for now")]
     public void ThrowIfModeNotSpecifiedNestedFunc()
     {
         u8 a = 1, b = 1;

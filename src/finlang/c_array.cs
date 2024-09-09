@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace finlang;
+﻿namespace finlang;
 
 /// <summary>
 /// A naked C style array. It transpiles to a C pointer to type T.<br/>
+/// Ex: `<![CDATA[c_array<u8> data]]>` transpiles to `u8 * data` in C.<br/>
+/// Ex: `<![CDATA[c_array<Bike> bikes]]>` transpiles to `Bike * * bikes` in C.<br/>
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class c_array<T> : FinObj
@@ -18,7 +18,7 @@ public class c_array<T> : FinObj
 
     /// <summary>
     /// Allows having a c like array that functions more like a pointer.<br/>
-    /// TODO: don't allow `c_array_mem` to have an offset as that makes no sense.<br/>
+    /// TODO: don't allow `<![CDATA[c_array<mem<T>>]]>` to have an offset as that makes no sense.<br/>
     /// Only accessible for test/simulation C# code. Not accessible to fin application code. Doesn't exist in generated C code.
     /// </summary>
     [simonly]
