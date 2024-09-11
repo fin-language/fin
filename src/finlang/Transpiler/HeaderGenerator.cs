@@ -51,7 +51,8 @@ public class HeaderGenerator
             return;
         }
 
-        // output any typedefs for delegates
+        // output any typedefs for delegates (aka function pointers) in the class
+        // https://github.com/fin-language/fin/issues/77
         foreach (var delegateType in cls.GetDelegateDefinitions())
         {
             // get delegate type

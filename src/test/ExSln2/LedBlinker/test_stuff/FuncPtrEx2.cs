@@ -1,6 +1,6 @@
 ﻿using finlang;
 
-namespace hal;
+namespace ts; // test stuff
 
 public class FuncPtrEx2 : FinObj
 {

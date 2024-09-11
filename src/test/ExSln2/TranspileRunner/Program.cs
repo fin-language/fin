@@ -1,8 +1,6 @@
-using finlang;
 using finlang.Transpiler;
-using hal;
-using issue58;
 using System.Text.RegularExpressions;
+using ts;
 
 string thisDir = PathHelpers.GetThisDir();
 
