@@ -283,13 +283,22 @@ public class CTranspiler
 
     private void ResolveFileDependencies(DependencyResolver resolver, OutputFile cOrHFile)
     {
+        HashSet<string> resolvedDependencies = new();
+
+        // resolve dependencies and add to set to remove duplicates
         foreach (var fqnDependency in cOrHFile.fqnDependencies)
         {
             string? includePath = resolver.ResolveDependency(fqnDependency);
             if (includePath != null)
             {
-                cOrHFile.includesSb.Append($"#include {includePath}{NL}");
+                resolvedDependencies.Add(includePath);
             }
+        }
+
+        // add resolved dependencies to the file
+        foreach (var includePath in resolvedDependencies)
+        {
+            cOrHFile.includesSb.Append($"#include {includePath}{NL}");
         }
     }
 

@@ -6,7 +6,6 @@
 
 #include <stdint.h>
 #include "ts_FuncPtrEx2_Bike.h"
-#include <stdint.h>
 
 
 typedef int32_t (*ts_FuncPtrEx2_FuncPtr)(int32_t a, int32_t b);

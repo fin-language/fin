@@ -5,7 +5,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <stdint.h>
 #include "hal_Led.h"
 #include "hal_LedArray_LedArrayStatus.h"
 

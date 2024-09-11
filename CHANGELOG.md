@@ -28,6 +28,10 @@ Test/interim releases are not documented here.
 - fix delegate and pointer type parameters
     - https://github.com/fin-language/fin/issues/86
 
+### Added
+- add duplicate include statements after fin type is resolved to c header file
+    - we had files with multiple `#include <stdint.h>` statements because fin types like u8, u16, etc. all resolved to `#include <stdint.h>`.
+
 ---
 
 ## [0.6.1]

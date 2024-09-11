@@ -5,8 +5,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <stdint.h>
-#include <stdint.h>
 
 
 // Class has no fields. No struct generated.

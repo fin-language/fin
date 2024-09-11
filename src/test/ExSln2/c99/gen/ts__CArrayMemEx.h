@@ -6,7 +6,6 @@
 
 #include "ts__CArrayMemEx_Bike.h"
 #include <stdint.h>
-#include <stdint.h>
 
 
 
