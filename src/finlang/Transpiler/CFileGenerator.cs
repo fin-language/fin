@@ -44,6 +44,21 @@ public class CFileGenerator : CSharpSyntaxWalker
         this.styleSettings = styleSettings;
     }
 
+    public void CaptureToSb(StringBuilder sb, Action action)
+    {
+        var oldSb = this.sb;
+        this.sb = sb;
+        action();
+        this.sb = oldSb;
+    }
+
+    public string CaptureToString(Action action)
+    {
+        var sb = new StringBuilder();
+        CaptureToSb(sb, action);
+        return sb.ToString();
+    }
+
     public void SetSb(StringBuilder sb)
     {
         this.sb = sb;
@@ -210,6 +225,28 @@ public class CFileGenerator : CSharpSyntaxWalker
         sb.Append($"{namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
         Visit(oces.ArgumentList);
     }
+
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/77
+    /// </summary>
+    /// <param name="node"></param>
+    public override void VisitDelegateDeclaration(DelegateDeclarationSyntax node)
+    {
+        if (!renderingPrototypes)
+        {
+            return;
+        }
+
+        var delegateSymbol = model.GetDeclaredSymbol(node).ThrowIfNull();
+
+        VisitLeadingTrivia(node);
+        sb.Append("typedef ");
+        Visit(node.ReturnType);
+        sb.Append($"(*{Namer.GetCName(delegateSymbol)})");
+        Visit(node.ParameterList);
+        VisitToken(node.SemicolonToken);
+    }
+
 
     // From: c_array_sized<u8> data = mem.init(new c_array_sized<u8>(5));
     // To: u8 data[5];
@@ -1508,6 +1545,11 @@ public class CFileGenerator : CSharpSyntaxWalker
             default:
                 {
                     SymbolInfo symbol = model.GetSymbolInfo(node);
+
+                    if (symbol.Symbol is INamedTypeSymbol ins)
+                    {
+                        outputFile.AddFqnDependency(ins);
+                    }
 
                     // support field accesses
                     if (symbol.Symbol is IFieldSymbol fs)

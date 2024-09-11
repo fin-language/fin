@@ -5,14 +5,30 @@
 #pragma once
 
 #include <stdint.h>
+#include "ts_FuncPtrEx2_Bike.h"
+#include <stdint.h>
 
 
 typedef int32_t (*ts_FuncPtrEx2_FuncPtr)(int32_t a, int32_t b);
 
+/// <summary>
+/// This is a delegate that takes a Bike and returns an i32.
+/// </summary>
+typedef int32_t (*ts_FuncPtrEx2_BikeSpeedFunc)(ts_FuncPtrEx2_Bike * bike);
+
+/// <summary>
+/// This is a delegate that takes a Bike and returns a Bike. Maybe for method chaining, but really just for testing :)
+/// </summary>
+typedef ts_FuncPtrEx2_Bike * (*ts_FuncPtrEx2_BikeBikeFunc)(ts_FuncPtrEx2_Bike * bike);
+
+/// <summary>
+/// This is a delegate that takes a Bike and returns a Bike. Maybe for method chaining, but really just for testing :)
+/// </summary>
+typedef ts_FuncPtrEx2_Bike * * (*ts_FuncPtrEx2_BikeArrayFunc)(ts_FuncPtrEx2_Bike * * bikes, uint8_t length);
+
 typedef struct ts_FuncPtrEx2 ts_FuncPtrEx2;
 struct ts_FuncPtrEx2
 {
-
     ts_FuncPtrEx2_FuncPtr func ;
 };
 

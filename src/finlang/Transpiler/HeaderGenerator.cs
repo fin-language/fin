@@ -53,23 +53,17 @@ public class HeaderGenerator
 
         // output any typedefs for delegates (aka function pointers) in the class
         // https://github.com/fin-language/fin/issues/77
-        foreach (var delegateType in cls.GetDelegateDefinitions())
+        // capture code so that we can later de-indent it
+        var delegatesCode = visitor.CaptureToString(() =>
         {
-            // get delegate type
-            IMethodSymbol methodSymbol = delegateType.DelegateInvokeMethod.ThrowIfNull();
-            var returnType = methodSymbol.ReturnType;
-
-            sb.Append($"typedef {Namer.GetCName(returnType)} (*{Namer.GetCName(delegateType)})(");
-
-            var sep = "";
-            foreach (var param in methodSymbol.Parameters)
+            foreach (var delegateType in cls.GetDelegateDefinitions())
             {
-                sb.Append($"{sep}{Namer.GetCName(param.Type)} {param.Name}");
-                sep = ", ";
+                DelegateDeclarationSyntax decl = (DelegateDeclarationSyntax)delegateType.DeclaringSyntaxReferences.Single().GetSyntax().ThrowIfNull();
+                visitor.Visit(decl);
             }
-            sb.Append($");{NL}");
-        }
+        });
 
+        sb.Append(StringUtils.DeIndent(delegatesCode));
 
         ClassDeclarationSyntax clsDeclSyntax = (ClassDeclarationSyntax)cls.syntaxNode;
         visitor.VisitLeadingTrivia(clsDeclSyntax);
