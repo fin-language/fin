@@ -22,7 +22,7 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
-## [0.???]
+## [0.6.3]
 ### Changed (major)
 - not a breaking change, but now generated constructors return a pointer to the object instead of void.
     - this allows more natural translations of C# to C
