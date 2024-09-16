@@ -34,6 +34,7 @@ Test/interim releases are not documented here.
 ### Fixed
 - fix multiple variable declarations in a single line
     - used to not work for reference types
+    - https://github.com/fin-language/fin/issues/24
 
 ---
 
