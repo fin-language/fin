@@ -303,6 +303,26 @@ public partial class StringUtils
         return false;
     }
 
+    /// <summary>
+    /// Split something like `Bike * * ` into `Bike` and `* *`
+    /// </summary>
+    /// <param name="cFullType"></param>
+    /// <param name="varTypeName"></param>
+    /// <param name="varTypeQualifiers"></param>
+    public static void ParseCTypeInfo(string cFullType, out string varTypeName, out string varTypeQualifiers)
+    {
+        varTypeName = cFullType;
+        varTypeQualifiers = "";
+        var re = CTypeInfoRegex();
+
+        Match match = re.Match(cFullType);
+        if (match.Success)
+        {
+            varTypeName = match.Groups["typeName"].Value;
+            varTypeQualifiers = match.Groups["otherQualifiers"].Value;
+        }
+    }
+
     [GeneratedRegex("^\\s*?([ \\t]+)\\S")]
     private static partial Regex DeIndentRegex();
     [GeneratedRegex("^[ \\t]+", RegexOptions.Multiline)]
@@ -327,4 +347,10 @@ public partial class StringUtils
     private static partial Regex LineStartRegex();
     [GeneratedRegex("(\\r\\n|\\r|\\n)")]
     private static partial Regex CapturedNewLineSeqRegex();
+    [GeneratedRegex(@"
+            \s*  # optional whitespace
+            (?<typeName> \w+ \s* )
+            (?<otherQualifiers> [\S] .* )?  # optional other qualifiers
+        ", RegexOptions.IgnorePatternWhitespace)]
+    private static partial Regex CTypeInfoRegex();
 }

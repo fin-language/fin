@@ -3,7 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace finlang.Transpiler;
 
@@ -574,7 +576,38 @@ public class CFileGenerator : CSharpSyntaxWalker
         var typeSymbol = model.GetTypeInfo(node.Type).Type.ThrowIfNull();
         outputFile.AddFqnDependency(typeSymbol);
 
-        base.VisitVariableDeclaration(node);
+        string varTypeName, varTypeQualifiers;
+        CaptureCTypeInfo(node, out varTypeName, out varTypeQualifiers);
+
+        VisitLeadingTrivia(node);
+
+        sb.Append(varTypeName);
+
+        var list = new WalkableChildSyntaxList(this, node.ChildNodesAndTokens());
+        list.SkipUpTo(node.Type, including: true);
+
+        while (list.HasNext())
+        {
+            // if it is a node, we need to output the type qualifiers (like '*' or '* *')
+            if (list.Peek().IsNode)
+            {
+                sb.Append(varTypeQualifiers);
+            }
+
+            list.VisitNext();
+        }
+    }
+
+    private void CaptureCTypeInfo(VariableDeclarationSyntax node, out string varTypeName, out string varTypeQualifiers)
+    {
+        // This may be something like `Bike * * ` or just `Bike`
+        var cFullType = CaptureToString(() =>
+        {
+            skipNextLeadingTrivia = true;
+            Visit(node.Type);
+        });
+
+        StringUtils.ParseCTypeInfo(cFullType, out varTypeName, out varTypeQualifiers);
     }
 
     public override void VisitArgumentList(ArgumentListSyntax node)

@@ -17,8 +17,8 @@ struct hal_MultipleVarsEx
     /// </summary>
     uint8_t a, b, c;
 
-    hal_Led * led_a, led_b, led_c;
-    uint8_t *  arr_a, arr_b, arr_c;
+    hal_Led * led_a, * led_b, * led_c;
+    uint8_t *  arr_a, *  arr_b, *  arr_c;
 };
 
 hal_MultipleVarsEx * hal_MultipleVarsEx_ctor(hal_MultipleVarsEx * self);

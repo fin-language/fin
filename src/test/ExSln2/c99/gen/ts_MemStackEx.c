@@ -41,6 +41,6 @@ int32_t ts_MemStackEx_calc_stuff(int32_t b1_speed, int32_t b2_speed)
 
 int32_t ts_MemStackEx_calc_stuff_mult_vars_on_same_line(int32_t b1_speed, int32_t b2_speed)
 {
-   ts_MemStackEx_Bike2 * b1 = ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, b1_speed), b2 = ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, b2_speed);
+   ts_MemStackEx_Bike2 * b1 = ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, b1_speed), * b2 = ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, b2_speed);
    return b1->speed + b2->speed;
 }
