@@ -11,8 +11,13 @@
     typedef struct ts_MemStackEx_Bike2 ts_MemStackEx_Bike2;
 struct ts_MemStackEx_Bike2
 {
+        uint8_t id;
         int32_t speed;
 };
 
 
 ts_MemStackEx_Bike2 * ts_MemStackEx_Bike2_ctor(ts_MemStackEx_Bike2 * self, int32_t speed);
+
+ts_MemStackEx_Bike2 * ts_MemStackEx_Bike2_set_speed(ts_MemStackEx_Bike2 * self, int32_t speed);
+
+ts_MemStackEx_Bike2 * ts_MemStackEx_Bike2_set_id(ts_MemStackEx_Bike2 * self, uint8_t id);

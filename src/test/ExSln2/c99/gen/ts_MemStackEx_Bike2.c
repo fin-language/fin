@@ -14,3 +14,15 @@ memset(self, 0, sizeof(*self));
     self->speed = speed;
 return self;
 }
+
+ts_MemStackEx_Bike2 * ts_MemStackEx_Bike2_set_speed(ts_MemStackEx_Bike2 * self, int32_t speed)
+{
+    self->speed = speed;
+    return self;
+}
+
+ts_MemStackEx_Bike2 * ts_MemStackEx_Bike2_set_id(ts_MemStackEx_Bike2 * self, uint8_t id)
+{
+    self->id = id;
+    return self;
+}

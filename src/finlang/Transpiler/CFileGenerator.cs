@@ -1054,26 +1054,15 @@ public class CFileGenerator : CSharpSyntaxWalker
         // https://github.com/fin-language/fin/issues/39
         if (methodNameSymbol.Name == nameof(mem.stack))
         {
-            // look upwards for variable declaration
-            var varDeclarator = ies.GetFirstAncestorOfType<VariableDeclaratorSyntax>("mem.stack() can only be used to declare local variables");
-            var variableDeclaration = varDeclarator.GetFirstAncestorOfType<VariableDeclarationSyntax>("mem.stack() can only be used to declare local variables");
-
-            if (variableDeclaration.Variables.Count != 1)
-                throw new TranspilerException("mem.stack() can only be used to declare one variable for now", varDeclarator);
-
-            var varType = variableDeclaration.Type;
-
             var stackArg = ies.ArgumentList.Arguments.Single();
 
             // the value must be a new expression
             if (stackArg.Expression is not ObjectCreationExpressionSyntax oces)
-                throw new TranspilerException("mem.stack() must be used with a new expression", varDeclarator);
+                throw new TranspilerException("mem.stack() must be used with a new expression", ies);
 
-            //sb.Append($"; ");
-
-            // pass variable to constructor
-            firstArgsSb.Append($"&({namer.GetCName(varType)}){{0}}");
-            sb.Append($"{namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
+            string typeCName = namer.GetCName(oces.Type);
+            firstArgsSb.Append($"&({typeCName}){{0}}");
+            sb.Append($"{typeCName}_{Namer.ConstructorMethodName}");
             Visit(oces.ArgumentList);
 
             VisitTrailingTrivia(ies);
@@ -1083,6 +1072,12 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         return done;
+    }
+
+    public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
+    {
+        //base.VisitObjectCreationExpression(node);
+        throw new TranspilerException("We currently only support mem.stack() and mem.init() for creating objects", node);
     }
 
     private bool TryFinCInvocations(InvocationExpressionSyntax ies, IMethodSymbol methodNameSymbol)

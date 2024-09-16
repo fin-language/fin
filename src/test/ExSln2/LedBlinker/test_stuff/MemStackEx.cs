@@ -17,12 +17,40 @@ public class MemStackEx : FinObj
 
     public class Bike2 : FinObj
     {
+        public u8 id;
         public i32 speed;
 
         public Bike2(i32 speed)
         {
             this.speed = speed;
         }
+
+        public Bike2 set_speed(i32 speed)
+        {
+            this.speed = speed;
+            return this;
+        }
+
+        public Bike2 set_id(u8 id)
+        {
+            this.id = id;
+            return this;
+        }
+    }
+
+    public static i32 chain_stack_creation()
+    {
+        return mem.stack(new Bike2(5)).set_speed(10).set_id(1).speed;
+    }
+
+    public static i32 calc_stuff_compound_literals_func_args()
+    {
+        return calc_stuff(mem.stack(new Bike2(5)), mem.stack(new Bike2(1)));
+    }
+
+    private static i32 calc_stuff(Bike2 b1, Bike2 b2)
+    {
+        return b1.speed + b2.speed;
     }
 
     public static i32 calc_stuff(i32 b1_speed, i32 b2_speed)
@@ -36,13 +64,9 @@ public class MemStackEx : FinObj
         return b1.speed + b2.speed;
     }
 
-    // Not supported yet
-    //public static i32 calc_stuff_2(i32 b1_speed, i32 b2_speed)
-    //{
-    //    Bike2 b1 = mem.stack(new Bike2(b1_speed)), b2 = mem.stack(new Bike2(b2_speed));
-    //            finlang.Transpiler.TranspilerException: mem.stack() can only be used to declare one variable for now
-    //            File: MemStackEx.cs, Line: 35, Char: 15
-    //            Code: `b1 = mem.stack(new Bike2(b1_speed))`
-    //    return b1.speed + b2.speed;
-    //}
+    public static i32 calc_stuff_mult_vars_on_same_line(i32 b1_speed, i32 b2_speed)
+    {
+       Bike2 b1 = mem.stack(new Bike2(b1_speed)), b2 = mem.stack(new Bike2(b2_speed));
+       return b1.speed + b2.speed;
+    }
 }
