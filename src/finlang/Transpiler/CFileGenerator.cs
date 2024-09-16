@@ -211,9 +211,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     private void HandleMemInit(IFieldSymbol field, SyntaxNode nodeForError, ExpressionSyntax value)
     {
-        var arg = value.GetMemInitCallArgument();
-        if (arg is null)
-            throw new TranspilerException("mem.init() must be used to initialize a field with the mem attribute", nodeForError);
+        var arg = value.GetMemInitCallArgument() ?? throw new TranspilerException("mem.init() must be used to initialize a field with the mem attribute", nodeForError);
 
         // the value must be a new expression
         if (arg.Expression is not ObjectCreationExpressionSyntax oces)
@@ -860,6 +858,9 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (TryFinCArrayMemInvocations(ies, maes, methodNameSymbol))
             return true;
 
+        if (TryFinMemInvocations(ies, methodNameSymbol))
+            return true;
+
         return done;
     }
 
@@ -1044,6 +1045,38 @@ public class CFileGenerator : CSharpSyntaxWalker
             sb.Append($"sizeof({cType} /*{arg}*/)");
             VisitTrailingTrivia(ies);
             done = true;
+        }
+
+        // allow stack allocations
+        // https://github.com/fin-language/fin/issues/39
+        if (methodNameSymbol.Name == nameof(mem.stack))
+        {
+            // look upwards for variable declaration
+            var varDeclarator = ies.GetFirstAncestorOfType<VariableDeclaratorSyntax>("mem.stack() can only be used to declare local variables");
+            var variableDeclaration = varDeclarator.GetFirstAncestorOfType<VariableDeclarationSyntax>("mem.stack() can only be used to declare local variables");
+
+            if (variableDeclaration.Variables.Count != 1)
+                throw new TranspilerException("mem.stack() can only be used to declare one variable for now", varDeclarator);
+
+            var varType = variableDeclaration.Type;
+
+            var stackArg = ies.ArgumentList.Arguments.Single();
+
+            // the value must be a new expression
+            if (stackArg.Expression is not ObjectCreationExpressionSyntax oces)
+                throw new TranspilerException("mem.stack() must be used with a new expression", varDeclarator);
+
+            sb.Append($"&({namer.GetCName(varType)}){{0}}; ");
+
+            // pass variable to constructor
+            firstArgsSb.Append(varDeclarator.Identifier);
+            sb.Append($"{namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
+            Visit(oces.ArgumentList);
+
+            VisitTrailingTrivia(ies);
+
+            done = true;
+            return done;
         }
 
         return done;

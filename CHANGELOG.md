@@ -22,6 +22,12 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
+## [0.???]
+### Added
+- add support for allocating objects on the stack
+    - https://github.com/fin-language/fin/issues/39
+
+---
 
 ## [0.6.2]
 ### Fixed

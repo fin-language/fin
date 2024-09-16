@@ -4,10 +4,13 @@
 #include <stdio.h>
 #include "hal_GpioDigInOut.h"
 #include "ts_FuncPtrEx2.h"
+#include "ts_MemStackEx.h"
 #include <assert.h>
 
-void test_interface_conversions(hal_GpioDigInOut * gpio_dio);
-void test_func_pointers(void);
+static void test_interface_conversions(hal_GpioDigInOut * gpio_dio);
+static void test_func_pointers(void);
+static void test_mem_stack_ex(void);
+
 
 int main(void)
 {
@@ -32,15 +35,15 @@ int main(void)
     }
 
     test_interface_conversions(&gpio_dio);
-
     test_func_pointers();
+    test_mem_stack_ex();
 
     printf("Done!\n");
 
     return 0;
 }
 
-void test_func_pointers(void)
+static void test_func_pointers(void)
 {
     printf("\n######## Testing function pointers #######\n");
 
@@ -59,7 +62,7 @@ void test_func_pointers(void)
     printf("\n\n");
 }
 
-void test_interface_conversions(hal_GpioDigInOut * gpio_dio)
+static void test_interface_conversions(hal_GpioDigInOut * gpio_dio)
 {
     printf("\n######## Testing interface conversions #######\n");
     hal_IDigInOut * dio = &MCL_hal_GpioDigInOut__to__hal_IDigInOut(gpio_dio);
@@ -101,3 +104,13 @@ void test_interface_conversions(hal_GpioDigInOut * gpio_dio)
     printf("\n\n");
 }
 
+static void test_mem_stack_ex(void)
+{
+    printf("\n######## Testing mem stack ex #######\n");
+
+    int32_t result = ts_MemStackEx_calc_stuff(10, 20);
+    printf("Should be 30: %d\n", result);
+    assert(result == 30);
+
+    printf("\n\n");
+}

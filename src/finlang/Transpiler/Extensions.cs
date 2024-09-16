@@ -245,6 +245,16 @@ public static class Extensions
         return node.Parent.ThrowIfNull();
     }
 
+    public static T GetFirstAncestorOfType<T>(this SyntaxNode ies, string exceptionText)
+    {
+        T t = ies.Ancestors().OfType<T>().First();
+
+        if (t == null)
+            throw new TranspilerException(exceptionText, ies);
+
+        return t;
+    }
+
     public static bool BelongsToFinlangInteger(this ISymbol symbol)
     {
         if (!symbol.IsInFinlangNamespace())
