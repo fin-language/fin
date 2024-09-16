@@ -112,5 +112,17 @@ static void test_mem_stack_ex(void)
     printf("Should be 30: %d\n", result);
     assert(result == 30);
 
+    result = ts_MemStackEx_chain_stack_creation();
+    printf("Should be 10: %d\n", result);
+    assert(result == 10);
+
+    result = ts_MemStackEx_calc_stuff_compound_literals_func_args();
+    printf("Should be 6: %d\n", result);
+    assert(result == 6);
+
+    result = ts_MemStackEx_calc_stuff_mult_vars_on_same_line(-10, 4);
+    printf("Should be -6: %d\n", result);
+    assert(result == -6);
+
     printf("\n\n");
 }
