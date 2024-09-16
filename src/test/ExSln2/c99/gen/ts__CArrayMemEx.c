@@ -8,10 +8,11 @@
 
 
 
-void ts__CArrayMemEx_ctor(ts__CArrayMemEx * self, ts__CArrayMemEx_Bike *my_bikes)
+ts__CArrayMemEx * ts__CArrayMemEx_ctor(ts__CArrayMemEx * self, ts__CArrayMemEx_Bike *my_bikes)
 {
     memset(self, 0, sizeof(*self));
     self->my_bikes = my_bikes;
+    return self;
 }
 
 uint16_t ts__CArrayMemEx_sum_c_array(ts__CArrayMemEx_Bike *bikes, uint8_t length)

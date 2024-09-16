@@ -20,7 +20,7 @@ struct ex_mem_QuadPoint
 };
 
 
-void ex_mem_QuadPoint_ctor(ex_mem_QuadPoint * self);
+ex_mem_QuadPoint * ex_mem_QuadPoint_ctor(ex_mem_QuadPoint * self);
 
 uint8_t ex_mem_QuadPoint_get_start_x(ex_mem_QuadPoint * self);
 

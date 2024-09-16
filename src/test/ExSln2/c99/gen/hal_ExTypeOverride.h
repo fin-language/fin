@@ -29,7 +29,7 @@ struct hal_ExTypeOverride
 };
 
 
-void hal_ExTypeOverride_ctor(hal_ExTypeOverride * self, GPIO_TypeDef * port, uint16_t pin);
+hal_ExTypeOverride * hal_ExTypeOverride_ctor(hal_ExTypeOverride * self, GPIO_TypeDef * port, uint16_t pin);
 
 void hal_ExTypeOverride_set_pin(hal_ExTypeOverride * self, uint16_t pin);
 

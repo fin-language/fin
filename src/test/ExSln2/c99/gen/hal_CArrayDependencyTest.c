@@ -8,8 +8,9 @@
 
 
 
-void hal_CArrayDependencyTest_ctor(hal_CArrayDependencyTest * self, uint8_t * data)
+hal_CArrayDependencyTest * hal_CArrayDependencyTest_ctor(hal_CArrayDependencyTest * self, uint8_t * data)
 {
     memset(self, 0, sizeof(*self));
     self->_data = data;
+    return self;
 }

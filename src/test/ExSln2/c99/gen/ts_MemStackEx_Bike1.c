@@ -7,7 +7,8 @@
 #include <string.h>
 
 
-void ts_MemStackEx_Bike1_ctor(ts_MemStackEx_Bike1 * self)
+ts_MemStackEx_Bike1 * ts_MemStackEx_Bike1_ctor(ts_MemStackEx_Bike1 * self)
 {
     memset(self, 0, sizeof(*self));
+    return self;
 }

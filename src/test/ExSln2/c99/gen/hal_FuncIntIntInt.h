@@ -10,7 +10,7 @@
 
 // Class is a Foreign Function Interface. No struct generated.
 
-void hal_FuncIntIntInt_ctor(hal_FuncIntIntInt * self, hal_FuncIntIntInt_FuncPtr func_ptr);
+hal_FuncIntIntInt * hal_FuncIntIntInt_ctor(hal_FuncIntIntInt * self, hal_FuncIntIntInt_FuncPtr func_ptr);
 
 void hal_FuncIntIntInt_set(hal_FuncIntIntInt * self, hal_FuncIntIntInt_FuncPtr func_ptr);
 

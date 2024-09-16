@@ -15,7 +15,7 @@ struct issue63_InterfaceSelectionForTranspile
     uint8_t my_number ;
 };
 
-void issue63_InterfaceSelectionForTranspile_ctor(issue63_InterfaceSelectionForTranspile * self);
+issue63_InterfaceSelectionForTranspile * issue63_InterfaceSelectionForTranspile_ctor(issue63_InterfaceSelectionForTranspile * self);
 
 uint8_t issue63_InterfaceSelectionForTranspile_GetNumber(issue63_InterfaceSelectionForTranspile * self);
 

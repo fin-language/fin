@@ -141,7 +141,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         var symbol = model.GetDeclaredSymbol(node).ThrowIfNull();
 
         VisitLeadingTrivia(node);
-        sb.Append($"void {Namer.GetCName(symbol)}");
+        sb.Append($"{Namer.GetCName(symbol.ContainingSymbol)} * {Namer.GetCName(symbol)}");
 
         VisitParameterList(node.ParameterList);
 
@@ -154,6 +154,8 @@ public class CFileGenerator : CSharpSyntaxWalker
         RenderConstructor();
 
         body.VisitChildrenNodesWithWalker(this);
+        sb.Append($"{Indent}{Indent}return {SelfVarName};{NL}");
+
         VisitToken(body.CloseBraceToken);
     }
 
@@ -165,13 +167,14 @@ public class CFileGenerator : CSharpSyntaxWalker
         RenderDefaultConstructorPrototype();
         sb.Append($"{NL}{Indent}{{{NL}");
         RenderConstructor();
+        sb.Append($"{Indent}{Indent}return {SelfVarName};{NL}");
         sb.Append($"{Indent}}}{NL}");
     }
 
     public void RenderDefaultConstructorPrototype()
     {
         var typeName = Namer.GetCName(cls.symbol);
-        sb.Append($"{Indent}void {typeName}_{Namer.ConstructorMethodName}({typeName} * {SelfVarName})");
+        sb.Append($"{Indent}{typeName} * {typeName}_{Namer.ConstructorMethodName}({typeName} * {SelfVarName})");
     }
 
     private void RenderConstructor()
@@ -220,7 +223,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         // pass field to constructor
         firstArgsSb.Append($"&{SelfVarName}->{field.Name}");
         sb.Append($"{Indent}{Indent}");
-        sb.Append($"{namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
+        sb.Append($"(void){namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
         Visit(oces.ArgumentList);
     }
 
@@ -1066,10 +1069,10 @@ public class CFileGenerator : CSharpSyntaxWalker
             if (stackArg.Expression is not ObjectCreationExpressionSyntax oces)
                 throw new TranspilerException("mem.stack() must be used with a new expression", varDeclarator);
 
-            sb.Append($"&({namer.GetCName(varType)}){{0}}; ");
+            //sb.Append($"; ");
 
             // pass variable to constructor
-            firstArgsSb.Append(varDeclarator.Identifier);
+            firstArgsSb.Append($"&({namer.GetCName(varType)}){{0}}");
             sb.Append($"{namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
             Visit(oces.ArgumentList);
 

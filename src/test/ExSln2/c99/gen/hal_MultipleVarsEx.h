@@ -21,4 +21,4 @@ struct hal_MultipleVarsEx
     uint8_t *  arr_a, arr_b, arr_c;
 };
 
-void hal_MultipleVarsEx_ctor(hal_MultipleVarsEx * self);
+hal_MultipleVarsEx * hal_MultipleVarsEx_ctor(hal_MultipleVarsEx * self);

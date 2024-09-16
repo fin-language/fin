@@ -7,8 +7,9 @@
 #include <string.h>
 
 
-void ts__CArrayMemEx_Bike_ctor(ts__CArrayMemEx_Bike * self)
+ts__CArrayMemEx_Bike * ts__CArrayMemEx_Bike_ctor(ts__CArrayMemEx_Bike * self)
 {
     memset(self, 0, sizeof(*self));
     self->speed = 0;
+    return self;
 }

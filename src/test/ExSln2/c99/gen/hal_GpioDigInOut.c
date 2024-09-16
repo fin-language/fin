@@ -9,10 +9,11 @@
 
 
 
-void hal_GpioDigInOut_ctor(hal_GpioDigInOut * self, hal_Gpio * gpio)
+hal_GpioDigInOut * hal_GpioDigInOut_ctor(hal_GpioDigInOut * self, hal_Gpio * gpio)
 {
     memset(self, 0, sizeof(*self));
     self->_gpio = gpio;
+    return self;
 }
 
 bool hal_GpioDigInOut_read_state(hal_GpioDigInOut * self)

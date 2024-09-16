@@ -13,4 +13,4 @@ struct ts_MemStackEx_Bike1
         int32_t speed;
 };
 
-void ts_MemStackEx_Bike1_ctor(ts_MemStackEx_Bike1 * self);
+ts_MemStackEx_Bike1 * ts_MemStackEx_Bike1_ctor(ts_MemStackEx_Bike1 * self);

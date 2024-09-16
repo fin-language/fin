@@ -20,7 +20,7 @@ struct issue58_VtableReturnsObjPointerEx
 };
 
 
-void issue58_VtableReturnsObjPointerEx_ctor(issue58_VtableReturnsObjPointerEx * self);
+issue58_VtableReturnsObjPointerEx * issue58_VtableReturnsObjPointerEx_ctor(issue58_VtableReturnsObjPointerEx * self);
 
 // https://github.com/fin-language/fin/issues/79
 issue58_Bike * issue58_VtableReturnsObjPointerEx_get_bike(issue58_VtableReturnsObjPointerEx * self);

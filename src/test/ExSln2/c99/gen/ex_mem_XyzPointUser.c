@@ -8,8 +8,9 @@
 
 
 
-void ex_mem_XyzPointUser_ctor(ex_mem_XyzPointUser * self)
+ex_mem_XyzPointUser * ex_mem_XyzPointUser_ctor(ex_mem_XyzPointUser * self)
 {
     memset(self, 0, sizeof(*self));
-    ex_mem_XyzPointI8_ctor(&self->p1, 55);
+    (void)ex_mem_XyzPointI8_ctor(&self->p1, 55);
+    return self;
 }

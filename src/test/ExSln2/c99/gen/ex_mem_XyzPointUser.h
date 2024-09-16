@@ -18,4 +18,4 @@ struct ex_mem_XyzPointUser
 };
 
 
-void ex_mem_XyzPointUser_ctor(ex_mem_XyzPointUser * self);
+ex_mem_XyzPointUser * ex_mem_XyzPointUser_ctor(ex_mem_XyzPointUser * self);

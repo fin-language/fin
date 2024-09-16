@@ -17,7 +17,7 @@ struct hal_GpioDigInOut
 };
 
 
-void hal_GpioDigInOut_ctor(hal_GpioDigInOut * self, hal_Gpio * gpio);
+hal_GpioDigInOut * hal_GpioDigInOut_ctor(hal_GpioDigInOut * self, hal_Gpio * gpio);
 
 bool hal_GpioDigInOut_read_state(hal_GpioDigInOut * self);
 

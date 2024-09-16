@@ -28,7 +28,7 @@ struct mcu_stm32_Stm32Gpio
 };
 
 
-void mcu_stm32_Stm32Gpio_ctor(mcu_stm32_Stm32Gpio * self, GPIO_TypeDef * port, uint16_t pin);
+mcu_stm32_Stm32Gpio * mcu_stm32_Stm32Gpio_ctor(mcu_stm32_Stm32Gpio * self, GPIO_TypeDef * port, uint16_t pin);
 
 // FFI function. User code must provide the implementation
 bool mcu_stm32_Stm32Gpio_enable_pulldown(mcu_stm32_Stm32Gpio * self);

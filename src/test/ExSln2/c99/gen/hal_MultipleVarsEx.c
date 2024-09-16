@@ -7,7 +7,8 @@
 #include <string.h>
 
 
-void hal_MultipleVarsEx_ctor(hal_MultipleVarsEx * self)
+hal_MultipleVarsEx * hal_MultipleVarsEx_ctor(hal_MultipleVarsEx * self)
 {
     memset(self, 0, sizeof(*self));
+    return self;
 }

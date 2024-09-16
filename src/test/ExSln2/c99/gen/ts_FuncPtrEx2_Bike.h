@@ -14,4 +14,4 @@ struct ts_FuncPtrEx2_Bike
         int32_t speed;
 };
 
-void ts_FuncPtrEx2_Bike_ctor(ts_FuncPtrEx2_Bike * self);
+ts_FuncPtrEx2_Bike * ts_FuncPtrEx2_Bike_ctor(ts_FuncPtrEx2_Bike * self);

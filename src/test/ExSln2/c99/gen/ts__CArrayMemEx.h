@@ -17,6 +17,6 @@ struct ts__CArrayMemEx
 };
 
 
-void ts__CArrayMemEx_ctor(ts__CArrayMemEx * self, ts__CArrayMemEx_Bike *my_bikes);
+ts__CArrayMemEx * ts__CArrayMemEx_ctor(ts__CArrayMemEx * self, ts__CArrayMemEx_Bike *my_bikes);
 
 uint16_t ts__CArrayMemEx_sum_c_array(ts__CArrayMemEx_Bike *bikes, uint8_t length);

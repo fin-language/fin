@@ -8,10 +8,11 @@
 
 
 
-void ex_mem_InitializedPoint_ctor(ex_mem_InitializedPoint * self)
+ex_mem_InitializedPoint * ex_mem_InitializedPoint_ctor(ex_mem_InitializedPoint * self)
 {
     memset(self, 0, sizeof(*self));
-    ex_mem_XyPointU8_ctor(&self->point) ;
+    (void)ex_mem_XyPointU8_ctor(&self->point) ;
+    return self;
 
 }
 

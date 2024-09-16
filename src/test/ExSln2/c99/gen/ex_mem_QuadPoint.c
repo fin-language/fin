@@ -8,11 +8,12 @@
 
 
 
-void ex_mem_QuadPoint_ctor(ex_mem_QuadPoint * self)
+ex_mem_QuadPoint * ex_mem_QuadPoint_ctor(ex_mem_QuadPoint * self)
 {
     memset(self, 0, sizeof(*self));
-    ex_mem_DoublePoint_ctor(&self->d1);
-    ex_mem_DoublePoint_ctor(&self->d2);
+    (void)ex_mem_DoublePoint_ctor(&self->d1);
+    (void)ex_mem_DoublePoint_ctor(&self->d2);
+    return self;
     
 }
 
