@@ -3,7 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace finlang.Transpiler;
 
@@ -141,7 +143,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         var symbol = model.GetDeclaredSymbol(node).ThrowIfNull();
 
         VisitLeadingTrivia(node);
-        sb.Append($"void {Namer.GetCName(symbol)}");
+        sb.Append($"{Namer.GetCName(symbol.ContainingSymbol)} * {Namer.GetCName(symbol)}");
 
         VisitParameterList(node.ParameterList);
 
@@ -154,6 +156,8 @@ public class CFileGenerator : CSharpSyntaxWalker
         RenderConstructor();
 
         body.VisitChildrenNodesWithWalker(this);
+        sb.Append($"{Indent}{Indent}return {SelfVarName};{NL}");
+
         VisitToken(body.CloseBraceToken);
     }
 
@@ -165,13 +169,14 @@ public class CFileGenerator : CSharpSyntaxWalker
         RenderDefaultConstructorPrototype();
         sb.Append($"{NL}{Indent}{{{NL}");
         RenderConstructor();
+        sb.Append($"{Indent}{Indent}return {SelfVarName};{NL}");
         sb.Append($"{Indent}}}{NL}");
     }
 
     public void RenderDefaultConstructorPrototype()
     {
         var typeName = Namer.GetCName(cls.symbol);
-        sb.Append($"{Indent}void {typeName}_{Namer.ConstructorMethodName}({typeName} * {SelfVarName})");
+        sb.Append($"{Indent}{typeName} * {typeName}_{Namer.ConstructorMethodName}({typeName} * {SelfVarName})");
     }
 
     private void RenderConstructor()
@@ -211,9 +216,7 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     private void HandleMemInit(IFieldSymbol field, SyntaxNode nodeForError, ExpressionSyntax value)
     {
-        var arg = value.GetMemInitCallArgument();
-        if (arg is null)
-            throw new TranspilerException("mem.init() must be used to initialize a field with the mem attribute", nodeForError);
+        var arg = value.GetMemInitCallArgument() ?? throw new TranspilerException("mem.init() must be used to initialize a field with the mem attribute", nodeForError);
 
         // the value must be a new expression
         if (arg.Expression is not ObjectCreationExpressionSyntax oces)
@@ -222,7 +225,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         // pass field to constructor
         firstArgsSb.Append($"&{SelfVarName}->{field.Name}");
         sb.Append($"{Indent}{Indent}");
-        sb.Append($"{namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
+        sb.Append($"(void){namer.GetCName(oces.Type)}_{Namer.ConstructorMethodName}");
         Visit(oces.ArgumentList);
     }
 
@@ -573,7 +576,38 @@ public class CFileGenerator : CSharpSyntaxWalker
         var typeSymbol = model.GetTypeInfo(node.Type).Type.ThrowIfNull();
         outputFile.AddFqnDependency(typeSymbol);
 
-        base.VisitVariableDeclaration(node);
+        string varTypeName, varTypeQualifiers;
+        CaptureCTypeInfo(node, out varTypeName, out varTypeQualifiers);
+
+        VisitLeadingTrivia(node);
+
+        sb.Append(varTypeName);
+
+        var list = new WalkableChildSyntaxList(this, node.ChildNodesAndTokens());
+        list.SkipUpTo(node.Type, including: true);
+
+        while (list.HasNext())
+        {
+            // if it is a node, we need to output the type qualifiers (like '*' or '* *')
+            if (list.Peek().IsNode)
+            {
+                sb.Append(varTypeQualifiers);
+            }
+
+            list.VisitNext();
+        }
+    }
+
+    private void CaptureCTypeInfo(VariableDeclarationSyntax node, out string varTypeName, out string varTypeQualifiers)
+    {
+        // This may be something like `Bike * * ` or just `Bike`
+        var cFullType = CaptureToString(() =>
+        {
+            skipNextLeadingTrivia = true;
+            Visit(node.Type);
+        });
+
+        StringUtils.ParseCTypeInfo(cFullType, out varTypeName, out varTypeQualifiers);
     }
 
     public override void VisitArgumentList(ArgumentListSyntax node)
@@ -860,6 +894,9 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (TryFinCArrayMemInvocations(ies, maes, methodNameSymbol))
             return true;
 
+        if (TryFinMemInvocations(ies, methodNameSymbol))
+            return true;
+
         return done;
     }
 
@@ -1046,7 +1083,34 @@ public class CFileGenerator : CSharpSyntaxWalker
             done = true;
         }
 
+        // allow stack allocations
+        // https://github.com/fin-language/fin/issues/39
+        if (methodNameSymbol.Name == nameof(mem.stack))
+        {
+            var stackArg = ies.ArgumentList.Arguments.Single();
+
+            // the value must be a new expression
+            if (stackArg.Expression is not ObjectCreationExpressionSyntax oces)
+                throw new TranspilerException("mem.stack() must be used with a new expression", ies);
+
+            string typeCName = namer.GetCName(oces.Type);
+            firstArgsSb.Append($"/* C99 compound literal on stack */&({typeCName}){{0}}");
+            sb.Append($"{typeCName}_{Namer.ConstructorMethodName}");
+            Visit(oces.ArgumentList);
+
+            VisitTrailingTrivia(ies);
+
+            done = true;
+            return done;
+        }
+
         return done;
+    }
+
+    public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
+    {
+        //base.VisitObjectCreationExpression(node);
+        throw new TranspilerException("We currently only support mem.stack() and mem.init() for creating objects", node);
     }
 
     private bool TryFinCInvocations(InvocationExpressionSyntax ies, IMethodSymbol methodNameSymbol)

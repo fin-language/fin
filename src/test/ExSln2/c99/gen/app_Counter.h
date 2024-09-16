@@ -26,7 +26,7 @@ struct app_Counter
 };
 
 
-void app_Counter_ctor(app_Counter * self, uint8_t * counts, uint8_t count_length);
+app_Counter * app_Counter_ctor(app_Counter * self, uint8_t * counts, uint8_t count_length);
 
 /// <summary>
 /// 

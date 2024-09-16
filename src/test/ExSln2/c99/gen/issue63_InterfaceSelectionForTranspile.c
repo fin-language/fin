@@ -7,10 +7,11 @@
 #include <string.h>
 
 
-void issue63_InterfaceSelectionForTranspile_ctor(issue63_InterfaceSelectionForTranspile * self)
+issue63_InterfaceSelectionForTranspile * issue63_InterfaceSelectionForTranspile_ctor(issue63_InterfaceSelectionForTranspile * self)
 {
     memset(self, 0, sizeof(*self));
     self->my_number = 42;
+    return self;
 }
 
 uint8_t issue63_InterfaceSelectionForTranspile_GetNumber(issue63_InterfaceSelectionForTranspile * self)

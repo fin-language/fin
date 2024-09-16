@@ -20,7 +20,7 @@ struct app_Main
 };
 
 
-void app_Main_ctor(app_Main * self, hal_Led * redLed, uint16_t period_ms);
+app_Main * app_Main_ctor(app_Main * self, hal_Led * redLed, uint16_t period_ms);
 
 /// <summary>
 /// This is the main loop of the application.

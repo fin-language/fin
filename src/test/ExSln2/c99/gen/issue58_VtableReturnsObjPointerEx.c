@@ -8,12 +8,13 @@
 
 
 
-void issue58_VtableReturnsObjPointerEx_ctor(issue58_VtableReturnsObjPointerEx * self)
+issue58_VtableReturnsObjPointerEx * issue58_VtableReturnsObjPointerEx_ctor(issue58_VtableReturnsObjPointerEx * self)
 {
     memset(self, 0, sizeof(*self));
-    issue58_Bike_ctor(&self->_bike);
+    (void)issue58_Bike_ctor(&self->_bike);
     self->_bike._speed = 10;
     self->_bike_ptr = &self->_bike;
+    return self;
 }
 
 // https://github.com/fin-language/fin/issues/79

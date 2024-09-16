@@ -8,11 +8,12 @@
 
 
 
-void mcu_stm32_Stm32Gpio_ctor(mcu_stm32_Stm32Gpio * self, GPIO_TypeDef * port, uint16_t pin)
+mcu_stm32_Stm32Gpio * mcu_stm32_Stm32Gpio_ctor(mcu_stm32_Stm32Gpio * self, GPIO_TypeDef * port, uint16_t pin)
 {
     memset(self, 0, sizeof(*self));
     self->port = port;
     self->pin = pin;
+    return self;
 }
 
 // virtual table implementation for IGpio. Note that this is extern'd.

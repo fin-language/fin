@@ -18,6 +18,6 @@ struct ex_mem_InitializedPoint
 };
 
 
-void ex_mem_InitializedPoint_ctor(ex_mem_InitializedPoint * self);
+ex_mem_InitializedPoint * ex_mem_InitializedPoint_ctor(ex_mem_InitializedPoint * self);
 
 void ex_mem_InitializedPoint_test(ex_mem_InitializedPoint * self);

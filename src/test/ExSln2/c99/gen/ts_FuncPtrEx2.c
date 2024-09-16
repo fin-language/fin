@@ -7,10 +7,11 @@
 #include <string.h>
 
 
-void ts_FuncPtrEx2_ctor(ts_FuncPtrEx2 * self)
+ts_FuncPtrEx2 * ts_FuncPtrEx2_ctor(ts_FuncPtrEx2 * self)
 {
     memset(self, 0, sizeof(*self));
     self->func = ts_FuncPtrEx2_add;
+    return self;
 }
 
 int32_t ts_FuncPtrEx2_add(int32_t a, int32_t b)

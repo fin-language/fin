@@ -8,8 +8,9 @@
 
 
 
-void ex_mem_XyPointU8_ctor(ex_mem_XyPointU8 * self)
+ex_mem_XyPointU8 * ex_mem_XyPointU8_ctor(ex_mem_XyPointU8 * self)
 {
         memset(self, 0, sizeof(*self));
+        return self;
 
 }

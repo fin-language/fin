@@ -20,6 +20,6 @@ struct ex_mem_DoublePoint
 };
 
 
-void ex_mem_DoublePoint_ctor(ex_mem_DoublePoint * self);
+ex_mem_DoublePoint * ex_mem_DoublePoint_ctor(ex_mem_DoublePoint * self);
 
 uint8_t ex_mem_DoublePoint_get_start_x(ex_mem_DoublePoint * self);

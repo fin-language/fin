@@ -13,4 +13,4 @@ struct ts__CArrayMemEx_Bike
         uint8_t speed ;
 };
 
-void ts__CArrayMemEx_Bike_ctor(ts__CArrayMemEx_Bike * self);
+ts__CArrayMemEx_Bike * ts__CArrayMemEx_Bike_ctor(ts__CArrayMemEx_Bike * self);

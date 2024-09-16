@@ -7,8 +7,9 @@
 #include <string.h>
 
 
-void issue58_Bike_ctor(issue58_Bike * self)
+issue58_Bike * issue58_Bike_ctor(issue58_Bike * self)
 {
     memset(self, 0, sizeof(*self));
     self->_speed = 0;
+    return self;
 }

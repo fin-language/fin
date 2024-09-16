@@ -58,4 +58,23 @@ public class StringUtilsTest
         "line1\nline2".IndentNewLines("\t", count: 2).Should().Be("line1\n\t\tline2");
         "line1\r\nline2".IndentNewLines("\t", count: 2).Should().Be("line1\r\n\t\tline2");
     }
+
+    [Fact]
+    public void ParseCTypeInfo()
+    {
+        string varTypeName;
+        string varTypeQualifiers;
+
+        StringUtils.ParseCTypeInfo("int", out varTypeName, out varTypeQualifiers);
+        varTypeName.Should().Be("int");
+        varTypeQualifiers.Should().BeEmpty();
+
+        StringUtils.ParseCTypeInfo("int *", out varTypeName, out varTypeQualifiers);
+        varTypeName.Should().Be("int ");
+        varTypeQualifiers.Should().Be("*");
+
+        StringUtils.ParseCTypeInfo("int * * ", out varTypeName, out varTypeQualifiers);
+        varTypeName.Should().Be("int ");
+        varTypeQualifiers.Should().Be("* * ");
+    }
 }

@@ -7,7 +7,8 @@
 #include <string.h>
 
 
-void ts_FuncPtrEx2_Bike_ctor(ts_FuncPtrEx2_Bike * self)
+ts_FuncPtrEx2_Bike * ts_FuncPtrEx2_Bike_ctor(ts_FuncPtrEx2_Bike * self)
 {
     memset(self, 0, sizeof(*self));
+    return self;
 }

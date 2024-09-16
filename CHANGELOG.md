@@ -22,6 +22,21 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
+## [0.???]
+### Changed (major)
+- not a breaking change, but now generated constructors return a pointer to the object instead of void.
+    - this allows more natural translations of C# to C
+
+### Added
+- add support for allocating objects on the stack
+    - https://github.com/fin-language/fin/issues/39
+
+### Fixed
+- fix multiple variable declarations in a single line
+    - used to not work for reference types
+    - https://github.com/fin-language/fin/issues/24
+
+---
 
 ## [0.6.2]
 ### Fixed

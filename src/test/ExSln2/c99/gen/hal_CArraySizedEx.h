@@ -17,7 +17,7 @@ struct hal_CArraySizedEx
 };
 
 
-void hal_CArraySizedEx_ctor(hal_CArraySizedEx * self);
+hal_CArraySizedEx * hal_CArraySizedEx_ctor(hal_CArraySizedEx * self);
 
 uint16_t hal_CArraySizedEx_sum(hal_CArraySizedEx * self);
 

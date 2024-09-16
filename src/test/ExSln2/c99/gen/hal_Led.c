@@ -9,10 +9,11 @@
 
 
 
-void hal_Led_ctor(hal_Led * self, hal_IDigInOut * dig_out)
+hal_Led * hal_Led_ctor(hal_Led * self, hal_IDigInOut * dig_out)
 {
     memset(self, 0, sizeof(*self));
     self->_dig_io = dig_out;
+    return self;
 }
 
 void hal_Led_toggle_twice(hal_Led * self)

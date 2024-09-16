@@ -17,7 +17,7 @@ struct hal_Led
 };
 
 
-void hal_Led_ctor(hal_Led * self, hal_IDigInOut * dig_out);
+hal_Led * hal_Led_ctor(hal_Led * self, hal_IDigInOut * dig_out);
 
 void hal_Led_toggle_twice(hal_Led * self);
 

@@ -8,9 +8,10 @@
 
 
 
-void hal_CArraySizedEx_ctor(hal_CArraySizedEx * self)
+hal_CArraySizedEx * hal_CArraySizedEx_ctor(hal_CArraySizedEx * self)
 {
     memset(self, 0, sizeof(*self));
+    return self;
 
 }
 

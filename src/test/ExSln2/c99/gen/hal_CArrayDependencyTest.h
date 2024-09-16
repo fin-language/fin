@@ -16,4 +16,4 @@ struct hal_CArrayDependencyTest
 };
 
 
-void hal_CArrayDependencyTest_ctor(hal_CArrayDependencyTest * self, uint8_t * data);
+hal_CArrayDependencyTest * hal_CArrayDependencyTest_ctor(hal_CArrayDependencyTest * self, uint8_t * data);

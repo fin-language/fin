@@ -13,4 +13,4 @@ struct hal_LedArray_LedInfo
         uint8_t something;
 };
 
-void hal_LedArray_LedInfo_ctor(hal_LedArray_LedInfo * self);
+hal_LedArray_LedInfo * hal_LedArray_LedInfo_ctor(hal_LedArray_LedInfo * self);

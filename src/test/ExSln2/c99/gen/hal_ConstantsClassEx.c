@@ -7,10 +7,11 @@
 #include <string.h>
 
 
-void hal_ConstantsClassEx_ctor(hal_ConstantsClassEx * self)
+hal_ConstantsClassEx * hal_ConstantsClassEx_ctor(hal_ConstantsClassEx * self)
 {
     memset(self, 0, sizeof(*self));
     self->my_div = 2;
+    return self;
 }
 
 uint32_t hal_ConstantsClassEx_calc_as_instance(hal_ConstantsClassEx * self, uint32_t cycles)

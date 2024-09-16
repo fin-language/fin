@@ -7,7 +7,8 @@
 #include <string.h>
 
 
-void hal_LedArray_LedInfo_ctor(hal_LedArray_LedInfo * self)
+hal_LedArray_LedInfo * hal_LedArray_LedInfo_ctor(hal_LedArray_LedInfo * self)
 {
     memset(self, 0, sizeof(*self));
+    return self;
 }

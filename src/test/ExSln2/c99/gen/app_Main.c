@@ -10,12 +10,13 @@
 
 
 
-void app_Main_ctor(app_Main * self, hal_Led * redLed, uint16_t period_ms)
+app_Main * app_Main_ctor(app_Main * self, hal_Led * redLed, uint16_t period_ms)
 {
     memset(self, 0, sizeof(*self));
     self->_redLed = redLed;
     self->_redLed->my_public_var = 5;
     self->period_ms = period_ms;
+    return self;
 }
 
 /// <summary>

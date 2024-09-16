@@ -27,6 +27,11 @@ public class WalkableChildSyntaxList
 
     }
 
+    public SyntaxNodeOrToken Peek()
+    {
+        return nodeOrTokenList[index];
+    }
+
     public void VisitUpTo(Predicate<SyntaxNodeOrToken> test, bool including = false)
     {
         while (index < nodeOrTokenList.Count)
@@ -43,6 +48,16 @@ public class WalkableChildSyntaxList
 
             VisitNext(syntaxNodeOrToken);
         }
+    }
+
+    public void SkipUpTo(SyntaxNodeOrToken toSkip, bool including = false)
+    {
+        SkipUpTo((snot) => snot == toSkip, including);
+    }
+
+    public void SkipUpTo(SyntaxToken syntaxToken, bool including = false)
+    {
+        SkipUpTo((snot) => snot == syntaxToken, including);
     }
 
     public void SkipUpTo(Predicate<SyntaxNodeOrToken> test, bool including = false)
@@ -85,11 +100,6 @@ public class WalkableChildSyntaxList
         VisitUpTo((snot) => snot == syntaxToken, including);
     }
 
-    public void SkipUpTo(SyntaxToken syntaxToken, bool including = false)
-    {
-        SkipUpTo((snot) => snot == syntaxToken, including);
-    }
-
     public void VisitUpTo(SyntaxNode syntaxNode, bool including = false)
     {
         VisitUpTo((snot) => snot == syntaxNode, including);
@@ -123,5 +133,10 @@ public class WalkableChildSyntaxList
             SyntaxNodeOrToken syntaxNodeOrToken = nodeOrTokenList[index];
             VisitNext(syntaxNodeOrToken);
         }
+    }
+
+    public bool HasNext()
+    {
+        return index < nodeOrTokenList.Count;
     }
 }

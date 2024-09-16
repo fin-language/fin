@@ -8,11 +8,12 @@
 
 
 
-void hal_ExTypeOverride_ctor(hal_ExTypeOverride * self, GPIO_TypeDef * port, uint16_t pin)
+hal_ExTypeOverride * hal_ExTypeOverride_ctor(hal_ExTypeOverride * self, GPIO_TypeDef * port, uint16_t pin)
 {
     memset(self, 0, sizeof(*self));
     self->port = port;
     self->pin = pin;
+    return self;
 }
 
 void hal_ExTypeOverride_set_pin(hal_ExTypeOverride * self, uint16_t pin)
