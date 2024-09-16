@@ -15,12 +15,12 @@ static int32_t calc_stuff(ts_MemStackEx_Bike2 * b1, ts_MemStackEx_Bike2 * b2);
 
 int32_t ts_MemStackEx_chain_stack_creation()
 {
-    return ts_MemStackEx_Bike2_set_id(ts_MemStackEx_Bike2_set_speed(ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, 5), 10), 1)->speed;
+    return ts_MemStackEx_Bike2_set_id(ts_MemStackEx_Bike2_set_speed(ts_MemStackEx_Bike2_ctor(/* C99 compound literal on stack */&(ts_MemStackEx_Bike2){0}, 5), 10), 1)->speed;
 }
 
 int32_t ts_MemStackEx_calc_stuff_compound_literals_func_args()
 {
-    return calc_stuff(ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, 5), ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, 1));
+    return calc_stuff(ts_MemStackEx_Bike2_ctor(/* C99 compound literal on stack */&(ts_MemStackEx_Bike2){0}, 5), ts_MemStackEx_Bike2_ctor(/* C99 compound literal on stack */&(ts_MemStackEx_Bike2){0}, 1));
 }
 
 static int32_t calc_stuff(ts_MemStackEx_Bike2 * b1, ts_MemStackEx_Bike2 * b2)
@@ -31,16 +31,16 @@ static int32_t calc_stuff(ts_MemStackEx_Bike2 * b1, ts_MemStackEx_Bike2 * b2)
 int32_t ts_MemStackEx_calc_stuff(int32_t b1_speed, int32_t b2_speed)
 {
     // leading comment
-    ts_MemStackEx_Bike1 * b1 = ts_MemStackEx_Bike1_ctor(&(ts_MemStackEx_Bike1){0}); // trailing comment
+    ts_MemStackEx_Bike1 * b1 = ts_MemStackEx_Bike1_ctor(/* C99 compound literal on stack */&(ts_MemStackEx_Bike1){0}); // trailing comment
     b1->speed = b1_speed;
 
     // below uses: `using static finlang.mem;`
-    ts_MemStackEx_Bike2 * b2 = ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, b2_speed); // implicit mem
+    ts_MemStackEx_Bike2 * b2 = ts_MemStackEx_Bike2_ctor(/* C99 compound literal on stack */&(ts_MemStackEx_Bike2){0}, b2_speed); // implicit mem
     return b1->speed + b2->speed;
 }
 
 int32_t ts_MemStackEx_calc_stuff_mult_vars_on_same_line(int32_t b1_speed, int32_t b2_speed)
 {
-   ts_MemStackEx_Bike2 * b1 = ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, b1_speed), * b2 = ts_MemStackEx_Bike2_ctor(&(ts_MemStackEx_Bike2){0}, b2_speed);
+   ts_MemStackEx_Bike2 * b1 = ts_MemStackEx_Bike2_ctor(/* C99 compound literal on stack */&(ts_MemStackEx_Bike2){0}, b1_speed), * b2 = ts_MemStackEx_Bike2_ctor(/* C99 compound literal on stack */&(ts_MemStackEx_Bike2){0}, b2_speed);
    return b1->speed + b2->speed;
 }

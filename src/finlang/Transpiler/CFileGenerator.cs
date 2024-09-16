@@ -1094,7 +1094,7 @@ public class CFileGenerator : CSharpSyntaxWalker
                 throw new TranspilerException("mem.stack() must be used with a new expression", ies);
 
             string typeCName = namer.GetCName(oces.Type);
-            firstArgsSb.Append($"&({typeCName}){{0}}");
+            firstArgsSb.Append($"/* C99 compound literal on stack */&({typeCName}){{0}}");
             sb.Append($"{typeCName}_{Namer.ConstructorMethodName}");
             Visit(oces.ArgumentList);
 
