@@ -6,7 +6,7 @@ namespace hal;
 public class CArraySizedEx : FinObj
 {
     // Some comment
-    [mem] c_array_sized<u8> data = mem.init(new c_array_sized<u8>(5));
+    c_array_sized<u8> data = mem.init(new c_array_sized<u8>(5));
     
     public CArraySizedEx()
     {

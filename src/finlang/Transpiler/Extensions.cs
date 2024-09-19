@@ -1,3 +1,4 @@
+using finlang.Validation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -8,9 +9,10 @@ namespace finlang.Transpiler;
 
 public static class Extensions
 {
-    static readonly string OverrideTypeAttrShortName = GetShortAttributeName(nameof(override_typeAttribute));
-    static readonly string MemAttrShortName = GetShortAttributeName(nameof(memAttribute));
-    static readonly string FFIAttrShortName = GetShortAttributeName(nameof(ffiAttribute));
+    public static readonly string OverrideTypeAttrShortName = GetShortAttributeName(nameof(override_typeAttribute));
+    public static readonly string MemAttrShortName = GetShortAttributeName(nameof(memAttribute));
+    public static readonly string FFIAttrShortName = GetShortAttributeName(nameof(ffiAttribute));
+    //static readonly string ValidateFieldNoMemAttrAttrShortName = GetShortAttributeName(nameof(ValidateFieldNoMemAttrAttribute));
 
     /// <summary>
     /// Takes in a name like "override_typeAttribute" and returns "override_type"
@@ -159,6 +161,11 @@ public static class Extensions
         return symbol.GetAttributes().Any(a => a.AttributeClass?.Name == attributeName);
     }
 
+    public static IEnumerable<AttributeData> GetAttributesWithName(this ISymbol symbol, string attributeName)
+    {
+        return symbol.GetAttributes().Where(a => a.AttributeClass?.Name == attributeName);
+    }
+
     public static bool IsFFI(this ISymbol symbol)
     {
         return symbol.HasAttribute(nameof(ffiAttribute));
@@ -169,16 +176,6 @@ public static class Extensions
         return node.Attributes.Any(attr => attr.Name.ToString() == FFIAttrShortName);
     }
 
-    public static AttributeSyntax? GetTypeOverride(this AttributeListSyntax node)
-    {
-        return node.Attributes.FirstOrDefault(attr => attr.Name.ToString() == OverrideTypeAttrShortName);
-    }
-
-    public static bool HasTypeOverride(this AttributeListSyntax node)
-    {
-        return node.GetTypeOverride() != null;
-    }
-
     public static bool HasMemAttr(this ISymbol symbol)
     {
         return symbol.HasAttribute(nameof(memAttribute));
@@ -187,6 +184,26 @@ public static class Extensions
     public static bool HasMemAttr(this AttributeListSyntax node)
     {
         return node.Attributes.Any(attr => attr.Name.ToString() == MemAttrShortName);
+    }
+
+    public static bool HasMemAttr(this FieldDeclarationSyntax node)
+    {
+        return node.AttributeLists.Any(attrList => attrList.HasMemAttr());
+    }
+
+    public static bool HasValidateFieldNoMemAttr(this ISymbol symbol)
+    {
+        return symbol.HasAttribute(nameof(ValidateFieldNoMemAttrAttribute));
+    }
+
+    public static AttributeSyntax? GetTypeOverride(this AttributeListSyntax node)
+    {
+        return node.Attributes.FirstOrDefault(attr => attr.Name.ToString() == OverrideTypeAttrShortName);
+    }
+
+    public static bool HasTypeOverride(this AttributeListSyntax node)
+    {
+        return node.GetTypeOverride() != null;
     }
 
     public static bool IsConst(this FieldDeclarationSyntax? node)

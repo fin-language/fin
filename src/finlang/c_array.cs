@@ -1,4 +1,6 @@
-﻿namespace finlang;
+﻿using finlang.Validation;
+
+namespace finlang;
 
 /// <summary>
 /// A naked C style array. It transpiles to a C pointer to type T.<br/>
@@ -6,6 +8,7 @@
 /// Ex: `<![CDATA[c_array<Bike> bikes]]>` transpiles to `Bike * * bikes` in C.<br/>
 /// </summary>
 /// <typeparam name="T"></typeparam>
+[ValidateFieldNoMemAttr("Don't declare fields of type `c_array<T>` with the `[mem]` attribute. They don't need it.")]
 public class c_array<T> : FinObj
 {
     /// <summary>

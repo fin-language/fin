@@ -1,11 +1,10 @@
 using finlang.Utils;
+using finlang.Validation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace finlang.Transpiler;
 
@@ -295,6 +294,11 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
     {
+        if (node.HasMemAttr())
+        {
+            CheckForMemRestrictions(node);
+        }
+
         if (TryCArraySizedFieldDecl(node))
             return;
 
@@ -317,6 +321,20 @@ public class CFileGenerator : CSharpSyntaxWalker
         //    VisitToken(variable.Identifier);
         //    VisitTrailingTrivia(variable);
         //}
+    }
+
+    private void CheckForMemRestrictions(FieldDeclarationSyntax node)
+    {
+        foreach (var variable in node.Declaration.Variables)
+        {
+            var symbol = (IFieldSymbol)model.GetDeclaredSymbol(variable).ThrowIfNull();
+            AttributeData? attr = symbol.Type.GetAttributesWithName(nameof(ValidateFieldNoMemAttrAttribute)).FirstOrDefault();
+            if (attr != null)
+            {
+                throw new TranspilerException(attr.ConstructorArguments[0].Value?.ToString()
+                    ?? $"Fields of type `{symbol.GetFqn()}` cannot have the `[{Extensions.MemAttrShortName}]` attribute.", node);
+            }
+        }
     }
 
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)

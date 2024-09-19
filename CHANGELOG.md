@@ -22,6 +22,12 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
+## [0.7.??]
+### Changed (BREAKING-CHANGES)
+- Transpiler - won't allow fields of type `c_array_sized<T>` or `c_array<T>` to be declared with `[mem]` attribute.
+
+---
+
 ## [0.6.3]
 ### Changed (major)
 - not a breaking change, but now generated constructors return a pointer to the object instead of void.
