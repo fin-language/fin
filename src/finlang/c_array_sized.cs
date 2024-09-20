@@ -8,6 +8,7 @@ namespace finlang;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 [ValidateFieldNoMemAttr("Don't declare fields of type `c_array_sized<T>` with the `[mem]` attribute. They don't need it.")]
+[ValidateNotAParameter($"{nameof(c_array_sized<T>)}<T> cannot be used as a parameter because of how C works. Use a {nameof(c_array<T>)}<T> instead.")]
 public class c_array_sized<T> : c_array<T>
 {
     public c_array_sized(int size) : base(size)

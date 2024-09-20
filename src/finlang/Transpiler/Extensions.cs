@@ -196,6 +196,11 @@ public static class Extensions
         return symbol.HasAttribute(nameof(ValidateFieldNoMemAttrAttribute));
     }
 
+    public static bool HasValidateNotAParameterAttr(this ISymbol symbol)
+    {
+        return symbol.HasAttribute(nameof(ValidateNotAParameterAttribute));
+    }
+
     public static AttributeSyntax? GetTypeOverride(this AttributeListSyntax node)
     {
         return node.Attributes.FirstOrDefault(attr => attr.Name.ToString() == OverrideTypeAttrShortName);

@@ -689,6 +689,8 @@ public class CFileGenerator : CSharpSyntaxWalker
     {
         VisitLeadingTrivia(node);
 
+        ValidateTypeIsValidForParameter(node);
+
         foreach (var attrList in node.AttributeLists)
         {
             // note: if there is an attribute present, it doesn't have any leading whitespace.
@@ -699,7 +701,7 @@ public class CFileGenerator : CSharpSyntaxWalker
         SyntaxTokenList modifiers = node.Modifiers;
 
         bool addStar = (modifiers.HasModifier(SyntaxKind.OutKeyword) || modifiers.HasModifier(SyntaxKind.RefKeyword));
-        
+
         // don't visit modifiers
 
         if (modifiers.HasModifier(SyntaxKind.InKeyword))
@@ -715,6 +717,27 @@ public class CFileGenerator : CSharpSyntaxWalker
         }
 
         VisitToken(node.Identifier);
+    }
+
+    private void ValidateTypeIsValidForParameter(ParameterSyntax node)
+    {
+        var typeSyntax = node.Type;
+        if (typeSyntax == null)
+            throw new TranspilerException("Parameter type syntax is null", node);
+
+        if (typeSyntax.IsKind(SyntaxKind.PredefinedType))
+            return; // no need to validate predefined types. Also, they aren't part of the model and would throw an exception.
+
+        var typeInfo = model.GetTypeInfo(typeSyntax).Type;
+        if (typeInfo == null)
+            throw new TranspilerException("Parameter type is null", node);
+
+        AttributeData? attr = typeInfo.GetAttributesWithName(nameof(ValidateNotAParameterAttribute)).FirstOrDefault();
+        if (attr != null)
+        {
+            throw new TranspilerException(attr.ConstructorArguments[0].Value?.ToString()
+                ?? $"Fields of type `{typeInfo.GetFqn()}` cannot be used as a parameter.", node);
+        }
     }
 
     private bool HandleArgumentInterfaceConversion(ArgumentSyntax node)
