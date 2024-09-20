@@ -1,17 +1,11 @@
-﻿using finlang;
+using finlang;
 
 namespace hal;
 
-
 public class CArraySizedEx : FinObj
 {
-    // Some comment
+    // NO [mem] attribute
     c_array_sized<u8> data = mem.init(new c_array_sized<u8>(5));
-    
-    public CArraySizedEx()
-    {
-
-    }
 
     public u16 sum()
     {
@@ -23,9 +17,15 @@ public class CArraySizedEx : FinObj
         return sum;
     }
 
-    public u16 sum2()
+    public u16 show_decay_to_c_array_parameter()
     {
         return sum_c_array(data, data.length.narrow_to_u8());
+    }
+
+    public u16 show_decay_to_c_array_assignment()
+    {
+        c_array<u8> arr = data;
+        return sum_c_array(arr, data.length.narrow_to_u8());
     }
 
     public u8 get_element(u8 index)

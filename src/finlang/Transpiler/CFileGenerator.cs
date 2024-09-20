@@ -328,6 +328,12 @@ public class CFileGenerator : CSharpSyntaxWalker
         foreach (var variable in node.Declaration.Variables)
         {
             var symbol = (IFieldSymbol)model.GetDeclaredSymbol(variable).ThrowIfNull();
+
+            if (symbol.Type.TypeKind == TypeKind.Struct)
+            {
+                throw new TranspilerException($"Primitives like type `{symbol.Type.GetFqn()}` cannot have the `[mem]` attribute. They don't need it.", node);
+            }
+
             AttributeData? attr = symbol.Type.GetAttributesWithName(nameof(ValidateFieldNoMemAttrAttribute)).FirstOrDefault();
             if (attr != null)
             {

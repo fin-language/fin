@@ -3,7 +3,7 @@ using finlang.Transpiler;
 
 namespace finlang.TranspilerTest;
 
-public class ValidateFieldNoMemAttr_Test
+public class MemFieldTests
 {
     [Fact]
     public void c_array()
@@ -40,5 +40,37 @@ public class ValidateFieldNoMemAttr_Test
 
         Action a = () => TranspilerTestHelper.TranspileFinToCFilesWithDummyMain(finCode);
         a.Should().Throw<TranspilerException>().WithMessage("*Don't declare fields of type `c_array_sized<T>` with the `[mem]` attribute. They don't need it.*");
+    }
+
+    [Fact]
+    public void primitive_u8()
+    {
+        const string finCode = """
+            using finlang;
+
+            public class MyClass: FinObj
+            {
+                [mem] u8 count;
+            }
+            """;
+
+        Action a = () => TranspilerTestHelper.TranspileFinToCFilesWithDummyMain(finCode);
+        a.Should().Throw<TranspilerException>().WithMessage("*Primitives like type `finlang.u8` cannot have the `[mem]` attribute*");
+    }
+
+    [Fact]
+    public void primitive_int()
+    {
+        const string finCode = """
+            using finlang;
+
+            public class MyClass: FinObj
+            {
+                [mem] int count;
+            }
+            """;
+
+        Action a = () => TranspilerTestHelper.TranspileFinToCFilesWithDummyMain(finCode);
+        a.Should().Throw<TranspilerException>().WithMessage("*Primitives like type `System.Int32` cannot have the `[mem]` attribute*");
     }
 }

@@ -24,7 +24,7 @@ Test/interim releases are not documented here.
 
 ## [0.7.??]
 ### Changed (BREAKING-CHANGES)
-- Transpiler - won't allow fields of type `c_array_sized<T>` or `c_array<T>` to be declared with `[mem]` attribute.
+- Transpiler - won't allow fields of type `c_array_sized<T>` or `c_array<T>` to be declared with `[mem]` attribute. Also won't allow primitives like `u8` or `int` to be declared with `[mem]` attribute.
 
 ### Fixed
 - Fix `[mem]` field needs to decay to pointer

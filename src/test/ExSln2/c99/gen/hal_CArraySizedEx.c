@@ -7,12 +7,10 @@
 #include <string.h>
 
 
-
 hal_CArraySizedEx * hal_CArraySizedEx_ctor(hal_CArraySizedEx * self)
 {
     memset(self, 0, sizeof(*self));
     return self;
-
 }
 
 uint16_t hal_CArraySizedEx_sum(hal_CArraySizedEx * self)
@@ -25,9 +23,15 @@ uint16_t hal_CArraySizedEx_sum(hal_CArraySizedEx * self)
     return sum;
 }
 
-uint16_t hal_CArraySizedEx_sum2(hal_CArraySizedEx * self)
+uint16_t hal_CArraySizedEx_show_decay_to_c_array_parameter(hal_CArraySizedEx * self)
 {
     return hal_CArraySizedEx_sum_c_array(self->data, (uint8_t)(sizeof(self->data)/sizeof(self->data[0])));
+}
+
+uint16_t hal_CArraySizedEx_show_decay_to_c_array_assignment(hal_CArraySizedEx * self)
+{
+    uint8_t * arr = self->data;
+    return hal_CArraySizedEx_sum_c_array(arr, (uint8_t)(sizeof(self->data)/sizeof(self->data[0])));
 }
 
 uint8_t hal_CArraySizedEx_get_element(hal_CArraySizedEx * self, uint8_t index)

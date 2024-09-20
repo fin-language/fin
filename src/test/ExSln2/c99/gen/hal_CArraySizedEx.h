@@ -8,20 +8,20 @@
 
 
 
-
 typedef struct hal_CArraySizedEx hal_CArraySizedEx;
 struct hal_CArraySizedEx
 {
-    // Some comment
+    // NO [mem] attribute
     uint8_t data[5];
 };
-
 
 hal_CArraySizedEx * hal_CArraySizedEx_ctor(hal_CArraySizedEx * self);
 
 uint16_t hal_CArraySizedEx_sum(hal_CArraySizedEx * self);
 
-uint16_t hal_CArraySizedEx_sum2(hal_CArraySizedEx * self);
+uint16_t hal_CArraySizedEx_show_decay_to_c_array_parameter(hal_CArraySizedEx * self);
+
+uint16_t hal_CArraySizedEx_show_decay_to_c_array_assignment(hal_CArraySizedEx * self);
 
 uint8_t hal_CArraySizedEx_get_element(hal_CArraySizedEx * self, uint8_t index);
 

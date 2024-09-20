@@ -1,4 +1,5 @@
 using finlang.Transpiler;
+using StateSmithTest.Processes;
 using System.Text.RegularExpressions;
 
 namespace finlang.TranspilerTest;
@@ -6,8 +7,10 @@ namespace finlang.TranspilerTest;
 [Collection(nameof(ExSln2Fixture))]
 public class Ex2C99TranspilerTest
 {
-    string slnPath = ExSln2Fixture.GetSlnPath();
-    string destDirPath = ExSln2Fixture.GetSlnDir() + "/c99/gen/";
+    static string slnPath = ExSln2Fixture.GetSlnPath();
+    static string c99DirPath = ExSln2Fixture.GetSlnDir() + "/c99/";
+    static string destDirPath = c99DirPath + "gen/";
+
     CTranspiler transpiler;
 
     public Ex2C99TranspilerTest()
@@ -56,7 +59,7 @@ public class Ex2C99TranspilerTest
     }
 
     [Fact]
-    public void GenerateFiles()
+    public void GenerateAndCompileToC()
     {
         // disable output of info that adds git noise
         transpiler.Options.OutputTimestamp = false;
@@ -72,17 +75,20 @@ public class Ex2C99TranspilerTest
 
         transpiler.GenerateAndWrite(solutionPath: slnPath, projectName: "LedBlinker");
 
-        //transpiler.GetListOfAllGeneratedFiles().Should().Contain(
-        //    "app_Main.h",
-        //    "app_Main.c",
-        //    "hal_Led.h",
-        //    "hal_Led.c",
-        //    "hal_Gpio.h",
-        //    "app_Counter.h",
-        //    "app_Counter.c",
-        //    "hal_Helper.h",
-        //    "hal_Helper.c",
-        //    "hal_GpioPinState.h"
-        //);
+        SimpleProcess process = new()
+        {
+            ProgramPath = "./build.sh",
+            WorkingDirectory = c99DirPath,
+        };
+        process.RequireLinux();
+        process.Run();
+
+        process = new()
+        {
+            ProgramPath = "./app_main",
+            WorkingDirectory = c99DirPath,
+        };
+        process.RequireLinux();
+        process.Run();
     }
 }

@@ -1,4 +1,4 @@
-﻿using finlang;
+using finlang;
 
 // test stuff
 namespace ts_;
