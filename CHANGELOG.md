@@ -26,6 +26,10 @@ Test/interim releases are not documented here.
 ### Changed (BREAKING-CHANGES)
 - Transpiler - won't allow fields of type `c_array_sized<T>` or `c_array<T>` to be declared with `[mem]` attribute.
 
+### Fixed
+- Fix `[mem]` field needs to decay to pointer
+  - https://github.com/fin-language/fin/issues/90
+
 ---
 
 ## [0.6.3]

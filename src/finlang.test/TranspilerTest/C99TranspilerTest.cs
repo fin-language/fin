@@ -136,4 +136,54 @@ public class C99TranspilerTest
         // djb2_hash_2
         cCode.Should().Contain("hash = (uint32_t)((uint32_t)(hash * (33)) + (data[i]))");
     }
+
+    /// <summary>
+    /// https://github.com/fin-language/fin/issues/90
+    /// </summary>
+    [Fact]
+    public void mem_field_tests()
+    {
+        const string finCode = """
+            using finlang;
+
+            public class Bike : FinObj
+            {
+                public i32 speed;
+            }
+
+            public class MemFieldEx : FinObj
+            {
+                [mem] Bike bike = mem.init(new Bike());
+
+                /// <summary>
+                /// mem field should decay to a pointer when passed to a function
+                /// https://github.com/fin-language/fin/issues/90
+                /// </summary>
+                public i32 use_mem_field_as_arg()
+                {
+                    return calc_bike_stuff(bike);
+                }
+
+                /// <summary>
+                ///  mem field should decay to a pointer on assignment
+                /// https://github.com/fin-language/fin/issues/90
+                /// </summary>
+                public i32 assign_mem_field_to_ptr()
+                {
+                    Bike temp = bike;
+                    return calc_bike_stuff(temp);
+                }
+
+                static i32 calc_bike_stuff(Bike b1)
+                {
+                    return b1.speed * 7;
+                }
+            }
+            """;
+
+        var files = TranspilerTestHelper.TranspileFinToCFilesWithDummyMain(finCode);
+        string cCode = files.GetSingleWriterTextByFileName("MemFieldEx.c");
+        cCode.Should().Contain("return calc_bike_stuff(&self->bike);");
+        cCode.Should().Contain("temp = &self->bike;");
+    }
 }

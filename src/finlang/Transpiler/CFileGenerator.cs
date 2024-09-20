@@ -649,20 +649,33 @@ public class CFileGenerator : CSharpSyntaxWalker
 
     public override void VisitArgument(ArgumentSyntax node)
     {
-        var done = HandleArgumentInterfaceConversion(node);
+        if (HandleArgumentInterfaceConversion(node))
+            return;
 
-        if (!done)
+        VisitLeadingTrivia(node);
+
+        MaybeTakeAddressOfArg(node);
+
+        Visit(node.Expression);
+    }
+
+    private void MaybeTakeAddressOfArg(ArgumentSyntax node)
+    {
+        // if the argument is a ref or out argument, we need to pass the address of the argument
+        // ex: `my_obj.do_stuff(ref x)` to `MyObj_do_stuff(&x)`
+        if (!node.RefKindKeyword.IsKind(SyntaxKind.None))
         {
-            VisitLeadingTrivia(node);
+            sb.Append('&');
+            return;
+        }
 
-            // if the argument is a ref or out argument, we need to pass the address of the argument
-            // ex: `my_obj.do_stuff(ref x)` to `MyObj_do_stuff(&x)`
-            if (!node.RefKindKeyword.IsKind(SyntaxKind.None))
-            {
-                sb.Append('&');
-            }
-
-            Visit(node.Expression);
+        // if the argument is a field and that field is memory (and not a pointer), we need to pass the address of the field
+        // 
+        var symbol = model.GetSymbolInfo(node.Expression).Symbol;
+        if (symbol != null && symbol.HasMemAttr())
+        {
+            sb.Append('&');
+            return;
         }
     }
 
@@ -769,7 +782,6 @@ public class CFileGenerator : CSharpSyntaxWalker
             // if it's a field, we need to handle it
             if (symbol is IFieldSymbol ifs)
             {
-                // if it's a field, we need to handle it
                 if (ifs.IsStatic)
                 {
                     // it's a static field
