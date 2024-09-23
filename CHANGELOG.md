@@ -22,7 +22,7 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
-## [0.7.??]
+## [0.7.0]
 ### Changed (BREAKING-CHANGES)
 - Transpiler - won't allow fields of type `c_array_sized<T>` or `c_array<T>` to be declared with `[mem]` attribute. Also won't allow primitives like `u8` or `int` to be declared with `[mem]` attribute.
 - Transpiler - won't allow parameters of type `c_array_sized<T>` as C standard makes arrays like `uint8_t data[5]` decay to pointers like `uint8_t * data` when used as a function parameter.
