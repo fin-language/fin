@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -20,6 +20,10 @@
     </PackageReference>
     <PackageReference Include="MethodDecorator.Fody" Version="1.1.1" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);8981</NoWarn> <!-- disable warning for lower case type names -->
+  </PropertyGroup>
 
   <!-- generate user intellisense documentation for nuget package -->
   <PropertyGroup>
