@@ -330,7 +330,7 @@ public class GenSimNumerics
         string noteAboutResult;
 
         if (classFinType != otherType)
-            noteAboutResult = $"NOTE: before the `{op}` operation, both operands are treated as {resultType.fin_name}.";
+            noteAboutResult = $"NOTE: before the <![CDATA[{op}]]> operation, both operands are treated as {resultType.fin_name}.";
         else
             noteAboutResult = $"Both operands stay of type {classFinType.fin_name} during this operation (no implicit promotion to platform dependent int).";
 
@@ -386,7 +386,7 @@ public class GenSimNumerics
         string noteAboutResult;
 
         if (classFinType != otherType)
-            noteAboutResult = $"NOTE: before the `{op}` operation, both operands are treated as {resultType.fin_name}.";
+            noteAboutResult = $"NOTE: before the <![CDATA[{op}]]> operation, both operands are treated as {resultType.fin_name}.";
         else
             noteAboutResult = $"Both operands stay of type {classFinType.fin_name} during this operation (no implicit promotion to platform dependent int).";
 

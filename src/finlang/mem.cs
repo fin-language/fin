@@ -19,21 +19,21 @@ public class mem
         /// </summary>
         UserProvidedErr,
 
-        /// <summary>
-        /// Using global implicit Err object to track errors.
-        /// </summary>
+        // /// <summary>
+        // /// Using global implicit Err object to track errors.
+        // /// </summary>
         //ImplicitErr,
 
         // Someday: Exception
     };
 
-    /// <summary>
-    /// ThreadStatic
-    /// </summary>
-    /// NOTE: Do not specify initial values for fields marked with ThreadStaticAttribute, because such initialization occurs only once, when the class constructor executes, and therefore affects only one thread. If you do not specify an initial value, you can rely on the field being initialized to its default value if it is a value type, or to null if it is a reference type.
-    [System.ThreadStatic]
-    [simonly]
-    private static AccessMode mode;
+    ///// <summary>
+    ///// ThreadStatic
+    ///// </summary>
+    ///// NOTE: Do not specify initial values for fields marked with ThreadStaticAttribute, because such initialization occurs only once, when the class constructor executes, and therefore affects only one thread. If you do not specify an initial value, you can rely on the field being initialized to its default value if it is a value type, or to null if it is a reference type.
+    //[System.ThreadStatic]
+    //[simonly]
+    //private static AccessMode mode;
 
     /// <summary>
     /// ThreadStatic

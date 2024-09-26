@@ -9,8 +9,6 @@
 public class c_array_mem<T> : FinObj where T : FinObj, new()
 {
     /// <summary>
-    /// You probably want to use <see cref="SimGetValues"/> instead.<br/>
-    /// This returns backing array with no offset.<br/>
     /// Only accessible for test/simulation C# code. Not accessible to fin application code. Doesn't exist in generated C code.
     /// </summary>
     [simonly]

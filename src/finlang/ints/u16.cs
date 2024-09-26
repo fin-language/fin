@@ -482,7 +482,7 @@ public struct u16: IHasU16
         return a._csReadValue == b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `==` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[==]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator ==(u16 a, IHasI8 b)
@@ -491,7 +491,7 @@ public struct u16: IHasU16
         return a._csReadValue == b.value;
     }
     /// <summary>
-    /// NOTE: before the `==` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[==]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator ==(u16 a, IHasI16 b)
@@ -500,7 +500,7 @@ public struct u16: IHasU16
         return a._csReadValue == b.value;
     }
     /// <summary>
-    /// NOTE: before the `==` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[==]]> operation, both operands are treated as u32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator ==(u16 a, u32 b)
@@ -509,7 +509,7 @@ public struct u16: IHasU16
         return a._csReadValue == b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `==` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[==]]> operation, both operands are treated as u64.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator ==(u16 a, u64 b)
@@ -529,7 +529,7 @@ public struct u16: IHasU16
         return a._csReadValue != b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `!=` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[!=]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator !=(u16 a, IHasI8 b)
@@ -538,7 +538,7 @@ public struct u16: IHasU16
         return a._csReadValue != b.value;
     }
     /// <summary>
-    /// NOTE: before the `!=` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[!=]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator !=(u16 a, IHasI16 b)
@@ -547,7 +547,7 @@ public struct u16: IHasU16
         return a._csReadValue != b.value;
     }
     /// <summary>
-    /// NOTE: before the `!=` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[!=]]> operation, both operands are treated as u32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator !=(u16 a, u32 b)
@@ -556,7 +556,7 @@ public struct u16: IHasU16
         return a._csReadValue != b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `!=` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[!=]]> operation, both operands are treated as u64.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator !=(u16 a, u64 b)
@@ -576,7 +576,7 @@ public struct u16: IHasU16
         return a._csReadValue < b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `<` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[<]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator <(u16 a, IHasI8 b)
@@ -585,7 +585,7 @@ public struct u16: IHasU16
         return a._csReadValue < b.value;
     }
     /// <summary>
-    /// NOTE: before the `<` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[<]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator <(u16 a, IHasI16 b)
@@ -594,7 +594,7 @@ public struct u16: IHasU16
         return a._csReadValue < b.value;
     }
     /// <summary>
-    /// NOTE: before the `<` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[<]]> operation, both operands are treated as u32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator <(u16 a, u32 b)
@@ -603,7 +603,7 @@ public struct u16: IHasU16
         return a._csReadValue < b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `<` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[<]]> operation, both operands are treated as u64.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator <(u16 a, u64 b)
@@ -623,7 +623,7 @@ public struct u16: IHasU16
         return a._csReadValue <= b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `<=` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[<=]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator <=(u16 a, IHasI8 b)
@@ -632,7 +632,7 @@ public struct u16: IHasU16
         return a._csReadValue <= b.value;
     }
     /// <summary>
-    /// NOTE: before the `<=` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[<=]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator <=(u16 a, IHasI16 b)
@@ -641,7 +641,7 @@ public struct u16: IHasU16
         return a._csReadValue <= b.value;
     }
     /// <summary>
-    /// NOTE: before the `<=` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[<=]]> operation, both operands are treated as u32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator <=(u16 a, u32 b)
@@ -650,7 +650,7 @@ public struct u16: IHasU16
         return a._csReadValue <= b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `<=` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[<=]]> operation, both operands are treated as u64.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator <=(u16 a, u64 b)
@@ -670,7 +670,7 @@ public struct u16: IHasU16
         return a._csReadValue > b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `>` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[>]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator >(u16 a, IHasI8 b)
@@ -679,7 +679,7 @@ public struct u16: IHasU16
         return a._csReadValue > b.value;
     }
     /// <summary>
-    /// NOTE: before the `>` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[>]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator >(u16 a, IHasI16 b)
@@ -688,7 +688,7 @@ public struct u16: IHasU16
         return a._csReadValue > b.value;
     }
     /// <summary>
-    /// NOTE: before the `>` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[>]]> operation, both operands are treated as u32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator >(u16 a, u32 b)
@@ -697,7 +697,7 @@ public struct u16: IHasU16
         return a._csReadValue > b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `>` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[>]]> operation, both operands are treated as u64.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator >(u16 a, u64 b)
@@ -717,7 +717,7 @@ public struct u16: IHasU16
         return a._csReadValue >= b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `>=` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[>=]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator >=(u16 a, IHasI8 b)
@@ -726,7 +726,7 @@ public struct u16: IHasU16
         return a._csReadValue >= b.value;
     }
     /// <summary>
-    /// NOTE: before the `>=` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[>=]]> operation, both operands are treated as i32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator >=(u16 a, IHasI16 b)
@@ -735,7 +735,7 @@ public struct u16: IHasU16
         return a._csReadValue >= b.value;
     }
     /// <summary>
-    /// NOTE: before the `>=` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[>=]]> operation, both operands are treated as u32.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator >=(u16 a, u32 b)
@@ -744,7 +744,7 @@ public struct u16: IHasU16
         return a._csReadValue >= b._csReadValue;
     }
     /// <summary>
-    /// NOTE: before the `>=` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[>=]]> operation, both operands are treated as u64.<br/>
     /// Error free operation.
     /// </summary>
     public static bool operator >=(u16 a, u64 b)
@@ -784,7 +784,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `+` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[+]]> operation, both operands are treated as i32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -812,7 +812,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `+` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[+]]> operation, both operands are treated as i32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -840,7 +840,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `+` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[+]]> operation, both operands are treated as u32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -868,7 +868,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `+` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[+]]> operation, both operands are treated as u64.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -926,7 +926,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `-` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[-]]> operation, both operands are treated as i32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -954,7 +954,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `-` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[-]]> operation, both operands are treated as i32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -982,7 +982,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `-` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[-]]> operation, both operands are treated as u32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -1010,7 +1010,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `-` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[-]]> operation, both operands are treated as u64.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -1068,7 +1068,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `*` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[*]]> operation, both operands are treated as i32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -1096,7 +1096,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `*` operation, both operands are treated as i32.<br/>
+    /// NOTE: before the <![CDATA[*]]> operation, both operands are treated as i32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -1124,7 +1124,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `*` operation, both operands are treated as u32.<br/>
+    /// NOTE: before the <![CDATA[*]]> operation, both operands are treated as u32.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>
@@ -1152,7 +1152,7 @@ public struct u16: IHasU16
     }
 
     /// <summary>
-    /// NOTE: before the `*` operation, both operands are treated as u64.<br/>
+    /// NOTE: before the <![CDATA[*]]> operation, both operands are treated as u64.<br/>
     /// When math mode is unsafe, this operation will throw during simulation if the value won't fit.<br/>
     /// When math mode is `user provided err`, this operation will add an error if the value won't fit.<br/>
     /// </summary>

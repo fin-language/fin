@@ -28,9 +28,9 @@ public class math
         /// </summary>
         UserProvidedErr,
 
-        /// <summary>
-        /// Using global implicit Err object to track errors.
-        /// </summary>
+        // /// <summary>
+        // /// Using global implicit Err object to track errors.
+        // /// </summary>
         //ImplicitErr,
 
         // Someday: Exception

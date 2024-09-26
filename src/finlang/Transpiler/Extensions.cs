@@ -95,11 +95,6 @@ public static class Extensions
         return symbol.Name.StartsWith("_") || symbol.DeclaredAccessibility != Accessibility.Public;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="symbol"></param>
-    /// <returns></returns>
     public static bool IsFinNonPublic(this BaseMethodDeclarationSyntax node)
     {
         // Public methods that start with _ are considered non-public in transpiled code.
@@ -380,7 +375,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// C# dot access: <expression>.<name>.
+    /// C# dot access: <![CDATA[<expression>.<name>]]>.
     /// Examples: "this.Name", "(1 + 2).some_function()", ...
     /// </summary>
     /// <param name="node"></param>

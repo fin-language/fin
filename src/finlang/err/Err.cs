@@ -127,7 +127,6 @@ public class Err : FinObj
     /// If an error has been set, this will add context to the error if it doesn't already have context.
     /// Useful for adding context to math errors.
     /// </summary>
-    /// <param name="error"></param>
     /// <param name="method_name">Automatically provided by C# compiler. Don't set.</param>
     /// <param name="source_file_path">Automatically provided by C# compiler. Don't set.</param>
     /// <param name="source_line_number">Automatically provided by C# compiler. Don't set.</param>
@@ -151,7 +150,6 @@ public class Err : FinObj
     /// <summary>
     /// If an error has been set, this will override context to the error.
     /// </summary>
-    /// <param name="error"></param>
     /// <param name="method_name">Automatically provided by C# compiler. Don't set.</param>
     /// <param name="source_file_path">Automatically provided by C# compiler. Don't set.</param>
     /// <param name="source_line_number">Automatically provided by C# compiler. Don't set.</param>
