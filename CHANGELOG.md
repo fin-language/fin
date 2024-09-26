@@ -22,7 +22,7 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
-## WIP
+## 0.7.1
 ### Added
 - Add `[c_const]` attribute for classes, fields and parameters
     - https://github.com/fin-language/fin/issues/92
