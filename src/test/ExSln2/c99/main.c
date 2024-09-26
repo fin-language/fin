@@ -6,11 +6,16 @@
 #include "ts_FuncPtrEx2.h"
 #include "ts_MemStackEx.h"
 #include <assert.h>
+#include "ts_CConstEx_Bike.h"
+#include "ts_CConstEx.h"
+
+// https://stackoverflow.com/a/4415646/7331858
+#define COUNT_OF(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 
 static void test_interface_conversions(hal_GpioDigInOut * gpio_dio);
 static void test_func_pointers(void);
 static void test_mem_stack_ex(void);
-
+static void test_c_const_ex(void);
 
 int main(void)
 {
@@ -37,6 +42,7 @@ int main(void)
     test_interface_conversions(&gpio_dio);
     test_func_pointers();
     test_mem_stack_ex();
+    test_c_const_ex();
 
     printf("Done!\n");
 
@@ -123,6 +129,72 @@ static void test_mem_stack_ex(void)
     result = ts_MemStackEx_calc_stuff_mult_vars_on_same_line(-10, 4);
     printf("Should be -6: %d\n", result);
     assert(result == -6);
+
+    printf("\n\n");
+}
+
+static void test_c_const_ex(void)
+{
+    printf("\n######## Testing c const ex #######\n");
+
+    int32_t result;
+
+    const ts_CConstEx_Bike const_bike1 = {10};
+    const ts_CConstEx_Bike const_bike2 = {20};
+
+    ts_CConstEx ex;
+    ts_CConstEx_ctor(&ex, &const_bike1, &const_bike2);
+
+    result = ts_CConstEx_sum_owned_const_bikes(&ex);
+    printf("Should be 30: %d\n", result);
+    assert(result == 30);
+
+    /////// end of instance tests
+
+    const ts_CConstEx_Bike bikes[2] = {
+        {70},
+        {30}
+    };
+
+    result = ts_CConstEx_sum_two_const_bikes_ro(&const_bike1, &const_bike2);
+    printf("Should be 30: %d\n", result);
+    assert(result == 30);
+
+    result = ts_CConstEx_sum_two_const_bikes_attr(&const_bike1, &const_bike2);
+    printf("Should be 30: %d\n", result);
+    assert(result == 30);
+
+    ts_CConstEx_Bike mutable_bike1 = {22};
+    ts_CConstEx_Bike mutable_bike2 = {11};
+
+    result = ts_CConstEx_sum_two_bikes_in(&mutable_bike1, &mutable_bike2);
+    printf("Should be 33: %d\n", result);
+    assert(result == 33);
+
+    result = ts_CConstEx_sum_two_const_bikes_in(&const_bike1, &const_bike2);
+    printf("Should be 30: %d\n", result);
+    assert(result == 30);
+    result = ts_CConstEx_sum_two_const_bikes_in(&mutable_bike1, &mutable_bike2);
+    printf("Should be 33: %d\n", result);
+    assert(result == 33);
+
+    result = ts_CConstEx_sum_two_bikes_in_mutate(&mutable_bike1, &mutable_bike2);
+    printf("Should be 44 + 33 = 77: %d\n", result);
+    assert(result == 77);
+    assert(mutable_bike1.speed == 44);
+    assert(mutable_bike2.speed == 33);
+
+    result = ts_CConstEx_sum_two_const_u8(15, 23);
+    printf("Should be 38: %d\n", result);
+    assert(result == 38);
+
+    result = ts_CConstEx_sum_two_u8_in(15, 23);
+    printf("Should be 38: %d\n", result);
+    assert(result == 38);
+
+    result = ts_CConstEx_sum_const_bikes_array(bikes, COUNT_OF(bikes));
+    printf("Should be 100: %d\n", result);
+    assert(result == 100);
 
     printf("\n\n");
 }

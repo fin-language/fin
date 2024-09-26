@@ -12,6 +12,7 @@ public static class Extensions
     public static readonly string OverrideTypeAttrShortName = GetShortAttributeName(nameof(override_typeAttribute));
     public static readonly string MemAttrShortName = GetShortAttributeName(nameof(memAttribute));
     public static readonly string FFIAttrShortName = GetShortAttributeName(nameof(ffiAttribute));
+    public static readonly string c_const_AttrShortName = GetShortAttributeName(nameof(c_constAttribute));
     //static readonly string ValidateFieldNoMemAttrAttrShortName = GetShortAttributeName(nameof(ValidateFieldNoMemAttrAttribute));
 
     /// <summary>
@@ -174,6 +175,16 @@ public static class Extensions
     public static bool HasFFI(this AttributeListSyntax node)
     {
         return node.Attributes.Any(attr => attr.Name.ToString() == FFIAttrShortName);
+    }
+
+    public static bool HasCConstAttr(this AttributeListSyntax node)
+    {
+        return node.Attributes.Any(attr => attr.Name.ToString() == c_const_AttrShortName);
+    }
+
+    public static bool HasCConstAttr(this ISymbol symbol)
+    {
+        return symbol.HasAttribute(nameof(c_constAttribute));
     }
 
     public static bool HasMemAttr(this ISymbol symbol)

@@ -88,6 +88,10 @@ public class CFileGenerator : CSharpSyntaxWalker
         {
             // FFI classes don't have method implementations
         }
+        else if (cls.symbol.HasCConstAttr())
+        {
+            // don't generate anything for classes with the c_const attribute
+        }
         else
         {
             // if implicit constructor is needed, generate it
@@ -422,6 +426,12 @@ public class CFileGenerator : CSharpSyntaxWalker
         if (node.HasFFI())
             sb.Append("// FFI function. User code must provide the implementation");
 
+        if (node.HasCConstAttr())
+        {
+            // https://github.com/fin-language/fin/issues/92
+            sb.Append("const ");
+        }
+
         // override_type support
         {
             AttributeSyntax? overrideType = node.GetTypeOverride();
@@ -698,18 +708,17 @@ public class CFileGenerator : CSharpSyntaxWalker
             VisitAttributeList(attrList);
         }
 
+        // purposely don't visit modifiers. Inspect them instead.
         SyntaxTokenList modifiers = node.Modifiers;
 
         bool addStar = (modifiers.HasModifier(SyntaxKind.OutKeyword) || modifiers.HasModifier(SyntaxKind.RefKeyword));
-
-        // don't visit modifiers
+        
+        Visit(node.Type);
 
         if (modifiers.HasModifier(SyntaxKind.InKeyword))
         {
             sb.Append("const ");
         }
-
-        Visit(node.Type);
 
         if (addStar)
         {
@@ -1667,15 +1676,22 @@ public class CFileGenerator : CSharpSyntaxWalker
 
             default:
                 {
-                    SymbolInfo symbol = model.GetSymbolInfo(node);
+                    ISymbol? symbol = model.GetSymbolInfo(node).Symbol;
 
-                    if (symbol.Symbol is INamedTypeSymbol ins)
+                    if (symbol is INamedTypeSymbol ins)
                     {
                         outputFile.AddFqnDependency(ins);
+
+                        if (ins.HasCConstAttr())
+                        {
+                            // https://github.com/fin-language/fin/issues/92
+                            pre = "const ";
+                            symbol = ins.BaseType.ThrowIfNull("Classes marked with [c_const] must extend a FinObj base class");
+                        }
                     }
 
                     // support field accesses
-                    if (symbol.Symbol is IFieldSymbol fs)
+                    if (symbol is IFieldSymbol fs)
                     {
                         // note that enum fields count as IFieldSymbol
                         if (!fs.IsStatic && !fs.IsConst)
@@ -1689,7 +1705,7 @@ public class CFileGenerator : CSharpSyntaxWalker
                         }
                     }
 
-                    if (symbol.Symbol is IParameterSymbol ps)
+                    if (symbol is IParameterSymbol ps)
                     {
                         if (ps.RefKind == RefKind.Ref || ps.RefKind == RefKind.Out)
                         {
@@ -1698,7 +1714,7 @@ public class CFileGenerator : CSharpSyntaxWalker
                         }
                     }
 
-                    result = GetCTypeDeclaration(symbol.Symbol.ThrowIfNull());
+                    result = GetCTypeDeclaration(symbol.ThrowIfNull());
                     break;
                 }
         }

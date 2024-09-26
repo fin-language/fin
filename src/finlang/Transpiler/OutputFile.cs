@@ -63,6 +63,11 @@ public class OutputFile
 
     internal void AddFqnDependency(ITypeSymbol type)
     {
+        if (type.HasCConstAttr())
+        {
+            return; // don't add dependencies for c_const types
+        }
+
         var fqn = Namer.GetFqn(type);
         if (fqn != "System.Void")
             fqnDependencies.Add(fqn);

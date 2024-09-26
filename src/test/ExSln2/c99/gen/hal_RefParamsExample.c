@@ -18,7 +18,7 @@ void hal_RefParamsExample_inc(uint8_t * a)
     (*a)++;
 }
 
-uint8_t hal_RefParamsExample_echo(const uint8_t a)
+uint8_t hal_RefParamsExample_echo(uint8_t const a)
 {
     //a++; // can't assign to in parameter
     return a;

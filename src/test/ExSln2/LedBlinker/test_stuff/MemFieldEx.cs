@@ -3,7 +3,6 @@ using finlang;
 // test stuff
 namespace ts;
 
-
 public class MemFieldEx : FinObj
 {
     public class Bike : FinObj

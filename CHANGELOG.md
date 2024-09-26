@@ -22,6 +22,16 @@ You can easily find changes by searching for `"### Change"` in this markdown fil
 # Releases
 Test/interim releases are not documented here.
 
+## WIP
+### Added
+- Add `[c_const]` attribute for classes, fields and parameters
+    - https://github.com/fin-language/fin/issues/92
+
+### Fixed
+- Fix `in` parameter modifier for reference types
+
+---
+
 ## [0.7.0]
 ### Changed (BREAKING-CHANGES)
 - Transpiler - won't allow fields of type `c_array_sized<T>` or `c_array<T>` to be declared with `[mem]` attribute. Also won't allow primitives like `u8` or `int` to be declared with `[mem]` attribute.
@@ -29,7 +39,7 @@ Test/interim releases are not documented here.
 
 ### Fixed
 - Fix `[mem]` field needs to decay to pointer
-  - https://github.com/fin-language/fin/issues/90
+    - https://github.com/fin-language/fin/issues/90
 
 ---
 
