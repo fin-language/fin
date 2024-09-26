@@ -1,7 +1,7 @@
 using finlang;
 
 // test stuff
-namespace ts_;
+namespace ts;
 
 public class CArrayMemEx : FinObj
 {
