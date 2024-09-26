@@ -21,6 +21,14 @@
     <PackageReference Include="MethodDecorator.Fody" Version="1.1.1" />
   </ItemGroup>
 
+  <!-- generate user intellisense documentation for nuget package -->
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- disable warning for undocumented members -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
   <!-- transpiling Roslyn stuff -->
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Locator" Version="1.6.10" />

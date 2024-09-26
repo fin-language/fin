@@ -26,6 +26,8 @@ Test/interim releases are not documented here.
 ### Added
 - Add `[c_const]` attribute for classes, fields and parameters
     - https://github.com/fin-language/fin/issues/92
+- Add C# docstring to nugget package
+    - https://github.com/fin-language/fin/issues/93
 
 ### Fixed
 - Fix `in` parameter modifier for reference types
